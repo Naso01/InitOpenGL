@@ -1,5 +1,6 @@
 #include "GameController.h"
 #include "WindowController.h"
+#include "ToolWindow.h"
 
 GameController::GameController() {
 	m_mesh = { };
@@ -16,6 +17,10 @@ void GameController::Initialize() {
 
 void GameController::RunGame() {
 
+	//Show the C++/CLI tool window
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	window->Show();
+
 	//Create and compile our GLSL program from the shaders
 	m_shader = Shader();
 	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
@@ -24,6 +29,7 @@ void GameController::RunGame() {
 	m_mesh.Create(&m_shader);
 	
 	do {
+		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen
 		m_mesh.Render();
