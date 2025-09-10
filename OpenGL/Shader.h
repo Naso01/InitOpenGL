@@ -28,7 +28,7 @@ private:
 	// Members
 	GLuint m_programID; // ID of the shader program
 	GLuint m_attrVertices; // Handle for the attribute vertex buffer
-	GLuint m_result = GL_FALSE;
+	GLint m_result = GL_FALSE;
 	int m_infoLogLength;
 };
 
