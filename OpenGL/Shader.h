@@ -8,11 +8,11 @@ class Shader {
 public:
 	// Contructor / Destructor
 	Shader();
-	virtual ~Shader();
+	virtual ~Shader() { }
 	
 	// Accessors
-	GLuint GetProgramID() const { return m_programID; }
-	GLuint GetAttrVertices() const { return m_attrVertices; }
+	GLuint GetProgramID() { return m_programID; }
+	GLuint GetAttrVertices() { return m_attrVertices; }
 
 	// Methods
 	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);

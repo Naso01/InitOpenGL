@@ -1,10 +1,11 @@
 #include "Mesh.h"
 #include "Shader.h"
 
-Mesh::Mesh() : 
-	m_shader(nullptr), 
-	m_vertexBuffer(0) 
-{ }
+Mesh::Mesh() {
+	m_shader = nullptr;
+	m_vertexBuffer = 0;
+	m_vertexData = { };
+}
 
 Mesh::~Mesh() {
 

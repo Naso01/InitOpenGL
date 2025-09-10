@@ -22,22 +22,21 @@ void Shader::EvaluateShader(int _infoLength, GLuint _id) {
 		// Only fetch and report the info log if there is something to report
 		std::vector<char> errorMessage(_infoLength + 1);
 		glGetProgramInfoLog(_id, _infoLength, NULL, &errorMessage[0]);
-		M_ASSERT(false, ("%s\n", &errorMessage[0]));
+		M_ASSERT(0, ("%s\n", &errorMessage[0]));
 	}
 }
 
 GLuint Shader::LoadShaderFile(const char* _filePath, GLenum _type) {
 
-	// Create the shader ID
-	GLuint shaderID = glCreateShader(_type);
+	GLuint shaderID = glCreateShader(_type); // Create the shader ID
 
 	// Read the shader code from the file
 	std::string shaderCode;
 	std::ifstream shaderStream(_filePath, std::ios::in);
 	M_ASSERT(shaderStream.is_open(), ("Impossible to open %s. Are you in the right directory ? Dont forget to read the FAQ !\n", _filePath));
-	std::string line = "";
-	while (getline(shaderStream, line))
-		shaderCode += "\n" + line;
+	std::string Line = "";
+	while (getline(shaderStream, Line))
+		shaderCode += "\n" + Line;
 	shaderStream.close();
 
 	//Compile the shader
@@ -72,6 +71,7 @@ void Shader::CreateShaderProgram(const char* _vertexFilePath, const char* _fragm
 	// Free resources
 	glDetachShader(m_programID, vertexShaderID);
 	glDetachShader(m_programID, fragmentShaderID);
+
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
 }
