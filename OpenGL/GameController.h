@@ -1,7 +1,7 @@
 #ifndef GAME_CONTROLLER_H
 #define GAME_CONTROLLER_H
 
-#include "Standard Includes.h"
+#include "StandardIncludes.h"
 #include "Mesh.h"
 
 class GameController : public Singleton<GameController>

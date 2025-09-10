@@ -3,6 +3,8 @@
 
 //std::vector
 #include <vector>
+#include <string>
+#include <fstream>
 
 //Windows Specific
 #ifdef _WIN32

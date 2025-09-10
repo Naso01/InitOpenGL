@@ -42,12 +42,15 @@
     <ClCompile Include="WindowController.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameController.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="Standard Includes.h">
+    <ClInclude Include="StandardIncludes.h">
       <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
@@ -58,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="WindowController.h">
       <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

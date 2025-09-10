@@ -1,7 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "Standard Includes.h"
+#include "StandardIncludes.h"
 
 class Mesh
 {

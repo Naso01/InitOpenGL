@@ -1,7 +1,7 @@
 #ifndef WINDOW_CONTROLLER_H
 #define WINDOW_CONTROLLER_H
 
-#include "Standard Includes.h"
+#include "StandardIncludes.h"
 
 class WindowController : public Singleton<WindowController>
 {
