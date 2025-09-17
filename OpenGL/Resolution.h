@@ -10,12 +10,4 @@ struct Resolution {
 
 };
 
-
-
-
-
-
-
-
-
 #endif // RESOLUTION_H
