@@ -5,6 +5,7 @@ Mesh::Mesh() {
 	m_shader = nullptr;
 	m_vertexBuffer = 0;
 	m_vertexData = { };
+	m_world = glm::mat4(1.0f); // Identity matrix
 }
 
 Mesh::~Mesh() {
@@ -41,7 +42,7 @@ void Mesh::Render(glm::mat4 _wvp) {
 		(void*)0	/*offset*/);
 
 
-	_wvp = m_world;
+	_wvp *= m_world;
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]); // Send our transformation to the currently bound shader, in the "WVP" uniform
 	//Draw the Triangle !
