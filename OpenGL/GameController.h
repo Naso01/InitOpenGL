@@ -4,6 +4,7 @@
 #include "StandardIncludes.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Camera.h"
 
 class GameController : public Singleton<GameController>
 {
@@ -18,6 +19,7 @@ public:
 
 private:
 	Shader m_shader;
+	Camera m_camera;
 	Mesh m_mesh;
 };
 
