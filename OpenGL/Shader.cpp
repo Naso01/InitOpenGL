@@ -3,10 +3,11 @@
 Shader::Shader() :
 	m_programID(0),
 	m_attrVertices(0),
+	m_attrWVP(0),
 	m_result(GL_FALSE),
 	m_infoLogLength(0)
-{
-}
+{ }
+
 
 void Shader:: Cleanup() {
 	glDeleteProgram(m_programID);
@@ -14,6 +15,7 @@ void Shader:: Cleanup() {
 
 void Shader::LoadAttributes() {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices"); // Get a handle for the vertex buffer
+	m_attrWVP = glGetUniformLocation(m_programID, "WVP"); // Get a handle for the WorldViewProjection matrix
 }
 
 void Shader::EvaluateShader(int _infoLength, GLuint _id) {
