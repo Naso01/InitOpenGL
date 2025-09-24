@@ -19,14 +19,14 @@ void Mesh::Create(Shader* _shader) {
 	//Cordinates for a triangle
 	m_vertexData = {
 		/*  Position  */ /*	    RGBA Color     */
-		0.2f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0.3f, 0.9f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-		0.4f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-		0.7f, 0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0.8f, 0.4f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 0.6f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-		1.0f, 0.2f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		1.5f, 0.6f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f };
+		20, 20, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		30, 110, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+		40, 50, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		70, 80, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		80, 40, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+		100, 60, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		100, 20, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		150, 60, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f };
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -65,8 +65,11 @@ void Mesh::Render(glm::mat4 _wvp) {
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]); // Send our transformation to the currently bound shader, in the "WVP" uniform
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	//Draw the Triangle !
-	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 7); // Starting from vertex 0; 3 vertices = 1 triangle
+	//Draw Lines !
+	//glDrawArrays(GL_LINES, 0, m_vertexData.size() / 7); // Starting from vertex 0; n * 2 = vertices | n = number of lines
+	//glDrawArrays(GL_LINE_STRIP, 0, m_vertexData.size() / 7); // Starting from vertex 0; n + 1 = vertices | n = number of lines
+	//glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 7); // Starting from vertex 0; n * 3 = vertices | n = number of Triangles
+	//glDrawArrays(GL_TRIANGLE_STRIP, 0, m_vertexData.size() / 7); // Starting from vertex 0; n + 2 vertices | n = number of Triangles
 	glDisableVertexAttribArray(m_shader->GetAttrColors());
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 }
