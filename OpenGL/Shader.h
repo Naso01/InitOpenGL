@@ -14,11 +14,11 @@ public:
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
+	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	// Methods
 	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	void Cleanup();
-	GLuint GetAttrWVP() { return m_attrWVP; }
 
 private:
 	//Methods
