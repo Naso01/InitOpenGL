@@ -70,6 +70,11 @@ void Mesh::Render(glm::mat4 _wvp) {
 	//glDrawArrays(GL_LINE_STRIP, 0, m_vertexData.size() / 7); // Starting from vertex 0; n + 1 = vertices | n = number of lines
 	//glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 7); // Starting from vertex 0; n * 3 = vertices | n = number of Triangles
 	//glDrawArrays(GL_TRIANGLE_STRIP, 0, m_vertexData.size() / 7); // Starting from vertex 0; n + 2 vertices | n = number of Triangles
+	
+	//glDrawArrays(GL_POINTS, 0, m_vertexData.size() / 7); // Starting from vertex 0; 
+	//glDrawArrays(GL_LINE_LOOP, 0, m_vertexData.size() / 7); // Starting from vertex 0; 
+	glDrawArrays(GL_TRIANGLE_FAN, 0, m_vertexData.size() / 7); // Starting from vertex 0; 
+
 	glDisableVertexAttribArray(m_shader->GetAttrColors());
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 }
