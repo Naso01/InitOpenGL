@@ -65,7 +65,7 @@ void Mesh::Render(glm::mat4 _wvp) {
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]); // Send our transformation to the currently bound shader, in the "WVP" uniform
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	//Draw Lines !
+	//Draw Stuff!
 	//glDrawArrays(GL_LINES, 0, m_vertexData.size() / 7); // Starting from vertex 0; n * 2 = vertices | n = number of lines
 	//glDrawArrays(GL_LINE_STRIP, 0, m_vertexData.size() / 7); // Starting from vertex 0; n + 1 = vertices | n = number of lines
 	//glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / 7); // Starting from vertex 0; n * 3 = vertices | n = number of Triangles
