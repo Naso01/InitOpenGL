@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 
+
 class GameController : public Singleton<GameController>
 {
 public:
@@ -21,6 +22,9 @@ private:
 	Shader m_shader;
 	Camera m_camera;
 	Mesh m_mesh;
+	std::vector < glm::mat4> m_objectMatrices;
+	std::vector <Mesh*> m_NPCTriangles;
+	Mesh m_player;
 };
 
 #endif //!GAME_CONTROLLER_H
