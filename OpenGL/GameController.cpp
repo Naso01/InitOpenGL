@@ -10,7 +10,9 @@ GameController::GameController() {
 	m_mesh = { };
 	m_camera = { };
 	m_shader = { };
+
 	m_player = { };
+	m_NPCTriangles = { };
 }
 
 void GameController::Initialize() {
@@ -32,6 +34,9 @@ void GameController::Initialize() {
 
 	for (int i = 0; i < 10; i++) {
 
+		m_NPCTriangles.push_back(new Mesh());
+		
+
 		srand(time(0));
 		//ran must be within {2, 10} or {-10, -2}
 		ranNumX = rand() % 11 + 2;
@@ -50,7 +55,11 @@ void GameController::Initialize() {
 			ranNumY = -ranNumY;
 		}
 
-		//m_objectMatrices[i] = glm::translate(m_objectMatrices[i], { ranNumX, ranNumY, 0 });
+		worldMatrix = glm::translate(worldMatrix, { ranNumX, ranNumY, 0 });
+		
+		m_NPCTriangles[i]->Create(&m_shader);
+		m_NPCTriangles[i]->Render(glm::translate( (m_camera.GetProjection() * m_camera.GetView() ), 
+														{ ranNumX, ranNumY, 0 }));
 	}
 }
 
@@ -69,7 +78,6 @@ void GameController::RunGame() {
 	do {
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 
-		
 		//Checkbox states from the tool window
 		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
 		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderRedChannel);
@@ -85,6 +93,12 @@ void GameController::RunGame() {
 
 		//Player
 		m_player.Render(m_camera.GetProjection() * m_camera.GetView()); // Gives mesh View and Projection matrices
+
+		for (int i = 0; i < m_NPCTriangles.size(); i++) {
+
+			m_NPCTriangles[i]->Render( m_camera.GetProjection() * m_camera.GetView() );
+
+		}
 
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
