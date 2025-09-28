@@ -52,7 +52,7 @@ void GameController::RunGame() {
 	srand(time(0));
 
 
-	std::vector<glm::vec3> randomVectors;
+	std::vector<glm::vec3> npcLocations;
 
 	for (int i = 1; i < 11; i++) {
 		Mesh* npc = new Mesh();
@@ -65,7 +65,7 @@ void GameController::RunGame() {
 
 		if (ranSign == 0) { ranNumY = -ranNumY; }
 
-		randomVectors.push_back({ ranNumX, ranNumY, 0 });
+		npcLocations.push_back({ ranNumX, ranNumY, 0 });
 		
 		npc->Create(&m_shader, 1);
 		m_Triangles.push_back(npc);
@@ -78,28 +78,30 @@ void GameController::RunGame() {
 
 	WindowController* window = new WindowController;
 
+	//Transformative values for NPCs
+	float distance = 0;
+	glm::vec3 direction = { 0,0,0 };
+	glm::vec3 destination = { 0,0,0 };
+	float npcAngleInRandians = 0.0f;
+
 	do {
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-			cout << "w" << endl;
-			m_playerLocation.y += 0.005f;
+			//cout << "w" << endl;
+			m_playerLocation.y += 0.01f;
 		}
-		else if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_S) == GLFW_PRESS){
-			m_playerLocation.y -= 0.005f;
-			cout << "s" << endl;
+		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_S) == GLFW_PRESS){
+			m_playerLocation.y -= 0.01f;
+			//cout << "s" << endl;
 		}
-		else if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-			m_playerLocation.x -= 0.005f;
-			cout << "a" << endl;
+		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+			m_playerLocation.x -= 0.01f;
+			//cout << "a" << endl;
 		}
-		else if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-			m_playerLocation.x += 0.005f;
-			cout << "d" << endl;
-		}
-		else {
-			//m_playerLocation = { 0, 0, 0 };
-			cout << "null" << endl;
+		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+			m_playerLocation.x += 0.01f;
+			//cout << "d" << endl;
 		}
 
 		/*
@@ -115,26 +117,42 @@ void GameController::RunGame() {
 		*/
 
 		//glfwSetKeyCallback(window->GetInstance().GetWindow(), PlayerTransform);
-	
+		
+		
+		
+		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen 
 
-		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen
+		m_Triangles[0]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
+		cout << "player location x:" << m_playerLocation.x << endl;
+		cout << "player location y:" << m_playerLocation.y << endl;
 
-		for (int i = 0; i < m_Triangles.size(); i++) {
+	//	for (int i = 1; i < m_Triangles.size(); i++) {
 			//Player
-			if (i == 0)
-				m_Triangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
-			//NPCs
-			else{
-				m_Triangles[i]->Render(glm::rotate(
-											(glm::translate((m_camera.GetProjection() * m_camera.GetView()), 
-													randomVectors[i - 1]))
-											,(glm::dot(m_playerLocation, randomVectors[i-1])), 
-											{ 0,0,1 }));
 
-		
-			}
-		}
-		
+        // Replace the NPC rendering section in RunGame() with the following:
+
+        for (int i = 1; i < m_Triangles.size(); i++) {
+            // Calculate direction from NPC to player
+            glm::vec3 npcToPlayer = glm::normalize(m_playerLocation - npcLocations[i - 1]);
+            // Calculate angle between NPC's forward (assume {0,1,0}) and direction to player
+            float cosa = glm::dot(glm::vec3{0, 1, 0}, npcToPlayer);
+            cosa = glm::clamp(cosa, -1.0f, 1.0f);
+            float angle = glm::degrees(glm::acos(cosa));
+            // Determine rotation axis (Z axis for 2D)
+            float crossZ = glm::cross(glm::vec3{0, 1, 0}, npcToPlayer).z;
+            float signedAngle = crossZ < 0 ? -angle : angle;
+
+            // Render NPC facing the player
+            m_Triangles[i]->Render(
+                glm::rotate(
+                    glm::translate((m_camera.GetProjection() * m_camera.GetView()), npcLocations[i - 1]),
+                    glm::radians(signedAngle),
+                    glm::vec3{0, 0, 1}
+                )
+            );
+        }
+
+
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 

@@ -98,7 +98,7 @@ void Mesh::Render(glm::mat4 _wvp) {
 
 
 	// 3rd attribute  :  WVP
-	//m_world = glm::rotate(m_world, 0.001f, { 0, 1, 0 });
+	//m_world = glm::rotate(m_world, -0.001f, { 0, 0, 1 });
 	_wvp *= m_world;
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &_wvp[0][0]); // Send our transformation to the currently bound shader, in the "WVP" uniform
 
