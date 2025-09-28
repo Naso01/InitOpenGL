@@ -37,6 +37,16 @@ void Mesh::Cleanup() {
 	
 }
 
+void Mesh::ChangeColor(int _color[]) {
+
+	m_vertexData[3] = _color[0];
+	m_vertexData[4] = _color[1];
+	m_vertexData[5] = _color[2];
+	m_vertexData[6] = _color[3];
+
+
+}
+
 void Mesh::Render(glm::mat4 _wvp) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader

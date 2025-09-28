@@ -27,12 +27,20 @@ void GameController::Initialize() {
 
 }
 
+int GameController::RandomNumber() {
+	int ranNum = rand() % 9 + 2;
+	int ranSign = rand() % 2;
+
+	if (ranSign == 0) { ranNum = -ranNum; }
+
+	return ranNum;
+}
+
 void GameController::RunGame() {
 
 	//Show the C++/CLI tool window
 	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
 	//window->Show();
-
 
 	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
@@ -41,6 +49,8 @@ void GameController::RunGame() {
 	int ranNumX = 0;
 	int ranNumY = 0;
 	int ranSign = 0;
+	srand(time(0));
+
 
 	std::vector<glm::vec3> randomVectors;
 
@@ -48,24 +58,18 @@ void GameController::RunGame() {
 
 		m_NPCTriangles.push_back(new Mesh());
 
-		srand(time(0));
-		//ran must be within {2, 10} or {-10, -2}
-		ranNumX = rand() % 11 + 2;
-		ranSign = rand() % 1;
+		ranNumX = RandomNumber();
+		ranNumY = RandomNumber();
 
-		if (ranSign == 0) {
-			ranNumX = -ranNumX;
-		}
+		cout <<"X: " << ranNumX << endl;
+		cout <<"y: " << ranNumX << endl;
 
-		srand(time(0));
-		//ran must be within {2, 10} or {-10, -2}
-		ranNumY = rand() % 11 + 2;
-		ranSign = rand() % 1;
+		if (ranSign == 0) { ranNumY = -ranNumY; }
 
-		if (ranSign == 0) {
-			ranNumY = -ranNumY;
-		}
+		randomVectors.push_back({ ranNumX, ranNumY, 0 });
 
+		int colorCode[4] = { 0, 1, 0, 1 };
+		//m_NPCTriangles[i]->ChangeColor(colorCode);
 		m_NPCTriangles[i]->Create(&m_shader);
 	}
 
@@ -96,7 +100,7 @@ void GameController::RunGame() {
 		//NPCs
 		for (int i = 0; i < m_NPCTriangles.size(); i++) {
 
-			m_NPCTriangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), { 10, 10, 0 }));
+			m_NPCTriangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), randomVectors[i]));
 		}
 
 

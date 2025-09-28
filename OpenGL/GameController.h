@@ -17,6 +17,7 @@ public:
 	//Methods
 	void Initialize();
 	void RunGame();
+	int RandomNumber();
 
 private:
 	Shader m_shader;
