@@ -54,6 +54,7 @@ void Mesh::Create(Shader* _shader, int _id) {
 			-1, 0, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
 		};
 	else
+		//Tagged NPC
 	if (_id == 2)
 		m_vertexData = {
 		/* Position */ /*	RGBA Color	*/

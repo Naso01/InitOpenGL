@@ -78,29 +78,23 @@ void GameController::RunGame() {
 
 	WindowController* window = new WindowController;
 
-	//Transformative values for NPCs
-	float distance = 0;
-	glm::vec3 direction = { 0,0,0 };
-	glm::vec3 destination = { 0,0,0 };
-	float npcAngleInRandians = 0.0f;
-
 	do {
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 			//cout << "w" << endl;
-			m_playerLocation.y += 0.01f;
+			m_playerLocation.y += 0.003f;
 		}
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_S) == GLFW_PRESS){
-			m_playerLocation.y -= 0.01f;
+			m_playerLocation.y -= 0.003f;
 			//cout << "s" << endl;
 		}
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-			m_playerLocation.x -= 0.01f;
+			m_playerLocation.x -= 0.003f;
 			//cout << "a" << endl;
 		}
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-			m_playerLocation.x += 0.01f;
+			m_playerLocation.x += 0.003f;
 			//cout << "d" << endl;
 		}
 
@@ -123,13 +117,9 @@ void GameController::RunGame() {
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen 
 
 		m_Triangles[0]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
-		cout << "player location x:" << m_playerLocation.x << endl;
-		cout << "player location y:" << m_playerLocation.y << endl;
+		//cout << "player location x:" << m_playerLocation.x << endl;
+		//cout << "player location y:" << m_playerLocation.y << endl;
 
-	//	for (int i = 1; i < m_Triangles.size(); i++) {
-			//Player
-
-        // Replace the NPC rendering section in RunGame() with the following:
 
         for (int i = 1; i < m_Triangles.size(); i++) {
             // Calculate direction from NPC to player
@@ -141,6 +131,22 @@ void GameController::RunGame() {
             // Determine rotation axis (Z axis for 2D)
             float crossZ = glm::cross(glm::vec3{0, 1, 0}, npcToPlayer).z;
             float signedAngle = crossZ < 0 ? -angle : angle;
+
+			float distance = glm::distance(m_playerLocation, npcLocations[i-1]);
+
+			if (distance > 11) {
+				glm::vec3 destination = m_playerLocation - npcToPlayer;
+				npcLocations[i - 1] += (glm::normalize((destination - npcLocations[i - 1])) * 0.0015f);
+			}
+			if (distance < 10) {
+				glm::vec3 destination = m_playerLocation - npcToPlayer;
+				npcLocations[i - 1] -= (glm::normalize((destination - npcLocations[i - 1])) * 0.0015f);
+			}
+			if (distance < 1) {
+				Mesh* taggedNPC = new Mesh();
+				taggedNPC->Create(&m_shader, 2);
+				m_Triangles[i] = taggedNPC;
+			}
 
             // Render NPC facing the player
             m_Triangles[i]->Render(
