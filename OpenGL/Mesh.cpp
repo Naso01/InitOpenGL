@@ -44,7 +44,7 @@ void Mesh::Create(Shader* _shader, int _id) {
 			0, 2, 0, 1.0f, 0.0f, 0.0f, 1.0f, // Red
 			-1, 0, 0, 1.0f, 0.0f, 0.0f, 1.0f, // Red
 		};
-
+	else
 	//NPC ID
 	if (_id == 1)
 		m_vertexData = {
@@ -53,6 +53,14 @@ void Mesh::Create(Shader* _shader, int _id) {
 			0, 2, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
 			-1, 0, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
 		};
+	else
+	if (_id == 2)
+		m_vertexData = {
+		/* Position */ /*	RGBA Color	*/
+		1, 0, 0, 0.0f, 0.0f, 1.0f, 1.0f, // Blue
+		0, 2, 0, 0.0f, 0.0f, 1.0f, 1.0f, // Blue
+		-1, 0, 0, 0.0f, 0.0f, 1.0f, 1.0f, // Blue
+	};
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
