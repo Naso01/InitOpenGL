@@ -10,8 +10,7 @@ GameController::GameController() {
 	m_mesh = { };
 	m_camera = { };
 	m_shader = { };
-
-	m_player = { };
+	m_playerLocation = { 0,0,0 };
 	m_Triangles = { };
 }
 
@@ -97,7 +96,7 @@ void GameController::RunGame() {
 		for (int i = 0; i < m_Triangles.size(); i++) {
 			//Player
 			if(i == 0)
-				m_Triangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), {0, 0, 0}));
+				m_Triangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
 			//NPCs
 			else
 			m_Triangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), randomVectors[i-1]));
@@ -109,7 +108,7 @@ void GameController::RunGame() {
 	} while (glfwGetKey(WindowController::GetInstance().GetWindow(), GLFW_KEY_ESCAPE) != GLFW_PRESS && // Check if the ESC key was pressed
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed
 
-	m_player.Cleanup();
+
 	for (int i = 0; i < m_Triangles.size(); i++) {
 		m_Triangles[i]->Cleanup();
 	}
