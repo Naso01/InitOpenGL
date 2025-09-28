@@ -52,7 +52,6 @@ void GameController::RunGame() {
 	srand(time(0));
 
 
-
 	std::vector<glm::vec3> randomVectors;
 
 	for (int i = 1; i < 11; i++) {
@@ -76,8 +75,32 @@ void GameController::RunGame() {
 	player->Create(&m_shader, 0);
 	m_Triangles.push_back(player);
 
+
+	WindowController* window = new WindowController;
+
 	do {
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
+
+		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+			cout << "w" << endl;
+			m_playerLocation.y += 0.005f;
+		}
+		else if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_S) == GLFW_PRESS){
+			m_playerLocation.y -= 0.005f;
+			cout << "s" << endl;
+		}
+		else if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+			m_playerLocation.x -= 0.005f;
+			cout << "a" << endl;
+		}
+		else if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+			m_playerLocation.x += 0.005f;
+			cout << "d" << endl;
+		}
+		else {
+			//m_playerLocation = { 0, 0, 0 };
+			cout << "null" << endl;
+		}
 
 		/*
 		//Checkbox states from the tool window
@@ -90,6 +113,9 @@ void GameController::RunGame() {
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderBlueChannel");
 		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderBlueChannel);
 		*/
+
+		//glfwSetKeyCallback(window->GetInstance().GetWindow(), PlayerTransform);
+	
 
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen
 

@@ -18,6 +18,7 @@ public:
 	void Initialize();
 	void RunGame();
 	int RandomNumber();
+	void PlayerTransform(GLFWwindow* window, unsigned int key);
 
 private:
 	Shader m_shader;
