@@ -55,7 +55,7 @@ void GameController::RunGame() {
 	std::vector<glm::vec3> npcLocations;
 
 	for (int i = 1; i < 11; i++) {
-		Mesh* npc = new Mesh();
+		Mesh npc;
 
 		ranNumX = RandomNumber();
 		ranNumY = RandomNumber();
@@ -67,20 +67,43 @@ void GameController::RunGame() {
 
 		npcLocations.push_back({ ranNumX, ranNumY, 0 });
 		
-		npc->Create(&m_shader, 1);
+		npc.Create(&m_shader, 1);
 		m_Triangles.push_back(npc);
 	}
 	
-	Mesh* player = new Mesh();
-	player->Create(&m_shader, 0);
+	Mesh player;
+	player.Create(&m_shader, 0);
 	m_Triangles.push_back(player);
+
+
+	std::vector<bool> npcIsBlue(npcLocations.size(), false);
 
 
 	WindowController* window = new WindowController;
 
-	do {
-		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
+	do {		
+		/*
+		//Checkbox states from the tool window
+		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
+		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderRedChannel);
 
+		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderGreenChannel");
+		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderGreenChannel);
+
+		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderBlueChannel");
+		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderBlueChannel);
+		*/
+
+		//glfwSetKeyCallback(window->GetInstance().GetWindow(), PlayerTransform);
+
+		
+		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
+		
+		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen 
+
+
+		m_Triangles[0].Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
+		
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 			//cout << "w" << endl;
 			m_playerLocation.y += 0.003f;
@@ -98,66 +121,52 @@ void GameController::RunGame() {
 			//cout << "d" << endl;
 		}
 
-		/*
-		//Checkbox states from the tool window
-		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderRedChannel);
+            
+            for (int i = 1; i < m_Triangles.size(); i++) {
+				// Render NPC facing the player
+                glm::vec3 npcToPlayer = glm::normalize(m_playerLocation - npcLocations[i - 1]);
+                float cosa = glm::dot(glm::vec3{0, 1, 0}, npcToPlayer);
+                cosa = glm::clamp(cosa, -1.0f, 1.0f);
+                float angle = glm::degrees(glm::acos(cosa));
+                float crossZ = glm::cross(glm::vec3{0, 1, 0}, npcToPlayer).z;
+                float signedAngle = crossZ < 0 ? -angle : angle;
 
-		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderGreenChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderGreenChannel);
+                float distance = glm::distance(m_playerLocation, npcLocations[i-1]);
 
-		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderBlueChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderBlueChannel);
-		*/
+                if (distance > 11) {
+                    glm::vec3 destination = m_playerLocation - npcToPlayer;
+                    npcLocations[i - 1] += (glm::normalize((destination - npcLocations[i - 1])) * 0.0015f);
+                }
+                if (distance < 10) {
+                    glm::vec3 destination = m_playerLocation - npcToPlayer;
+                    npcLocations[i - 1] -= (glm::normalize((destination - npcLocations[i - 1])) * 0.0015f);
+                }
 
-		//glfwSetKeyCallback(window->GetInstance().GetWindow(), PlayerTransform);
-		
-		
-		
-		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen 
+                // Change color if distance <= 1
+				if (distance <= 1) {
+					npcIsBlue[i - 1] = true;
+				}
+				//if npc is tagged, turn blue
+				if (npcIsBlue[i - 1]) {
+					GLint colorLoc = glGetUniformLocation(m_shader.GetProgramID(), "OverrideColor");
+					glUniform3f(colorLoc, 0.0f, 0.0f, 1.0f); // Blue color
 
-		m_Triangles[0]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
-		//cout << "player location x:" << m_playerLocation.x << endl;
-		//cout << "player location y:" << m_playerLocation.y << endl;
+					GLint useOverrideLoc = glGetUniformLocation(m_shader.GetProgramID(), "UseOverrideColor");
+					glUniform1i(useOverrideLoc, 1);
+				}
+				else {
+					GLint useOverrideLoc = glGetUniformLocation(m_shader.GetProgramID(), "UseOverrideColor");
+					glUniform1i(useOverrideLoc, 0);
+				}
 
-
-        for (int i = 1; i < m_Triangles.size(); i++) {
-            // Calculate direction from NPC to player
-            glm::vec3 npcToPlayer = glm::normalize(m_playerLocation - npcLocations[i - 1]);
-            // Calculate angle between NPC's forward (assume {0,1,0}) and direction to player
-            float cosa = glm::dot(glm::vec3{0, 1, 0}, npcToPlayer);
-            cosa = glm::clamp(cosa, -1.0f, 1.0f);
-            float angle = glm::degrees(glm::acos(cosa));
-            // Determine rotation axis (Z axis for 2D)
-            float crossZ = glm::cross(glm::vec3{0, 1, 0}, npcToPlayer).z;
-            float signedAngle = crossZ < 0 ? -angle : angle;
-
-			float distance = glm::distance(m_playerLocation, npcLocations[i-1]);
-
-			if (distance > 11) {
-				glm::vec3 destination = m_playerLocation - npcToPlayer;
-				npcLocations[i - 1] += (glm::normalize((destination - npcLocations[i - 1])) * 0.0015f);
-			}
-			if (distance < 10) {
-				glm::vec3 destination = m_playerLocation - npcToPlayer;
-				npcLocations[i - 1] -= (glm::normalize((destination - npcLocations[i - 1])) * 0.0015f);
-			}
-			if (distance < 1) {
-				Mesh* taggedNPC = new Mesh();
-				taggedNPC->Create(&m_shader, 2);
-				m_Triangles[i] = taggedNPC;
-			}
-
-            // Render NPC facing the player
-            m_Triangles[i]->Render(
-                glm::rotate(
-                    glm::translate((m_camera.GetProjection() * m_camera.GetView()), npcLocations[i - 1]),
-                    glm::radians(signedAngle),
-                    glm::vec3{0, 0, 1}
-                )
-            );
-        }
-
+                m_Triangles[i].Render(
+                    glm::rotate(
+                        glm::translate((m_camera.GetProjection() * m_camera.GetView()), npcLocations[i - 1]),
+                        glm::radians(signedAngle),
+                        glm::vec3{0, 0, 1}
+                    )
+                );
+            }
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
@@ -167,7 +176,7 @@ void GameController::RunGame() {
 
 
 	for (int i = 0; i < m_Triangles.size(); i++) {
-		m_Triangles[i]->Cleanup();
+		m_Triangles[i].Cleanup();
 	}
 	m_shader.Cleanup();
 }

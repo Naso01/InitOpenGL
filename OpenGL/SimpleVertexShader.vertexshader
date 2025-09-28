@@ -4,10 +4,17 @@ in vec3 vertices; // Value set from application to this attribute
 in vec4 colors; // Input color from application
 uniform mat4 WVP; // World-View-Projection matrix from application
 
+uniform vec3 OverrideColor; // Added this uniform
+uniform int UseOverrideColor; // Added this uniform
+
 out vec4 retColor; // output a color to the fragment shader
 
 void main()
 {
-	gl_Position = WVP * vec4(vertices, 1.0); // Transform the model to screen projection
-	retColor = colors;
+	gl_Position = WVP * vec4(vertices, 1.0);
+
+    if (UseOverrideColor == 1)
+        retColor = vec4(OverrideColor, 1.0);
+    else
+        retColor = colors;
 }
