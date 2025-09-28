@@ -24,7 +24,7 @@ private:
 	Camera m_camera;
 	Mesh m_mesh;
 	std::vector < glm::mat4> m_objectMatrices;
-	std::vector <Mesh*> m_NPCTriangles;
+	std::vector <Mesh*> m_Triangles;
 	Mesh m_player;
 };
 

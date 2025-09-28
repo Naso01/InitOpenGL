@@ -13,10 +13,10 @@ public:
 
 	//Methods
 	void Create(Shader * _shader);
+	void Create(Shader* _shader, int _id);
 	void Cleanup();
 	void Render(glm::mat4 _wvp);
 	
-	void ChangeColor(int _color[]);
 
 private:
 	//Members

@@ -31,20 +31,39 @@ void Mesh::Create(Shader* _shader) {
 
 }
 
+void Mesh::Create(Shader* _shader, int _id) {
+
+	m_shader = _shader;
+
+	//Triangles
+	//Player ID
+	if (_id == 0)
+		m_vertexData = {
+			/* Position */ /*	RGBA Color	*/
+			1, 0, 0, 1.0f, 0.0f, 0.0f, 1.0f, // Red
+			0, 2, 0, 1.0f, 0.0f, 0.0f, 1.0f, // Red
+			-1, 0, 0, 1.0f, 0.0f, 0.0f, 1.0f, // Red
+		};
+
+	//NPC ID
+	if (_id == 1)
+		m_vertexData = {
+			/* Position */ /*	RGBA Color	*/
+			1, 0, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
+			0, 2, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
+			-1, 0, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
+		};
+
+	glGenBuffers(1, &m_vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
+
+}
+
 void Mesh::Cleanup() {
 	glDeleteBuffers(1, &m_indexBuffer);  
 	glDeleteBuffers(1, &m_vertexBuffer);
 	
-}
-
-void Mesh::ChangeColor(int _color[]) {
-
-	m_vertexData[3] = _color[0];
-	m_vertexData[4] = _color[1];
-	m_vertexData[5] = _color[2];
-	m_vertexData[6] = _color[3];
-
-
 }
 
 void Mesh::Render(glm::mat4 _wvp) {
