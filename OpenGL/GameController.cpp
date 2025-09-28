@@ -25,17 +25,28 @@ void GameController::Initialize() {
 	// Create a default perspective camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 
+}
+
+void GameController::RunGame() {
+
+	//Show the C++/CLI tool window
+	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	//window->Show();
+
+
+	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
+
 	//10 NPCs Object Matrix
 	int ranNumX = 0;
 	int ranNumY = 0;
 	int ranSign = 0;
 
-	glm::mat4 worldMatrix = glm::mat4(1.0f);
+	std::vector<glm::vec3> randomVectors;
 
 	for (int i = 0; i < 10; i++) {
 
 		m_NPCTriangles.push_back(new Mesh());
-		
 
 		srand(time(0));
 		//ran must be within {2, 10} or {-10, -2}
@@ -55,49 +66,37 @@ void GameController::Initialize() {
 			ranNumY = -ranNumY;
 		}
 
-		worldMatrix = glm::translate(worldMatrix, { ranNumX, ranNumY, 0 });
-		
 		m_NPCTriangles[i]->Create(&m_shader);
-		m_NPCTriangles[i]->Render(glm::translate( (m_camera.GetProjection() * m_camera.GetView() ), 
-														{ ranNumX, ranNumY, 0 }));
 	}
-}
 
-void GameController::RunGame() {
-
-	//Show the C++/CLI tool window
-	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	//window->Show();
-
-	//Create and compile our GLSL program from the shaders
-	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+	System::Windows::Forms::Application::DoEvents();
 
 	m_player = Mesh();
 	m_player.Create(&m_shader);
-	
+
 	do {
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 
 		//Checkbox states from the tool window
 		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
 		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderRedChannel);
-		
+
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderGreenChannel");
 		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderGreenChannel);
-		
+
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderBlueChannel");
 		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderBlueChannel);
-		
+
 
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen
 
 		//Player
-		m_player.Render(m_camera.GetProjection() * m_camera.GetView()); // Gives mesh View and Projection matrices
+		m_player.Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), { 0, 0, 0 })); // Gives mesh View and Projection matrices
 
+		//NPCs
 		for (int i = 0; i < m_NPCTriangles.size(); i++) {
 
-			m_NPCTriangles[i]->Render( m_camera.GetProjection() * m_camera.GetView() );
-
+			m_NPCTriangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), { 10, 10, 0 }));
 		}
 
 
@@ -108,5 +107,8 @@ void GameController::RunGame() {
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed
 
 	m_player.Cleanup();
+	for (int i = 0; i < m_NPCTriangles.size(); i++) {
+		m_NPCTriangles[i]->Cleanup();
+	}
 	m_shader.Cleanup();
 }

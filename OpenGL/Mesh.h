@@ -15,6 +15,7 @@ public:
 	void Create(Shader * _shader);
 	void Cleanup();
 	void Render(glm::mat4 _wvp);
+	//void SetWorldMatrix(glm::mat4 _){}
 
 private:
 	//Members
