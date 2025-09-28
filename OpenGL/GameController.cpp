@@ -121,13 +121,20 @@ void GameController::RunGame() {
 
 		for (int i = 0; i < m_Triangles.size(); i++) {
 			//Player
-			if(i == 0)
+			if (i == 0)
 				m_Triangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
 			//NPCs
-			else
-			m_Triangles[i]->Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), randomVectors[i-1]));
-		}
+			else{
+				m_Triangles[i]->Render(glm::rotate(
+											(glm::translate((m_camera.GetProjection() * m_camera.GetView()), 
+													randomVectors[i - 1]))
+											,(glm::dot(m_playerLocation, randomVectors[i-1])), 
+											{ 0,0,1 }));
 
+		
+			}
+		}
+		
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 
