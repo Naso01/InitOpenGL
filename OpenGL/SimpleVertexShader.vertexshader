@@ -13,8 +13,14 @@ void main()
 {
 	gl_Position = WVP * vec4(vertices, 1.0);
 
-    if (UseOverrideColor == 1)
+    if (UseOverrideColor == 0)              //Player
+        retColor = vec4(OverrideColor, 0.0);
+
+    else if (UseOverrideColor == 1)         //NPC
         retColor = vec4(OverrideColor, 1.0);
+
+    else if (UseOverrideColor == 2)         //Tagged NPC
+        retColor = vec4(OverrideColor, 2.0);
     else
         retColor = colors;
 }

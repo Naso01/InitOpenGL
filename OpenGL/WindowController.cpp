@@ -19,7 +19,7 @@ void WindowController::NewWindow() {
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	M_ASSERT((m_window = glfwCreateWindow(1920,1080, "A sample scene", NULL, NULL)) != nullptr, "Failed to open GLFW window.");
+	M_ASSERT((m_window = glfwCreateWindow(GetResolution().width, GetResolution().height, "A sample scene", NULL, NULL)) != nullptr, "Failed to open GLFW window.");
 	glfwMakeContextCurrent(m_window);
 }
 

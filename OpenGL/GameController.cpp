@@ -37,24 +37,21 @@ int GameController::RandomNumber() {
 
 void GameController::RunGame() {
 
-	//Show the C++/CLI tool window
-	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	//window->Show();
-
 	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
-	
+	//Player
+	Mesh player;
+	player.Create(&m_shader);
+	m_Triangles.push_back(player);
+
 
 	//10 NPCs Object Matrix
 	int ranNumX = 0;
 	int ranNumY = 0;
 	int ranSign = 0;
 	srand(time(0));
-
-
 	std::vector<glm::vec3> npcLocations;
-
-	for (int i = 1; i < 11; i++) {
+	for (int i = 0; i < 10; i++) {
 		Mesh npc;
 
 		ranNumX = RandomNumber();
@@ -67,43 +64,29 @@ void GameController::RunGame() {
 
 		npcLocations.push_back({ ranNumX, ranNumY, 0 });
 		
-		npc.Create(&m_shader, 1);
+		npc.Create(&m_shader);
 		m_Triangles.push_back(npc);
 	}
-	
-	Mesh player;
-	player.Create(&m_shader, 0);
-	m_Triangles.push_back(player);
-
-
 	std::vector<bool> npcIsBlue(npcLocations.size(), false);
 
 
 	WindowController* window = new WindowController;
 
 	do {		
-		/*
-		//Checkbox states from the tool window
-		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderRedChannel);
 
-		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderGreenChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderGreenChannel);
-
-		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderBlueChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::RenderBlueChannel);
-		*/
-
-		//glfwSetKeyCallback(window->GetInstance().GetWindow(), PlayerTransform);
-
-		
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 		
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen 
 
+		//Player
+		GLint colorLoc = glGetUniformLocation(m_shader.GetProgramID(), "OverrideColor");
+		glUniform3f(colorLoc, 1.0f, 0.0f, 0.0f); // Red color
+
+		GLint useOverrideLoc = glGetUniformLocation(m_shader.GetProgramID(), "UseOverrideColor");
+		glUniform1i(useOverrideLoc, 0);
 
 		m_Triangles[0].Render(glm::translate((m_camera.GetProjection() * m_camera.GetView()), m_playerLocation));
-		
+
 		if (glfwGetKey(window->GetInstance().GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
 			//cout << "w" << endl;
 			m_playerLocation.y += 0.003f;
@@ -152,11 +135,14 @@ void GameController::RunGame() {
 					glUniform3f(colorLoc, 0.0f, 0.0f, 1.0f); // Blue color
 
 					GLint useOverrideLoc = glGetUniformLocation(m_shader.GetProgramID(), "UseOverrideColor");
-					glUniform1i(useOverrideLoc, 1);
+					glUniform1i(useOverrideLoc, 2);
 				}
 				else {
+					GLint colorLoc = glGetUniformLocation(m_shader.GetProgramID(), "OverrideColor");
+					glUniform3f(colorLoc, 0.0f, 1.0f, 0.0f); // Green color
+
 					GLint useOverrideLoc = glGetUniformLocation(m_shader.GetProgramID(), "UseOverrideColor");
-					glUniform1i(useOverrideLoc, 0);
+					glUniform1i(useOverrideLoc, 1);
 				}
 
                 m_Triangles[i].Render(

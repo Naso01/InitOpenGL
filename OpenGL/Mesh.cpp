@@ -53,6 +53,7 @@ void Mesh::Create(Shader* _shader, int _id) {
 			0, 2, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
 			-1, 0, 0, 0.0f, 1.0f, 0.0f, 1.0f, // Green
 		};
+	
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
