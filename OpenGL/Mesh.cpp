@@ -22,6 +22,7 @@ void Mesh::Cleanup() {
 	glDeleteBuffers(1, &m_indexBuffer);  
 	glDeleteBuffers(1, &m_vertexBuffer);
 	m_texture.Cleanup();
+	m_texture2.Cleanup();
 }
 
 void Mesh::Create(Shader* _shader) {
@@ -96,6 +97,7 @@ void Mesh::Render(glm::mat4 _wvp) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); //Bind the vertex buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer); //Bind the index buffer
+
 	//Texture 1
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture());

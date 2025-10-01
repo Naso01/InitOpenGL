@@ -23,7 +23,8 @@ void Shader::LoadAttributes() {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices"); // Get a handle for the vertex buffer
 	m_attrColors = glGetAttribLocation(m_programID, "colors"); //Get a handle for the colors buffer
 	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords"); // Get a handle for the texCoords buffer
-	m_sampler1 = glGetAttribLocation(m_programID, "sampler1"); // Get a handle for texture sampler 1
+	m_sampler1 = glGetUniformLocation(m_programID, "sampler1"); // Get a handle for texture sampler 1
+	m_sampler2 = glGetUniformLocation(m_programID, "sampler2"); // Get a handle for texture sampler 1
 
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP"); // Get a handle for the WorldViewProjection matrix
 }
