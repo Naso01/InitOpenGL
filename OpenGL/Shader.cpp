@@ -4,7 +4,11 @@ Shader::Shader() :
 	m_programID(0),
 	m_attrVertices(0),
 	m_attrColors(0),
+	m_attrTexCoords(0),
+	m_sampler1(0),
+
 	m_attrWVP(0),
+
 	m_result(GL_FALSE),
 	m_infoLogLength(0)
 { }
@@ -17,6 +21,9 @@ void Shader:: Cleanup() {
 void Shader::LoadAttributes() {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices"); // Get a handle for the vertex buffer
 	m_attrColors = glGetAttribLocation(m_programID, "colors"); //Get a handle for the colors buffer
+	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords"); // Get a handle for the texCoords buffer
+	m_sampler1 = glGetAttribLocation(m_programID, "sampler1"); // Get a handle for texture sampler 1
+
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP"); // Get a handle for the WorldViewProjection matrix
 }
 
