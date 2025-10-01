@@ -78,7 +78,7 @@ void Mesh::Render(glm::mat4 _wvp) {
 
 
 	// 3rd attribute buffer :  texCoords
-	glEnableVertexAttribArray(m_shader->GetAttrColors());
+	glEnableVertexAttribArray(m_shader->GetAttrTexCoords());
 	glVertexAttribPointer(m_shader->GetAttrTexCoords(),//The attribute we want to configure
 		2,							//size (3 vertices per primitive)
 		GL_FLOAT,					//type
@@ -87,7 +87,7 @@ void Mesh::Render(glm::mat4 _wvp) {
 		(void*)(6 * sizeof(float)));//Array buffer offset
 
 	//4th attribute : WVP
-	m_rotation.y += 0.005f;
+	m_rotation.y += 0.001f;
 	glm::mat4 transform = glm::rotate(_wvp, m_rotation.y, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]); // Send our transformation to the currently bound shader, in the "WVP" uniform
 
