@@ -6,6 +6,7 @@ in vec2 retTexCoord;
 out vec4 FragColor;
 
 uniform sampler2D sampler1;
+uniform sampler2D sampler2;
 
 // uniform int RenderRedChannel;
 // uniform int RenderGreenChannel;
@@ -13,5 +14,7 @@ uniform sampler2D sampler1;
 
 void main()
 {
-	FragColor = texture(sampler1, retTexCoord); //Example 1: Texture only
+	//FragColor = texture(sampler1, retTexCoord); //Example 1: Texture only
+	FragColor = texture(sampler1, retTexCoord) * vec4(retColor, 1.0f); //Example 2: Texture and color
+	//FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3f)); //Example 3: 2 Textures
 }

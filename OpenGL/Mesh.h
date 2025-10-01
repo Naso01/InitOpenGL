@@ -22,6 +22,7 @@ private:
 	//Members
 	Shader* m_shader;
 	Texture m_texture;
+	Texture m_texture2;
 	GLuint m_vertexBuffer;//GPU Buffer
 	GLuint m_indexBuffer; //GPU Buffer
 	

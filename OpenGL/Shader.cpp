@@ -6,6 +6,7 @@ Shader::Shader() :
 	m_attrColors(0),
 	m_attrTexCoords(0),
 	m_sampler1(0),
+	m_sampler2(0),
 
 	m_attrWVP(0),
 

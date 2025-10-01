@@ -16,6 +16,7 @@ public:
 	GLuint GetAttrColors() { return m_attrColors; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
 	GLuint GetSampler1() { return m_sampler1; }
+	GLuint GetSampler2() { return m_sampler2; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	// Methods
@@ -35,6 +36,7 @@ private:
 	GLuint m_attrColors;
 	GLuint m_attrTexCoords;
 	GLuint m_sampler1;
+	GLuint m_sampler2;
 
 	GLuint m_attrWVP; // Handle for the WorldViewProjection matrix
 

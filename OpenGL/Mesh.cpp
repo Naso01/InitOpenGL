@@ -4,6 +4,7 @@
 Mesh::Mesh() {
 	m_shader = nullptr;
 	m_texture = { };
+	m_texture2 = { };
 	m_vertexData = { };
 	m_vertexBuffer = 0;
 	
@@ -29,6 +30,8 @@ void Mesh::Create(Shader* _shader) {
 
 	m_texture = Texture();
 	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
+	m_texture2 = Texture();
+	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
 
 
 	m_vertexData = {
@@ -87,13 +90,20 @@ void Mesh::Render(glm::mat4 _wvp) {
 		(void*)(6 * sizeof(float)));//Array buffer offset
 
 	//4th attribute : WVP
-	//m_rotation.y += 0.001f;
+	m_rotation.y += 0.001f;
 	glm::mat4 transform = glm::rotate(_wvp, m_rotation.y, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]); // Send our transformation to the currently bound shader, in the "WVP" uniform
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); //Bind the vertex buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer); //Bind the index buffer
+	//Texture 1
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture());
+	glUniform1i(m_shader->GetSampler1(), 0);
+	//Texture 2
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture());
+	glUniform1i(m_shader->GetSampler2(), 1);
 
 	glDrawElements(GL_TRIANGLES, m_indexData.size(), GL_UNSIGNED_BYTE, (void*)0);
 	glDisableVertexAttribArray(m_shader->GetAttrColors());
