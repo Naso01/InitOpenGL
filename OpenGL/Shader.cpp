@@ -35,6 +35,13 @@ void Shader::SetMat4(const char* _name, glm::mat4 _value) {
 	}
 }
 
+void Shader::SetFloat(const char* _name, float _value) {
+	GLint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1) {
+		glUniform1f(loc, _value);
+	}
+}
+
 void Shader::LoadAttributes() {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices"); // Get a handle for the vertex buffer
 	m_attrColors = glGetAttribLocation(m_programID, "colors"); //Get a handle for the colors buffer

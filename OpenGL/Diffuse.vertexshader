@@ -4,12 +4,14 @@ in vec3 vertices; // Value set from application to this attribute
 in vec3 normals; // Input normals from application
 in vec2 texCoords;
 
+uniform vec3 CameraPosition;
 uniform mat4 World;
 uniform mat4 WVP; // World-View-Projection matrix from application
 
 out vec3 retNormal; // output a normal to the fragment shader
 out vec2 retTexCoord;
 out vec3 retFragPos;
+out vec3 retViewDirection;
 
 void main()
 {
@@ -17,4 +19,5 @@ void main()
 	retNormal = normalize(mat3(transpose(inverse(World))) * normals);
 	retTexCoord = texCoords;
 	retFragPos = vec3(World * vec4(vertices, 1.0f));
+	retViewDirection = normalize(CameraPosition - retFragPos);
 }
