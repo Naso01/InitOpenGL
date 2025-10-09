@@ -22,7 +22,7 @@ void Shader:: Cleanup() {
 }
 
 void Shader::SetVec3(const char* _name, glm::vec3 _value) {
-	GLuint loc = glGetUniformLocation(m_programID, _name);
+	GLint loc = glGetUniformLocation(m_programID, _name);
 	if (loc != -1) {
 		glUniform3fv(loc, 1, &_value[0]);
 	}
@@ -33,7 +33,6 @@ void Shader::LoadAttributes() {
 	m_attrColors = glGetAttribLocation(m_programID, "colors"); //Get a handle for the colors buffer
 	m_attrNormals = glGetAttribLocation(m_programID, "normals"); // Get a handle for the normals buffer
 	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords"); // Get a handle for the texCoords buffer
-	
 	m_sampler1 = glGetUniformLocation(m_programID, "sampler1"); // Get a handle for texture sampler 1
 	m_sampler2 = glGetUniformLocation(m_programID, "sampler2"); // Get a handle for texture sampler 1
 
