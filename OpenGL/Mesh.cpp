@@ -90,8 +90,12 @@ void Mesh::Create(Shader* _shader) {
 void Mesh::Render(glm::mat4 _wvp) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader
-	m_shader->SetVec3("LightDirection", { 0.1f, 0.1f, 0.1f });
-	m_shader->SetVec3("DiffuseColor", { 1.0f, 0.0f, 0.0f });
+	
+	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1f, 0.1f });
+	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f });
+	
+	m_shader->SetVec3("LightDirection", { 1.0f, 0.5f, 0.0f });
+	m_shader->SetVec3("LightColor", { 0.5f, 0.9f, 0.5f });
 
 	//1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());

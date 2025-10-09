@@ -14,7 +14,7 @@ public:
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
-	GLuint GetAttrNormals() { return m_attrTexCoords; }
+	GLuint GetAttrNormals() { return m_attrNormals; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
 	GLuint GetSampler1() { return m_sampler1; }
 	GLuint GetSampler2() { return m_sampler2; }
