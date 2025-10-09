@@ -14,6 +14,7 @@ public:
 	GLuint GetProgramID() { return m_programID; }
 	GLuint GetAttrVertices() { return m_attrVertices; }
 	GLuint GetAttrColors() { return m_attrColors; }
+	GLuint GetAttrNormals() { return m_attrTexCoords; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
 	GLuint GetSampler1() { return m_sampler1; }
 	GLuint GetSampler2() { return m_sampler2; }
@@ -22,6 +23,7 @@ public:
 	// Methods
 	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	void Cleanup();
+	void SetVec3(const char* _name, glm::vec3 _value);
 
 private:
 	//Methods
@@ -34,7 +36,9 @@ private:
 	GLuint m_programID; // ID of the shader program
 	GLuint m_attrVertices; // Handle for the attribute vertex buffer
 	GLuint m_attrColors;
+	GLuint m_attrNormals;
 	GLuint m_attrTexCoords;
+	
 	GLuint m_sampler1;
 	GLuint m_sampler2;
 
