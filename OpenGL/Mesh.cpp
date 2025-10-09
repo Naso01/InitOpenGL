@@ -146,8 +146,8 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1f, 0.1f });
 	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f });
 
-	m_shader->SetVec3("LightDirection", { 1.0f, 0.5f, 0.0f });
-	m_shader->SetVec3("LightColor", { 0.5f, 0.9f, 0.5f });
+	m_shader->SetVec3("LightPosition", m_lightPosition);
+	m_shader->SetVec3("LightColor", m_lightColor);
 
 	m_shader->SetMat4("WVP", _pv * m_world);
 

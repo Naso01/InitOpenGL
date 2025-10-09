@@ -18,9 +18,15 @@ public:
 	void RunGame();
 
 private:
+	//Members
+	Shader m_shaderColor;
+	Shader m_shaderDiffuse;
 	Shader m_shader;
+
 	Camera m_camera;
-	Mesh m_mesh;
+	
+	Mesh m_meshBox;
+	Mesh m_meshLight;
 };
 
 #endif //!GAME_CONTROLLER_H
