@@ -33,14 +33,33 @@ void Mesh::Create(Shader* _shader) {
 	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
 	m_texture2 = Texture();
 	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
+	
+	
+	glm::mat3 yuvMatrix = glm::mat3(
+		0.299f, 0.587f, 0.114f,
+		-0.14713f, -0.28886f, 0.436f,
+		0.615f, -0.51499f, -0.10001f
+	);
+	glm::vec3 yuv = glm::vec3(1.0f, 0.0f, 0.0f) * yuvMatrix;
 
+	
+	yuv.r = -0.5;
+
+
+	glm::mat3 rgbMatrix = glm::mat3(
+		1, 0, 1.13983f,
+		1, -0.39465f, -0.58060f,
+		1, 2.03211f, 0
+	);
+
+	glm::vec3 rgb =  glm::vec3(yuv.r, yuv.g, yuv.b) * rgbMatrix ;
 
 	m_vertexData = {
 		/* Position */			/* RGB Color */		/* Texture Coords */
-		50.0f, 50.0f, 0.0f,		1.0f, 0.0f,	0.0f,	1.0f, 1.0f,	// top-right
-		50.0f, -50.0f, 0.0f,	0.0f, 1.0f,	0.0f,	1.0f, 0.0f,	// bottom-right
-		-50.0f, -50.0f, 0.0f,	0.0f, 0.0f,	1.0f,	0.0f, 0.0f,	// bottom-left
-		-50.0f, 50.0f, 0.0f,	1.0f, 1.0f,	1.0f,	0.0f, 1.0f	// top-left
+		50.0f, 50.0f, 0.0f,		rgb.r, rgb.g, rgb.b,	1.0f, 1.0f,	// top-right
+		50.0f, -50.0f, 0.0f,	rgb.r, rgb.g, rgb.b,	1.0f, 0.0f,	// bottom-right
+		-50.0f, -50.0f, 0.0f,	rgb.r, rgb.g, rgb.b,	0.0f, 0.0f,	// bottom-left
+		-50.0f, 50.0f, 0.0f,	rgb.r, rgb.g, rgb.b,	0.0f, 1.0f	// top-left
 	};
 
 	glGenBuffers(1, &m_vertexBuffer);

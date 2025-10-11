@@ -164,6 +164,8 @@ copy /Y "$(SolutionDir)\External\glfw-3.3.4\lib-vc2019\glfw3.dll" "$(TargetDir)"
   <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader" />
     <None Include="SimpleVertexShader.vertexshader" />
+    <None Include="YUVFragmentShader.fragmentshader" />
+    <None Include="YUVVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
