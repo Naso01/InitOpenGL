@@ -1,7 +1,7 @@
 #version 330
 
 in vec3 vertices; // Value set from application to this attribute
-in vec3 RGB; // Input RGB value from application
+in vec3 colors; // Input color from application
 in vec2 texCoords;
 
 uniform mat4 WVP; // World-View-Projection matrix from application

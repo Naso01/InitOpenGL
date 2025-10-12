@@ -19,9 +19,9 @@ void main()
 {
 
 	//vec3 FragColorYUV = vec3(retColor.r, retColor.g, retColor.b) * yuvMatrix;
-	vec3 ResultColorYUV = vec3(YChannel, UChannel, VChannel);
+	//vec3 ResultColorYUV = vec3(YChannel, UChannel, VChannel);
 	
 	vec3 ResultColorRGB = vec3(YChannel, UChannel, VChannel) * rgbMatrix;
 
-	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f) * vec4(ResultColorRGB, 1.0f);
+	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);// * vec4(ResultColorRGB, 1.0f);
 }

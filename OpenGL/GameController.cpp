@@ -27,7 +27,7 @@ void GameController::RunGame() {
 
 	//Create and compile our GLSL program from the shaders
 	m_shader = Shader();
-	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "YUVFragmentShader.fragmentshader");
+	m_shader.LoadShaders("YUVVertexShader.vertexshader", "YUVFragmentShader.fragmentshader");
 
 	m_mesh = Mesh();
 	m_mesh.Create(&m_shader);
