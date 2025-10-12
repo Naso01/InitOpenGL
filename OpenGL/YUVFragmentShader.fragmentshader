@@ -29,19 +29,17 @@ void main()
 	);
 
     vec4 texColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);
-	if(InvertColors == 1)
+	
+	if(InvertColors == 1) // Invert colors
 	{
 		texColor = vec4(1 - texColor.r, 1 - texColor.g, 1 - texColor.b, 1);
 	}
 
     vec3 FragColorRGB = vec3(texColor.r, texColor.g, texColor.b);
-    vec3 FragColorYUV = FragColorRGB * yuvMatrix;
-
-	
+    vec3 FragColorYUV = FragColorRGB * yuvMatrix; //Convert to YUV
 
 	vec3 ResultColorYUV = vec3(FragColorYUV.r * (YChannel/100), FragColorYUV.g * (UChannel/100), FragColorYUV.b * (VChannel/100));
-
-    vec3 ResultColorRGB = ResultColorYUV * rgbMatrix;
+	vec3 ResultColorRGB = ResultColorYUV * rgbMatrix; //Convert back to RGB
 
    FragColor = vec4(ResultColorRGB, 1.0f);
 }
