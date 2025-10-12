@@ -33,7 +33,8 @@ void Mesh::Create(Shader* _shader) {
 	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
 	m_texture2 = Texture();
 	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
-	
+	glm::vec4 lightDir = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+
 	/*
 	glm::mat3 yuvMatrix = glm::mat3(
 		0.299f, 0.587f, 0.114f,

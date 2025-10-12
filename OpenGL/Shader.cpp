@@ -31,17 +31,6 @@ void Shader::LoadAttributes() {
 
 	GLint loc = glGetUniformLocation(m_programID, "rgbMatrix");
 
-	SetMatrix3("yuvMatrix", glm::mat3( //Convert RGB to YUV
-		0.299f, 0.587f, 0.114f,
-		-0.14713f, -0.28886f, 0.436f,
-		0.615f, -0.51499f, -0.10001f
-	));
-
-	SetMatrix3("rgbMatrix", glm::mat3( //Convert YUV to RGB
-		1, 0, 1.13983f,
-		1, -0.39465f, -0.58060f,
-		1, 2.03211f, 0
-	));
 
 
 }

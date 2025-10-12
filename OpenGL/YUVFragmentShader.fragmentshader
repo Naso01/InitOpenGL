@@ -1,6 +1,6 @@
 #version 330
 
-in vec3 retColor; // MUST use same name as out variable used by vertex shader
+in vec3 retColor;
 in vec2 retTexCoord;
 
 out vec4 FragColor;
@@ -12,16 +12,28 @@ uniform float YChannel;
 uniform float UChannel;
 uniform float VChannel;
 
-uniform mat3 yuvMatrix; // help convert RGB to YUV
-uniform mat3 rgbMatrix; // help convert YUV to RGB
-
 void main()
 {
 
-	//vec3 FragColorYUV = vec3(retColor.r, retColor.g, retColor.b) * yuvMatrix;
-	//vec3 ResultColorYUV = vec3(YChannel, UChannel, VChannel);
-	
-	vec3 ResultColorRGB = vec3(YChannel, UChannel, VChannel) * rgbMatrix;
+   mat3 yuvMatrix = mat3( //Convert RGB to YUV
+		0.299f, 0.587f, 0.114f,
+		-0.14713f, -0.28886f, 0.436f,
+		0.615f, -0.51499f, -0.10001f
+	);
 
-	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);// * vec4(ResultColorRGB, 1.0f);
+    mat3 rgbMatrix = mat3( //Convert YUV to RGB
+		1, 0, 1.13983f,
+		1, -0.39465f, -0.58060f,
+		1, 2.03211f, 0
+	);
+
+    vec4 texColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);
+
+    vec3 FragColorRGB = vec3(texColor.r, texColor.g, texColor.b);
+    vec3 FragColorYUV = FragColorRGB * yuvMatrix;
+	vec3 ResultColorYUV = vec3(FragColorYUV.r * (YChannel/100), FragColorYUV.g * (UChannel/100), FragColorYUV.b * (VChannel/100));
+
+    vec3 ResultColorRGB = ResultColorYUV * rgbMatrix;
+
+   FragColor = vec4(ResultColorRGB, 1.0f);
 }

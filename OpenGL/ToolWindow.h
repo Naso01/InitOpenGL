@@ -22,9 +22,9 @@ namespace OpenGL {
 		ToolWindow(void)
 		{
 			InitializeComponent();
-			YScale = -1.0f + 1 * (this->trackBarY->Value / 100);
-			UScale = -0.5f + 0.5f * (this->trackBarU->Value / 100);
-			VScale = -0.5f + 0.5f * (this->trackBarV->Value / 100);
+			YScale = 100;
+			UScale = 100;
+			VScale = 100;
 		}
 
 	protected:
@@ -162,17 +162,17 @@ namespace OpenGL {
 private: System::Void trackBarY_Scroll(System::Object^ sender, System::EventArgs^ e) {
 	float percent = this->trackBarY->Value;
 	this->labelY->Text = "Y: " + percent.ToString() + "%";
-	YScale = -1.0f + 1 * (percent/100);
+	YScale = this->trackBarY->Value;
 }
 private: System::Void trackBarU_Scroll(System::Object^ sender, System::EventArgs^ e) {
 	float percent = this->trackBarU->Value;
 	this->labelU->Text = "U: " + percent.ToString() + "%";
-	UScale = -0.5f + 0.5 * (percent / 100);
+	UScale = this->trackBarU->Value;
 }
 private: System::Void trackBarV_Scroll(System::Object^ sender, System::EventArgs^ e) {
 	float percent = this->trackBarV->Value;
 	this->labelV->Text = "V: " + percent.ToString() + "%";
-	VScale = -0.5f + 0.5 * (percent / 100);
+	VScale = this->trackBarV->Value;
 }
 private: System::Void checkBoxInvert_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
