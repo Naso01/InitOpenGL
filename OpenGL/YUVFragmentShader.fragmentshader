@@ -11,6 +11,7 @@ uniform sampler2D sampler2;
 uniform float YChannel;
 uniform float UChannel;
 uniform float VChannel;
+uniform int InvertColors;
 
 void main()
 {
@@ -28,9 +29,16 @@ void main()
 	);
 
     vec4 texColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);
+	if(InvertColors == 1)
+	{
+		texColor = vec4(1 - texColor.r, 1 - texColor.g, 1 - texColor.b, 1);
+	}
 
     vec3 FragColorRGB = vec3(texColor.r, texColor.g, texColor.b);
     vec3 FragColorYUV = FragColorRGB * yuvMatrix;
+
+	
+
 	vec3 ResultColorYUV = vec3(FragColorYUV.r * (YChannel/100), FragColorYUV.g * (UChannel/100), FragColorYUV.b * (VChannel/100));
 
     vec3 ResultColorRGB = ResultColorYUV * rgbMatrix;

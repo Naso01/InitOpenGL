@@ -45,6 +45,8 @@ void GameController::RunGame() {
 		
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "VChannel");
 		glUniform1f(loc, (float)OpenGL::ToolWindow::VScale);
+		loc = glGetUniformLocation(m_shader.GetProgramID(), "InvertColors");
+		glUniform1i(loc, (float)OpenGL::ToolWindow::InvertColors);
 		
 
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen

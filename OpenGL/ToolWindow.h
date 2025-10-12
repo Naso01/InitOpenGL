@@ -18,13 +18,14 @@ namespace OpenGL {
 		static float YScale;
 		static float UScale;
 		static float VScale;
-
+		static bool InvertColors;
 		ToolWindow(void)
 		{
 			InitializeComponent();
 			YScale = 100;
 			UScale = 100;
 			VScale = 100;
+			InvertColors = this->checkBoxInvert->Checked;
 		}
 
 	protected:
@@ -176,13 +177,8 @@ private: System::Void trackBarV_Scroll(System::Object^ sender, System::EventArgs
 }
 private: System::Void checkBoxInvert_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-	if(checkBoxInvert->Checked)
-	{
-		YScale = -YScale;
-		UScale = -UScale;
-		VScale = -VScale;
-		return;
-	}
+	InvertColors = this->checkBoxInvert->Checked;
+
 }
 	   
 };
