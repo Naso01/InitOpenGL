@@ -22,6 +22,7 @@ public:
 	// Methods
 	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	void Cleanup();
+	void SetMatrix3(const char* _name, const glm::mat3 _matrix);
 
 private:
 	//Methods

@@ -38,13 +38,13 @@ void GameController::RunGame() {
 		
 		//Trackbars states from the tool window
 		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "YChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::YScale);
+		glUniform1i(loc, (float)OpenGL::ToolWindow::YScale);
 		
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "UChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::UScale);
+		glUniform1i(loc, (float)OpenGL::ToolWindow::UScale);
 		
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "VChannel");
-		glUniform1i(loc, (int)OpenGL::ToolWindow::VScale);
+		glUniform1i(loc, (float)OpenGL::ToolWindow::VScale);
 		
 
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen

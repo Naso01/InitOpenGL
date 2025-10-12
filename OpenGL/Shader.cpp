@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include <iostream>
 
 Shader::Shader() :
 	m_programID(0),
@@ -27,6 +28,29 @@ void Shader::LoadAttributes() {
 	m_sampler2 = glGetUniformLocation(m_programID, "sampler2"); // Get a handle for texture sampler 1
 
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP"); // Get a handle for the WorldViewProjection matrix
+
+	GLint loc = glGetUniformLocation(m_programID, "rgbMatrix");
+
+	SetMatrix3("yuvMatrix", glm::mat3( //Convert RGB to YUV
+		0.299f, 0.587f, 0.114f,
+		-0.14713f, -0.28886f, 0.436f,
+		0.615f, -0.51499f, -0.10001f
+	));
+
+	SetMatrix3("rgbMatrix", glm::mat3( //Convert YUV to RGB
+		1, 0, 1.13983f,
+		1, -0.39465f, -0.58060f,
+		1, 2.03211f, 0
+	));
+
+
+}
+
+void Shader::SetMatrix3(const char* _name, glm::mat3 _value) {
+	
+	GLint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1)
+		glUniformMatrix3fv(loc, 1, GL_FALSE, &_value[0][0]);
 }
 
 void Shader::EvaluateShader(int _infoLength, GLuint _id) {
