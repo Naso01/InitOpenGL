@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 namespace OpenGL {
 
 	using namespace System;
@@ -161,25 +161,37 @@ namespace OpenGL {
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void trackBarY_Scroll(System::Object^ sender, System::EventArgs^ e) {
-	int percent = this->trackBarY->Value;
+	float percent = this->trackBarY->Value;
 	this->labelY->Text = "Y: " + percent.ToString() + "%";
 	YScale = -1.0f + 1 * (percent/100);
+	std::cout <<"Y: " << YScale << std::endl;
 }
 private: System::Void trackBarU_Scroll(System::Object^ sender, System::EventArgs^ e) {
-	int percent = this->trackBarU->Value;
+	float percent = this->trackBarU->Value;
 	this->labelU->Text = "U: " + percent.ToString() + "%";
-	YScale = -0.5f + 0.5 * (percent / 100);
+	UScale = -0.5f + 0.5 * (percent / 100);
+	std::cout << "U: " << UScale << std::endl;
 }
 private: System::Void trackBarV_Scroll(System::Object^ sender, System::EventArgs^ e) {
-	int percent = this->trackBarV->Value;
+	float percent = this->trackBarV->Value;
 	this->labelV->Text = "V: " + percent.ToString() + "%";
-	YScale = -0.5f + 0.5 * (percent / 100);
+	VScale = -0.5f + 0.5 * (percent / 100);
+	std::cout << "V: " << VScale << std::endl;
 }
 private: System::Void checkBoxInvert_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-	YScale = -YScale;
-	UScale = -UScale;
-	VScale = -VScale;
+	if(checkBoxInvert->Checked)
+	{
+		YScale = -YScale;
+		UScale = -UScale;
+		VScale = -VScale;
+		return;
+	}
+	else {
+		YScale = -1.0f + 1 * (this->trackBarY->Value / 100);
+		UScale = -0.5f + 0.5f * (this->trackBarU->Value / 100);
+		VScale = -0.5f + 0.5f * (this->trackBarV->Value / 100);
+	}
 }
 	   
 };

@@ -12,26 +12,26 @@ uniform float YChannel;
 uniform float UChannel;
 uniform float VChannel;
 
-//uniform mat3 rgbMatrix = mat3( //Convert YUV to RGB
-//		1, 0, 1.13983f,
-//		1, -0.39465f, -0.58060f,
-//		1, 2.03211f, 0
-//);
-//uniform mat3 yuvMatrix = glm::mat3( //Convert RGB to YUV
-//		0.299f, 0.587f, 0.114f,
-//		-0.14713f, -0.28886f, 0.436f,
-//		0.615f, -0.51499f, -0.10001f
-//	);
+uniform mat3 rgbMatrix = mat3( //Convert YUV to RGB
+		1,	0,			1.13983f,
+		1, -0.39465f,  -0.58060f,
+		1,	2.03211f,	0
+		);
+uniform mat3 yuvMatrix = mat3( //Convert RGB to YUV
+		0.299f,		0.587f,		0.114f,
+	   -0.14713f,  -0.28886f,	0.436f,
+		0.615f,	   -0.51499f,  -0.10001f
+		);
 
 void main()
 {
 	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);
 
-	//vec3 FragColorRGB = vec3 (FragColor.r, FragColor.g, FragColor.b);
-	//vec3 FragColorYUV = FragColorRGB * yuvMatrix;
-	//vec3 ResultColorYUV = vec3(FragColorYUV.r * YChannel, FragColorYUV.g * UChannel, FragColorYUV.b * VChannel);
+	vec3 FragColorRGB = vec3 (FragColor.r, FragColor.g, FragColor.b);
+	vec3 FragColorYUV = FragColorRGB * yuvMatrix;
+	vec3 ResultColorYUV = vec3(FragColorYUV.r * YChannel, FragColorYUV.g * UChannel, FragColorYUV.b * VChannel);
 	
-	//vec4 ResultColorRGB = vec4(ResultColorYUV * rgbMatrix, 1);
+	vec4 ResultColorRGB = vec4(ResultColorYUV * rgbMatrix, 1);
 
-	//FragColor = ResultColorRGB;
+	FragColor = ResultColorRGB;
 }

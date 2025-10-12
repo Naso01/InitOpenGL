@@ -36,15 +36,15 @@ void GameController::RunGame() {
 		System::Windows::Forms::Application::DoEvents(); // Handle Windows events
 
 		
-		//Checkbox states from the tool window
+		//Trackbars states from the tool window
 		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "YChannel");
-		//glUniform1i(loc, (int)OpenGL::ToolWindow::RenderRedChannel);
+		glUniform1i(loc, (int)OpenGL::ToolWindow::YScale);
 		
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "UChannel");
-	//	glUniform1i(loc, (int)OpenGL::ToolWindow::RenderGreenChannel);
+		glUniform1i(loc, (int)OpenGL::ToolWindow::UScale);
 		
 		loc = glGetUniformLocation(m_shader.GetProgramID(), "VChannel");
-		//glUniform1i(loc, (int)OpenGL::ToolWindow::RenderBlueChannel);
+		glUniform1i(loc, (int)OpenGL::ToolWindow::VScale);
 		
 
 		glClear(GL_COLOR_BUFFER_BIT); //Clear the screen
