@@ -14,8 +14,5 @@ uniform sampler2D sampler2;
 
 void main()
 {
-	//FragColor = texture(sampler1, retTexCoord); //Example 1: Texture only
-	//FragColor = texture(sampler1, retTexCoord) * vec4(retColor, 1.0f); //Example 2: Texture and color
-	//FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3); //Example 3: 2 Textures
-	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f); // Example 4: 2 Textures and color
+	FragColor = mix(texture(sampler1, retTexCoord), texture(sampler2, retTexCoord), 0.3) * vec4(retColor, 1.0f);
 }
