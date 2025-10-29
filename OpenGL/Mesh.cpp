@@ -36,9 +36,9 @@ void Mesh::Create(Shader* _shader) {
 	m_shader = _shader;
 
 	m_diffuseTexture = Texture();
-	m_diffuseTexture.LoadTexture("../Assets/Textures/Wood.jpg");
+	m_diffuseTexture.LoadTexture("../Assets/Textures/MetalFrameWood.jpg");
 	m_specularTexture = Texture();
-	m_specularTexture.LoadTexture("../Assets/Textures/Emoji.jpg");
+	m_specularTexture.LoadTexture("../Assets/Textures/MetalFrame.jpg");
 
 #pragma region VertexData
 	m_vertexData = {
@@ -122,16 +122,6 @@ void Mesh::BindAttributes() {
 		(void*)(6 * sizeof(float)));//Array buffer offset
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); //Bind the vertex buffer
-
-	//Texture 1
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_diffuseTexture.GetTexture());
-	glUniform1i(m_shader->GetSampler1(), 0);
-	//Texture 2
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_specularTexture.GetTexture());
-	glUniform1i(m_shader->GetSampler2(), 1);
-
 }
 
 void Mesh::CalculateTransform() {
@@ -144,19 +134,20 @@ void Mesh::CalculateTransform() {
 void Mesh::SetShaderVariables(glm::mat4 _pv) {
 
 	m_shader->SetMat4("World", m_world);
-
-	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1f, 0.1f });
-	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f });
-
-	m_shader->SetFloat("SpecularStrength", 4);
-	m_shader->SetVec3("SpecularColor", { 3.0f, 3.0f, 3.0f });
-	m_shader->SetVec3("LightPosition", m_lightPosition);
-	m_shader->SetVec3("LightColor", m_lightColor);
-
 	m_shader->SetMat4("WVP", _pv * m_world);
-
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
 
+	//Configure lighting
+	m_shader->SetVec3("light.position", m_lightPosition);
+	m_shader->SetVec3("light.color", m_lightColor);
+	m_shader->SetVec3("light.ambientColor", { 0.1f, 0.1f, 0.1f });
+	m_shader->SetVec3("light.diffuseColor", { 1.0f, 1.0f, 1.0f });
+	m_shader->SetVec3("light.specularColor", { 3.0f, 3.0f, 3.0f });
+
+	//Configure material
+	m_shader->SetFloat("material.specularStrength", 8);
+	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
+	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
 }
 
 void Mesh::Render(glm::mat4 _pv) {
