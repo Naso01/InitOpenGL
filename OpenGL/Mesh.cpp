@@ -4,8 +4,8 @@
 Mesh::Mesh() {
 	m_shader = nullptr;
 	
-	m_texture = { };
-	m_texture2 = { };
+	m_diffuseTexture = { };
+	m_specularTexture = { };
 	
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
@@ -27,18 +27,18 @@ Mesh::~Mesh() {
 void Mesh::Cleanup() {
 	
 	glDeleteBuffers(1, &m_vertexBuffer);
-	m_texture.Cleanup();
-	m_texture2.Cleanup();
+	m_diffuseTexture.Cleanup();
+	m_specularTexture.Cleanup();
 }
 
 void Mesh::Create(Shader* _shader) {
 
 	m_shader = _shader;
 
-	m_texture = Texture();
-	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
-	m_texture2 = Texture();
-	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
+	m_diffuseTexture = Texture();
+	m_diffuseTexture.LoadTexture("../Assets/Textures/Wood.jpg");
+	m_specularTexture = Texture();
+	m_specularTexture.LoadTexture("../Assets/Textures/Emoji.jpg");
 
 #pragma region VertexData
 	m_vertexData = {
@@ -125,11 +125,11 @@ void Mesh::BindAttributes() {
 
 	//Texture 1
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture());
+	glBindTexture(GL_TEXTURE_2D, m_diffuseTexture.GetTexture());
 	glUniform1i(m_shader->GetSampler1(), 0);
 	//Texture 2
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture());
+	glBindTexture(GL_TEXTURE_2D, m_specularTexture.GetTexture());
 	glUniform1i(m_shader->GetSampler2(), 1);
 
 }
