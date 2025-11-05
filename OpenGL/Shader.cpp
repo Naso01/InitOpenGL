@@ -24,7 +24,7 @@ void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitI
 	if (loc != -1) {
 		glActiveTexture(_texUnit);
 		glBindTexture(GL_TEXTURE_2D, _value);
-		glUniform1i(loc, _texUnitID); // issue fixed: was glUniform1f
+		glUniform1i(loc, _texUnitID);
 	}
 }
 

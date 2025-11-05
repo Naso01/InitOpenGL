@@ -16,12 +16,15 @@ struct Material{
 
 struct Light{
 
-	//vec3 position;
-    vec3 direction;
+	vec3 position;
 	vec3 color;
 	vec3 ambientColor;
 	vec3 diffuseColor;
 	vec3 specularColor;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 uniform Material material;
@@ -29,15 +32,16 @@ uniform Light light;
 
 void main()
 {
-    //vec3 lightDir = normalize(light.position - retFragPos); // Normalize, for correct dot product results
-    vec3 lightDir = (light.direction);
+    vec3 lightDir = normalize(light.position - retFragPos); // Normalize, for correct dot product results
     float lambertianStrength = dot(lightDir, retNormal); // Add lambertian lighting
     vec3 refl = reflect(-lightDir, retNormal);
     float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength);
-    
+    float distance = length(light.position - retFragPos);
+    float att = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
     vec3 ambient = texture(material.diffuseTexture, retTexCoord).rgb * light.ambientColor;
-    vec3 lambertian = lambertianStrength * texture(material.diffuseTexture, retTexCoord).rgb * light.diffuseColor;
-    vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light.specularColor;
+    vec3 lambertian = lambertianStrength * texture(material.diffuseTexture, retTexCoord).rgb * light.diffuseColor * att;
+    vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light.specularColor * att;
 
     FragColor = vec4(ambient + lambertian + specular, 1.0f); // Calculate final color
 }
