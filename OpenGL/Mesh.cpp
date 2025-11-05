@@ -1,6 +1,8 @@
 #include "Mesh.h"
 #include "Shader.h"
 
+vector<Mesh> Mesh::Lights;
+
 Mesh::Mesh() {
 	m_shader = nullptr;
 	
@@ -14,8 +16,8 @@ Mesh::Mesh() {
 	m_rotation = { 0, 0, 0 };
 	m_scale = { 1, 1, 1 };
 	m_world = glm::mat4();
-	m_lightPosition = { 0, 0, 0 };
-	m_lightColor = { 1, 1, 1 }; //White light
+	//m_lightPosition = { 0, 0, 0 };
+	//m_lightColor = { 1, 1, 1 }; //White light
 
 	//m_cameraPosition = { };
 }
@@ -92,6 +94,8 @@ void Mesh::Create(Shader* _shader) {
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
 }
 
+
+
 void Mesh::BindAttributes() {
 	//1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());
@@ -131,6 +135,12 @@ void Mesh::CalculateTransform() {
 	m_world = glm::scale(m_world, m_scale);
 }
 
+string Mesh::Concat(string _s1, int _index, string _s2) {
+
+	string index = to_string(_index);
+	return (_s1 + index + _s2);
+}
+
 void Mesh::SetShaderVariables(glm::mat4 _pv) {
 
 	m_shader->SetMat4("World", m_world);
@@ -138,20 +148,21 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
 
 	//Configure lighting
-	m_shader->SetVec3("light.color", m_lightColor);
-	m_shader->SetFloat("light.constant", 1.0f);
-	m_shader->SetFloat("light.linear", 0.09f);
-	m_shader->SetFloat("light.quadratic", 0.032f);
+	for (unsigned int i = 0; i < Lights.size(); i++) {
 
-	m_shader->SetVec3("light.ambientColor", { 0.1f, 0.1f, 0.1f });
-	m_shader->SetVec3("light.diffuseColor", { 1.0f, 1.0f, 1.0f });
-	m_shader->SetVec3("light.specularColor", { 3.0f, 3.0f, 3.0f });
+		m_shader->SetFloat(Concat("light[", i, "].constant").c_str(), 1.0f);
+		m_shader->SetFloat(Concat("light[", i, "].linear").c_str(), 0.09f);
+		m_shader->SetFloat(Concat("light[", i, "].quadratic").c_str(), 0.032f);
 
-	m_shader->SetVec3("light.position", m_lightPosition);
-	m_shader->SetVec3("light.direction", glm::normalize(glm::vec3({0, 0, 0}) - m_lightPosition));
-	m_shader->SetFloat("light.coneAngle", glm::radians(15.0f));
-	m_shader->SetFloat("light.falloff", 100);
+		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.1f, 0.1f, 0.1f });
+		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
+		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 3.0f, 3.0f, 3.0f });
 
+		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
+		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
+		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
+		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
+	}
 	//Configure material
 	m_shader->SetFloat("material.specularStrength", 8);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
