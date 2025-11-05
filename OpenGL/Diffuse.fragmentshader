@@ -47,6 +47,7 @@ void main()
         float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength); //Specular component
         float distance = length(light.position - retFragPos);
         float att = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance)); // Point falloff
+        att *= 1 - pow(clamp(a / d, 0.0f, 1.0f), light.falloff); // Sportlight falloff
 
         vec3 ambient = texture(material.diffuseTexture, retTexCoord).rgb * light.ambientColor;
         vec3 lambertian = lambertianStrength * texture(material.diffuseTexture, retTexCoord).rgb * light.diffuseColor * att;
