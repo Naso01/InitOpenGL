@@ -34,7 +34,7 @@ private:
 	//Methods
 	void SetShaderVariables(glm::mat4 _pv);
 	void BindAttributes();
-	string Concat(string _s1, int _intdex, string _s2);
+	string Concat(string _s1, int _index, string _s2);
 
 	//Members
 	Shader* m_shader;
@@ -51,6 +51,7 @@ private:
 	glm::vec3 m_rotation;
 	glm::vec3 m_scale;
 	glm::mat4 m_world;
+	glm::vec3 m_color;
 
 	//Lighting
 	glm::vec3 m_cameraPosition;
