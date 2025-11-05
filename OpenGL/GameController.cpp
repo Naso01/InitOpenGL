@@ -20,7 +20,7 @@ void GameController::Initialize() {
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow(); // Call this first, as it creates a window required by GLEW
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Black background
+	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
 	glEnable(GL_DEPTH_TEST);
 	srand(time(0));
 	// Create a default perspective camera
@@ -42,21 +42,23 @@ void GameController::RunGame() {
 	//Create meshes
 	m_meshLight = Mesh();
 	m_meshLight.Create(&m_shaderColor);
-	m_meshLight.SetPosition({ 1, -0.5f, 0.0f });
+	m_meshLight.SetPosition({ 0.5f, 0.0f, -0.5f });
 	m_meshLight.SetScale({ 0.1f, 0.1f, 0.1f });
 	
-	for (int count = 0; count < 10; count++) {
-		
-		Mesh box = Mesh();
-		box.Create(&m_shaderDiffuse);
-		box.SetLightColor({ 1.0f, 1.0f, 1.0f });
-		box.SetLightPosition(m_meshLight.GetPosition());
-		box.SetCameraPosition(m_camera.GetPosition());
-		box.SetScale({ 0.3f, 0.3f ,0.3f });
-		box.SetPosition({ glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f) });
-		m_meshBoxes.push_back(box);
-	}
+	for (int col = 0; col < 10; col++) {
 
+		for (int count = 0; count < 10; count++) {
+		
+			Mesh box = Mesh();
+			box.Create(&m_shaderDiffuse);
+			box.SetLightColor({ 1.0f, 1.0f, 1.0f });
+			box.SetLightPosition(m_meshLight.GetPosition());
+			box.SetCameraPosition(m_camera.GetPosition());
+			box.SetScale({ 0.1f, 0.1f , 0.1f });
+			box.SetPosition({ 0.0f, -0.5f + (float)count / 10.0f, -0.2f + (float)col / 10.0f });
+			m_meshBoxes.push_back(box);
+		}
+	}
 	do {
 		
 		//Checkbox states from the tool window 
