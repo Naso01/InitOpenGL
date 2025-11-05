@@ -18,7 +18,7 @@ void Shader:: Cleanup() {
 	glDeleteProgram(m_programID);
 }
 
-void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitID, int _value) {
+void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitID, int _value){
 
 	GLint loc = glGetUniformLocation(m_programID, _name);
 	if (loc != -1) {

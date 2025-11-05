@@ -17,7 +17,7 @@ Mesh::Mesh() {
 	m_lightPosition = { 0, 0, 0 };
 	m_lightColor = { 1, 1, 1 }; //White light
 
-	m_cameraPosition = { };
+	//m_cameraPosition = { };
 }
 
 Mesh::~Mesh() {

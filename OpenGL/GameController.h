@@ -25,7 +25,7 @@ private:
 
 	Camera m_camera;
 	
-	Mesh m_meshBox;
+	vector<Mesh> m_meshBoxes;
 	Mesh m_meshLight;
 };
 
