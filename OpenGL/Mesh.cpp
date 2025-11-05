@@ -138,7 +138,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
 
 	//Configure lighting
-	m_shader->SetVec3("light.position", m_lightPosition);
+	m_shader->SetVec3("light.direction", m_lightPosition);
 	m_shader->SetVec3("light.color", m_lightColor);
 	m_shader->SetVec3("light.ambientColor", { 0.1f, 0.1f, 0.1f });
 	m_shader->SetVec3("light.diffuseColor", { 1.0f, 1.0f, 1.0f });

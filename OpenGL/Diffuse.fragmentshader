@@ -16,7 +16,8 @@ struct Material{
 
 struct Light{
 
-	vec3 position;
+	//vec3 position;
+    vec3 direction;
 	vec3 color;
 	vec3 ambientColor;
 	vec3 diffuseColor;
@@ -28,7 +29,8 @@ uniform Light light;
 
 void main()
 {
-    vec3 lightDir = normalize(light.position - retFragPos); // Normalize, for correct dot product results
+    //vec3 lightDir = normalize(light.position - retFragPos); // Normalize, for correct dot product results
+    vec3 lightDir = (light.direction);
     float lambertianStrength = dot(lightDir, retNormal); // Add lambertian lighting
     vec3 refl = reflect(-lightDir, retNormal);
     float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength);
