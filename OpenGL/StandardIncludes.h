@@ -18,7 +18,6 @@
 #include <GLFW/glfw3.h>	// Include GLFW
 #include <glm/glm.hpp>	// Include GLM
 #include <glm/gtc/matrix_transform.hpp> // Include GLM transformations: View | Projection
-#include <OBJ_Loader.h>
 
 #include "Resolution.h"
 #include "Singleton.h"

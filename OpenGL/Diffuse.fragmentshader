@@ -21,14 +21,6 @@ struct Light{
 	vec3 ambientColor;
 	vec3 diffuseColor;
 	vec3 specularColor;
-
-    float constant;
-    float linear;
-    float quadratic;
-
-    vec3 direction;
-    float coneAngle;
-    float falloff;
 };
 
 uniform Material material;

@@ -26,7 +26,7 @@ private:
 	Camera m_camera;
 	
 	vector<Mesh> m_meshBoxes;
-	Mesh m_meshLight;
+	//Mesh m_meshLight;
 };
 
 #endif //!GAME_CONTROLLER_H

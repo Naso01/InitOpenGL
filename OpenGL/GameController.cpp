@@ -6,7 +6,7 @@
 GameController::GameController() {
 	
 	//m_meshBoxes.clear();	- Implemented by default by the compiler 
-	m_meshLight = { };
+	//m_meshLight = { };
 
 	m_camera = { };
 
@@ -22,7 +22,6 @@ void GameController::Initialize() {
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
 	glEnable(GL_DEPTH_TEST);
-	srand(time(0));
 	// Create a default perspective camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
@@ -52,16 +51,7 @@ void GameController::RunGame() {
 	
 	for (int col = 0; col < 10; col++) {
 
-		for (int count = 0; count < 10; count++) {
-		
-			Mesh box = Mesh();
-			box.Create(&m_shaderDiffuse);
-			box.SetCameraPosition(m_camera.GetPosition());
-			box.SetScale({ 0.1f, 0.1f , 0.1f });
-			box.SetPosition({ 0.0f, -0.5f + (float)count / 10.0f, -0.2f + (float)col / 10.0f });
-			m_meshBoxes.push_back(box);
-		}
-	}
+
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen
