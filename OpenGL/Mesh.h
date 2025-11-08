@@ -51,7 +51,6 @@ private:
 	glm::vec3 m_rotation;
 	glm::vec3 m_scale;
 	glm::mat4 m_world;
-	glm::vec3 m_color;
 
 	//Lighting
 	glm::vec3 m_cameraPosition;

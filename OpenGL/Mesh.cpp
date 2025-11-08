@@ -58,6 +58,7 @@ void Mesh::Create(Shader* _shader , string _file) {
 	string diffuseNap = Loader.LoadedMaterials[0].map_Kd;
 	const size_t last_slash_idx = diffuseNap.find_last_of("\\");
 	if (std::string::npos != last_slash_idx) {
+
 		diffuseNap.erase(0, last_slash_idx + 1);
 	}
 
@@ -125,21 +126,22 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	//Configure lighting
 	for (unsigned int i = 0; i < Lights.size(); i++) {
 
-		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 1.0f, 1.0f, 1.0f });
+		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.25f, 0.25f, 0.25f });
 		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
-		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 3.0f, 3.0f, 3.0f });
+		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 2.0f, 2.0f, 2.0f });
 
 		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
 		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({ 0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
 		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
 		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
-	}
+	
 
 		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
 		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
 		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
 		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
 	}
+
 	//Configure material
 	m_shader->SetFloat("material.specularStrength", 8);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());

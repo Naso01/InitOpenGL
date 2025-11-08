@@ -22,6 +22,7 @@ void GameController::Initialize() {
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
 	glEnable(GL_DEPTH_TEST);
+
 	// Create a default perspective camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
@@ -39,18 +40,20 @@ void GameController::RunGame() {
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
 	//Create meshes
-	for (int count = 0; count < 4; count++) {
 
 		Mesh m = Mesh();
-		m.Create(&m_shaderColor);
-		m.SetPosition({ 0.5f + (float)count / 10.0f, 0.0f, -0.5f });
-		m.SetColor({ glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f),  glm::linearRand(0.0f, 1.0f) });
-		m.SetScale({ 0.1f, 0.1f, 0.1f });
+		m.Create(&m_shaderColor, "../Assets/Models/teapot.obj");
+		m.SetPosition({1.0f, 0.0f, 0.0f});
+		m.SetColor({1.0f, 1.0f , 1.0f });
+		m.SetScale({ 0.01f, 0.01f, 0.01f });
 		Mesh::Lights.push_back(m);
-	}
-	
-	for (int col = 0; col < 10; col++) {
 
+		Mesh teapot = Mesh();
+		teapot.Create(&m_shaderDiffuse, "../Assets/Models/teapot.obj");
+		teapot.SetCameraPosition(m_camera.GetPosition());
+		teapot.SetScale({ 0.02f, 0.02f, 0.02f });
+		teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
+		m_meshBoxes.push_back(teapot);
 
 	do {
 		
@@ -63,7 +66,6 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
-
 		
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
