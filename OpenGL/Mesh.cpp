@@ -122,11 +122,10 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetMat4("World", m_world);
 	m_shader->SetMat4("WVP", _pv * m_world);
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
-
 	//Configure lighting
 	for (unsigned int i = 0; i < Lights.size(); i++) {
 
-		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.1f, 0.1f, 0.1f });
+		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 1.0f, 1.0f, 1.0f });
 		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
 		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 3.0f, 3.0f, 3.0f });
 
