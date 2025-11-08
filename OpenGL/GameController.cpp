@@ -45,7 +45,7 @@ void GameController::RunGame() {
 	m_meshLight.SetPosition({ 0.5f, 0.0f, -0.5f });
 	m_meshLight.SetScale({ 0.1f, 0.1f, 0.1f });
 	
-	for (int col = 0; col < 10; col++) {
+	for (int col = 0; col < 2; col++) {
 
 		for (int count = 0; count < 10; count++) {
 		
