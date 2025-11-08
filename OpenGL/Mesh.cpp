@@ -1,6 +1,8 @@
 #include "Mesh.h"
 #include "Shader.h"
 
+vector <Mesh> Mesh::Lights;
+
 Mesh::Mesh() {
 	m_shader = nullptr;
 	
@@ -14,10 +16,6 @@ Mesh::Mesh() {
 	m_rotation = { 0, 0, 0 };
 	m_scale = { 1, 1, 1 };
 	m_world = glm::mat4();
-	m_lightPosition = { 0, 0, 0 };
-	m_lightColor = { 1, 1, 1 }; //White light
-
-	//m_cameraPosition = { };
 }
 
 Mesh::~Mesh() {
@@ -129,6 +127,11 @@ void Mesh::CalculateTransform() {
 	m_world = glm::translate(glm::mat4(1.0f), m_position);
 	m_world = glm::rotate(m_world, m_rotation.y, glm::vec3(0, 1, 0));
 	m_world = glm::scale(m_world, m_scale);
+}
+
+string Mesh::Concat(string _s1, int _index, string _s2) {
+	string index = to_string(_index);
+	return (_s1 + index + _s2);
 }
 
 void Mesh::SetShaderVariables(glm::mat4 _pv) {
