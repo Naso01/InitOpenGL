@@ -33,7 +33,7 @@ struct Light{
 
 uniform Material material;
 #define NR_LIGHTS 4
-uniform Light light[NR_LIGHTS];
+uniform Light light;//[NR_LIGHTS];
 
 void main()
 {
