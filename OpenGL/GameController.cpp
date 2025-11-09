@@ -12,6 +12,7 @@ GameController::GameController() {
 
 	m_shaderColor = { };
 	m_shaderDiffuse = { };
+	m_shaderFont = { };
 }
 
 void GameController::Initialize() {
@@ -48,14 +49,14 @@ void GameController::RunGame() {
 
 	//Create meshes
 	Mesh m = Mesh();
-	m.Create(&m_shaderColor, "../Assets/Models/Teapot.obj");
+	m.Create(&m_shaderColor, "../Assets/Models/teapot.obj");
 	m.SetPosition({1.0f, 0.0f, 0.0f});
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	m.SetScale({ 0.01f, 0.01f, 0.01f });
 	Mesh::Lights.push_back(m);
 		
 	Mesh teapot = Mesh();
-	teapot.Create(&m_shaderDiffuse, "../Assets/Models/Teapot.obj");
+	teapot.Create(&m_shaderDiffuse, "../Assets/Models/teapot.obj");
 	teapot.SetCameraPosition(m_camera.GetPosition());
 	teapot.SetScale({ 0.02f, 0.02f, 0.02f });
 	teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
@@ -77,9 +78,9 @@ void GameController::RunGame() {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//Fomt
-		f.RenderText("it has a flower texture", 10, 500, 0.5f, { 1.0f, 1.5f, 1.0f });
-		f.RenderText("The cake is a lie", 1000, 500, 0.5f, { 1.0f, 0.0f, 0.0f });
-		f.RenderText("This is a teapot", 500, 10, 0.5f, { 1.0f, 1.0f, 1.0f });
+		f.RenderText("it has a flower texture", 10, 500, 0.5f, { 1.0f, 1.0f, 0.0f });
+		f.RenderText("The cake is a lie", 2000, 1000, 0.5f, { 1.0f, 0.0f, 0.0f });
+		f.RenderText("This is a teapot", 500, 100, 0.5f, { 1.0f, 1.0f, 1.0f });
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();

@@ -80,6 +80,7 @@ void Fonts::CreateCharacters() {
 }
 
 void Fonts::RenderText(string _text, float _x, float _y, float _scale, glm::vec3 _color) {
+	
 	_y = WindowController::GetInstance().GetResolution().height - _y;
 	glUseProgram(m_shader->GetProgramID()); //Use our shader
 	m_shader->SetVec3("TextColor", _color);
