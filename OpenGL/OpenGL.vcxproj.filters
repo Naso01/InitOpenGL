@@ -63,6 +63,9 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameController.h">
@@ -95,6 +98,9 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader">
@@ -113,6 +119,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Color.vertexshader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Font.fragmentshader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Font.vertexshader">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

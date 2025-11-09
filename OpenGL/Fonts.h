@@ -14,6 +14,7 @@ struct Character {
 
 class Fonts
 {
+public:
 	//Constructors / Destructors
 	Fonts();
 
