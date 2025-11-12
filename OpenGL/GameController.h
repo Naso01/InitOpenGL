@@ -17,6 +17,7 @@ public:
 	//Methods
 	void Initialize();
 	void RunGame();
+	Mesh CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position);
 
 private:
 	//Members
@@ -27,7 +28,7 @@ private:
 
 	Camera m_camera;
 	
-	vector<Mesh> m_meshBoxes;
+	vector<Mesh> m_meshes;
 	//Mesh m_meshLight;
 };
 
