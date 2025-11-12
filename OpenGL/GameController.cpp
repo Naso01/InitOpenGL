@@ -70,6 +70,10 @@ void GameController::RunGame() {
 	teapot.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(teapot);
 
+	Mesh box = CreateMesh(m_shaderDiffuse, "Cube", { 0.5f, 0.5f, 0.5f }, 
+												   { -1.0f, -1.0f, -1.0f });
+	box.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(box);
 
 	do {
 		
