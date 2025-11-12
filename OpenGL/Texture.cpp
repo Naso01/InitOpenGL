@@ -16,6 +16,16 @@ void Texture::Cleanup() {
 	glDeleteTextures(1, &m_texture);
 }
 
+bool EndsWith(const string& _str, const string& _suffix) {
+	
+	if (_str.length() <= _suffix.length())
+		return false;
+
+	size_t suffixStartPos = _str.length() - _suffix.length();
+
+	return (_str.compare(suffixStartPos, _suffix.length(), _suffix) == 0);
+}
+
 void Texture::LoadTexture(string _fileName) {
 
 	glGenTextures(1, &m_texture);

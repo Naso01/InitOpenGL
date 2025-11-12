@@ -23,6 +23,9 @@ private:
 	int m_height;
 	int m_channels;
 	GLuint m_texture;
+
+	// Methods 
+	bool EndsWith(const string& _str, const string& _suffix);
 };
 
 #endif // TEXTURE_H
