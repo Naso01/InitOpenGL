@@ -49,6 +49,7 @@ void GameController::RunGame() {
 	//window->Show();
 
 	//Create and compile our GLSL program from the shaders
+#pragma region SetupShaders
 	m_shaderColor = Shader();
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
 	
@@ -57,23 +58,22 @@ void GameController::RunGame() {
 
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
+#pragma endregion SetupShaders
 
 	//Create meshes
-	
+#pragma region CreateMeshes
 	Mesh m = CreateMesh(m_shaderColor, "teapot", { 0.01f, 0.01f, 0.01f }, 
 												 { 1.0f,  0.0f,  0.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 		
-	Mesh teapot = CreateMesh(m_shaderDiffuse, "teapot", { 0.02f, 0.02f, 0.02f },
-													    { 0.0f,  0.0f,  0.0f });
-	teapot.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(teapot);
+	
 
-	Mesh box = CreateMesh(m_shaderDiffuse, "Cube", { 0.5f, 0.5f, 0.5f }, 
-												   { -1.0f, -1.0f, -1.0f });
-	box.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(box);
+	Mesh plane = CreateMesh(m_shaderDiffuse, "Plane", { 0.3f, 0.3f, 0.3f },
+													  { 0.0f, 0.0f, 0.0f });
+	plane.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(plane);
+#pragma endregion CreateMeshes
 
 	do {
 		
