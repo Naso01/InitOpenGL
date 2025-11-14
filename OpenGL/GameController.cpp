@@ -25,6 +25,11 @@ void GameController::Initialize() {
 	glEnable(GL_DEPTH_TEST);	//Configure global OpenGl state
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//Face Culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+
 	srand((unsigned int)time(0));
 
 	// Create a default perspective camera
@@ -66,26 +71,11 @@ void GameController::RunGame() {
 												 { 1.0f,  0.0f,  0.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
-		
-	Mesh teapot = CreateMesh(m_shaderDiffuse, "teapot.obj", { 0.02f, 0.02f, 0.02f },
-		{ 0.0f, 0.0f, 0.0f });
-	teapot.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(teapot);
 
 	Mesh box = CreateMesh(m_shaderDiffuse, "Cube.obj", { 0.5f, 0.5f, 0.5f },
 		{ -1.0f, -1.0f, -1.0f });
 	box.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(box);
-
-	Mesh plane = CreateMesh(m_shaderDiffuse, "Plane.obj", { 0.3f, 0.3f, 0.3f },
-												  { 0.0f, 0.0f, -1.0f });
-	plane.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(plane);
-
-	Mesh window = CreateMesh(m_shaderDiffuse, "Window.obj", { 0.1f, 0.1f, 0.1f },
-		{ 0.0f, 0.0f, 0.0f });
-	window.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(window);
 #pragma endregion CreateMeshes
 
 	do {
