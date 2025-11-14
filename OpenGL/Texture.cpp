@@ -26,6 +26,7 @@ bool Texture::EndsWith(const string& _str, const string& _suffix) {
 	return (_str.compare(suffixStartPos, _suffix.length(), _suffix) == 0);
 }
 
+//----Load Texture
 void Texture::LoadTexture(string _fileName) {
 
 	glGenTextures(1, &m_texture);
@@ -53,4 +54,27 @@ void Texture::LoadTexture(string _fileName) {
 
 	//Free image data from RAM
 	stbi_image_free(data);
+}
+
+//---Load CubeMap
+void Texture::LoadCubemap(vector<string> _faces) {
+
+	glGenTextures(1, &m_texture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
+
+	for (unsigned int i = 0; i < _faces.size(); i++) {
+
+		stbi_set_flip_vertically_on_load(false); // TODO: try moving this outside the loop
+		GLubyte* data = stbi_load(_faces[i].c_str(), &m_width, &m_height, &m_channels, 0);
+		M_ASSERT(data != nullptr, "Failed to load cubemap texture");
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+			0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		stbi_image_free(data);
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
