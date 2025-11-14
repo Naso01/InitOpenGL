@@ -127,7 +127,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	//Configure lighting
 	for (unsigned int i = 0; i < Lights.size(); i++) {
 
-		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.25f, 0.25f, 0.25f });
+		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.5f, 0.5f, 0.5f });
 		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
 		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 2.0f, 2.0f, 2.0f });
 
@@ -135,19 +135,9 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({ 0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
 		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
 		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
-
-		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
-		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
-		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
-		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
-
-		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
-		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
-		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
-		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
 	}
 	//Configure material
-	m_shader->SetFloat("material.specularStrength", 8);
+	m_shader->SetFloat("material.specularStrength", 16);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
 	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
 }
@@ -156,7 +146,7 @@ void Mesh::Render(glm::mat4 _pv) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader
 
-	m_rotation.y = 0.55f;
+	m_rotation.y += 0.001f;
 	
 	CalculateTransform();
 	SetShaderVariables(_pv);
