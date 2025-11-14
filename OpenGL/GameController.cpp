@@ -5,14 +5,14 @@
 
 GameController::GameController() {
 	
-	//m_meshes.clear();	- Implemented by default by the compiler 
-	//m_meshLight = { };
-
+	//m_meshes.clear();
+	m_skybox = { };
 	m_camera = { };
-
+	//Shader
 	m_shaderColor = { };
 	m_shaderDiffuse = { };
 	m_shaderFont = { };
+	m_shaderSkybox = { };
 }
 
 void GameController::Initialize() {
@@ -61,6 +61,9 @@ void GameController::RunGame() {
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
+	m_shaderSkybox = Shader();
+	m_shaderSkybox.LoadShaders("Skybox.vertexshader", "Skybox.fragmentshader");
+
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 #pragma endregion SetupShaders
@@ -73,14 +76,31 @@ void GameController::RunGame() {
 	Mesh::Lights.push_back(m);
 
 	Mesh box = CreateMesh(m_shaderDiffuse, "Cube.obj", { 0.5f, 0.5f, 0.5f },
-		{ -1.0f, -1.0f, -1.0f });
+		{ 1.0f, 0.0f, 5.0f });
 	box.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(box);
+
+	Skybox m_skybox = Skybox();
+	m_skybox.Create(&m_shaderSkybox, "../Assets/Models/Skybox.obj",
+		{ "../Assets/Textures/Skybox/right.jpg",
+		  "../Assets/Textures/Skybox/left.jpg",
+		  "../Assets/Textures/Skybox/top.jpg",
+		  "../Assets/Textures/Skybox/bottom.jpg",
+		  "../Assets/Textures/Skybox/front.jpg",
+		  "../Assets/Textures/Skybox/back.jpg" });
 #pragma endregion CreateMeshes
 
+	Fonts f = Fonts();
+	f.Create(&m_shaderFont, "arial.ttf", 40);
+
+#pragma region Render
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
+
+		m_camera.Rotate();
+		glm::mat4 view = glm::mat4(glm::mat3(m_camera.GetView()));
+		m_skybox.Render(m_camera.GetProjection() * view);
 
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
@@ -91,13 +111,16 @@ void GameController::RunGame() {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//Font
+		f.RenderText("Testing text", 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 
 	} while (glfwGetKey(WindowController::GetInstance().GetWindow(), GLFW_KEY_ESCAPE) != GLFW_PRESS && // Check if the ESC key was pressed
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed
+#pragma endregion Render
 
+#pragma region Cleanup
 	for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 		Mesh::Lights[count].Cleanup();
 	}
@@ -106,4 +129,8 @@ void GameController::RunGame() {
 	}
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
+	m_skybox.Cleanup();
+	m_shaderSkybox.Cleanup();
+
+#pragma endregion Cleanup
 }

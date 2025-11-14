@@ -34,6 +34,7 @@ void Skybox::Create(Shader* _shader, string _file, vector<string> _faces) {
 			m_vertexData.push_back(curMesh.Vertices[j].Position.Z);
 		}
 	}
+
 	m_texture = Texture();
 	m_texture.LoadCubemap(_faces);
 
