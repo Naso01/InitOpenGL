@@ -43,8 +43,8 @@ private:
 	GLuint m_vertexBuffer;//GPU Buffer
 	GLuint m_indexBuffer; //GPU Buffer
 	
-	std::vector<GLfloat> m_vertexData; //Store vertex data in RAM
-	std::vector<GLubyte> m_indexData; //Store index data in RAM
+	vector<GLfloat> m_vertexData; //Store vertex data in RAM
+	vector<GLubyte> m_indexData; //Store index data in RAMw
 	
 	//Transform
 	glm::vec3 m_position;
