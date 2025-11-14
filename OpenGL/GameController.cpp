@@ -35,7 +35,7 @@ void GameController::Initialize() {
 Mesh GameController::CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position) {
 
 	Mesh m = Mesh();
-	m.Create(&_shader, "../Assets/Models/"+ _obj +".obj");
+	m.Create(&_shader, "../Assets/Models/"+ _obj);
 	m.SetScale(_scale);
 	m.SetPosition(_position);
 
@@ -62,15 +62,23 @@ void GameController::RunGame() {
 
 	//Create meshes
 #pragma region CreateMeshes
-	Mesh m = CreateMesh(m_shaderColor, "teapot", { 0.01f, 0.01f, 0.01f }, 
+	Mesh m = CreateMesh(m_shaderColor, "teapot.obj", { 0.01f, 0.01f, 0.01f }, 
 												 { 1.0f,  0.0f,  0.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 		
-	
+	Mesh teapot = CreateMesh(m_shaderDiffuse, "teapot.obj", { 0.02f, 0.02f, 0.02f },
+		{ 0.0f, 0.0f, 0.0f });
+	teapot.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(teapot);
 
-	Mesh plane = CreateMesh(m_shaderDiffuse, "Plane", { 0.3f, 0.3f, 0.3f },
-													  { 0.0f, 0.0f, 0.0f });
+	Mesh box = CreateMesh(m_shaderDiffuse, "Cube.obj", { 0.5f, 0.5f, 0.5f },
+		{ -1.0f, -1.0f, -1.0f });
+	box.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(box);
+
+	Mesh plane = CreateMesh(m_shaderDiffuse, "Plane.obj", { 0.3f, 0.3f, 0.3f },
+												  { 0.0f, 0.0f, 0.0f });
 	plane.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(plane);
 #pragma endregion CreateMeshes
