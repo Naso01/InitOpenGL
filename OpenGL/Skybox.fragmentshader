@@ -1,6 +1,6 @@
 #version 330
 
-in vec3 retTexCoord;
+in vec3 retTexCoords;
 
 out vec4 FragColor;
 

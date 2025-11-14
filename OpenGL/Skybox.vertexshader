@@ -8,7 +8,7 @@ uniform mat4 PV; // Projection-View matrix from application
 
 void main()
 {	
-	retTexCoord = vertices;
+	retTexCoords = vertices;
 	gl_Position = PV * vec4(vertices, 1.0); // Transform the model to screen projection
 
 }
