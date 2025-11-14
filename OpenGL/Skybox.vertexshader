@@ -1,0 +1,14 @@
+#version 330
+
+in vec3 vertices; // Value set from application to this attribute
+
+out vec3 retTexCoords;
+
+uniform mat4 PV; // Projection-View matrix from application
+
+void main()
+{	
+	retTexCoord = vertices;
+	gl_Position = PV * vec4(vertices, 1.0); // Transform the model to screen projection
+
+}
