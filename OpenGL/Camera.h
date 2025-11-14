@@ -15,11 +15,16 @@ public:
 	glm::mat4 GetView() { return m_view; }
 	glm::vec3 GetPosition() { return m_position; }
 
+	//Methods
+	void Rotate();
 private:
 	//Members
 	glm::mat4 m_projection;
 	glm::mat4 m_view;
 	glm::vec3 m_position;
+	glm::vec3 m_lookAt;
+	glm::vec3 m_rotation;
+	float m_angle;
 
 };
 
