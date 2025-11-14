@@ -37,9 +37,9 @@ Camera::~Camera() { }
 
 void Camera::Rotate() {
 	// https://gamedev.stackexchange.com/questions/9607/moving-an-object-in-a-circular-path
-	m_angle += 0.1f;
-	m_lookAt.x = cos(glm::radians(m_angle)) * 100;
-	m_lookAt.z = sin(glm::radians(m_angle)) * 100;
+	m_angle += 0.01f;
+	m_lookAt.x = cos(glm::radians(m_angle)) * 50;
+	m_lookAt.z = sin(glm::radians(m_angle)) * 50;
 
 	//Camera matrix
 	m_view = glm::lookAt(

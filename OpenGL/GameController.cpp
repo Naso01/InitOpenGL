@@ -28,7 +28,7 @@ void GameController::Initialize() {
 
 	//Face Culling
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
+	glCullFace(GL_BACK);
 
 	srand((unsigned int)time(0));
 
