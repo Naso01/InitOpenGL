@@ -78,9 +78,14 @@ void GameController::RunGame() {
 	m_meshes.push_back(box);
 
 	Mesh plane = CreateMesh(m_shaderDiffuse, "Plane.obj", { 0.3f, 0.3f, 0.3f },
-												  { 0.0f, 0.0f, 0.0f });
+												  { 0.0f, 0.0f, -1.0f });
 	plane.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(plane);
+
+	Mesh window = CreateMesh(m_shaderDiffuse, "Window.obj", { 0.1f, 0.1f, 0.1f },
+		{ 0.0f, 0.0f, 0.0f });
+	window.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(window);
 #pragma endregion CreateMeshes
 
 	do {
