@@ -1,0 +1,46 @@
+#version 330
+
+in vec3 retNormal; // MUST use same name as out variable used by vertex shader
+in vec3 retFragPos;
+in vec3 retViewDirection;
+
+out vec4 FragColor;
+
+struct Material{
+
+	float specularStrength;
+};
+
+struct Light{
+
+	vec3 position;
+	vec3 color;
+	vec3 ambientColor;
+	vec3 diffuseColor;
+	vec3 specularColor;
+};
+
+uniform Material material;
+#define NR_LIGHTS 1
+uniform Light light[NR_LIGHTS];
+
+void main()
+{
+    vec4 finalColor = vec4(0);
+    for(int i = 0; i < NR_LIGHTS; i++)
+    {
+    
+        vec3 lightDir = normalize(light[i].position - retFragPos); // Normalize, for correct dot product result
+        float lambertianStrength = dot(lightDir, retNormal); // Add lambertian lighting
+        vec3 refl = reflect(-lightDir, retNormal);
+        float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength); //Specular component
+        
+        vec3 ambient = light[i].ambientColor / NR_LIGHTS;
+        vec3 lambertian = lambertianStrength * light[i].diffuseColor;
+        vec3 specular = specularStrength * light[i].specularColor;
+
+        finalColor += vec4(ambient + lambertian + specular, 1.0f); // Calculate final color
+    }
+
+    FragColor = finalColor;
+}

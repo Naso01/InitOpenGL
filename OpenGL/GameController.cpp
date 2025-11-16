@@ -72,7 +72,7 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region Mesh Creation
 	Mesh m = Mesh();
-	m.Create(&m_shaderColor, "../Assets/Models/teapot.obj");
+	m.Create(&m_shaderColor, "../Assets/Models/sphere.obj");
 	m.SetPosition({1.0f, 0.0f, 0.0f});
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	m.SetScale({ 0.01f, 0.01f, 0.01f });
