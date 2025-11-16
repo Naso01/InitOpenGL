@@ -35,9 +35,12 @@ void GameController::RunGame() {
 	
 	//Show the C++/CLI tool window
 	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	//window->Show();
+	//window->Show();	
+	
 
 	//Create and compile our GLSL program from the shaders
+#pragma region Shader Create/Compile
+
 	m_shaderColor = Shader();
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
 	
@@ -47,7 +50,13 @@ void GameController::RunGame() {
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 
+
+
+#pragma endregion Shader Create/Compile
+
+
 	//Create meshes
+#pragma region Mesh Creation
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/teapot.obj");
 	m.SetPosition({1.0f, 0.0f, 0.0f});
@@ -61,6 +70,7 @@ void GameController::RunGame() {
 	teapot.SetScale({ 0.02f, 0.02f, 0.02f });
 	teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
 	m_meshBoxes.push_back(teapot);
+#pragma endregion Mesh Creation
 
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 100);
