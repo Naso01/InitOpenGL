@@ -2,6 +2,7 @@
 #include "WindowController.h"
 #include <glm/gtc/random.hpp>
 #include "Fonts.h"
+#include "ToolWindow.h"
 
 GameController::GameController() {
 	
@@ -31,11 +32,24 @@ void GameController::Initialize() {
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
 
+void GameController::RenderToolWindow() {
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	System::Windows::Forms::Application::Run(window);
+}
+
 void GameController::RunGame() {
 	
 	//Show the C++/CLI tool window
-	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	//window->Show();	
+#pragma region ToolWindow
+	System::Threading::Thread^ uiThread =
+		gcnew System::Threading::Thread(
+			gcnew System::Threading::ThreadStart(&GameController::RenderToolWindow)
+		);
+
+	uiThread->SetApartmentState(System::Threading::ApartmentState::STA);
+	uiThread->IsBackground = true;
+	uiThread->Start();
+#pragma endregion ToolWindow
 	
 
 	//Create and compile our GLSL program from the shaders
@@ -106,4 +120,6 @@ void GameController::RunGame() {
 	}
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
+
+	System::Windows::Forms::Application::ExitThread();
 }

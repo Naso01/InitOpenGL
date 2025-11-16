@@ -17,8 +17,11 @@ public:
 	//Methods
 	void Initialize();
 	void RunGame();
-
+	
 private:
+	//Methods
+	static void RenderToolWindow();
+
 	//Members
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;

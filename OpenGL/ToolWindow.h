@@ -14,14 +14,10 @@ namespace OpenGL {
 	/// </summary>
 	public ref class ToolWindow : public System::Windows::Forms::Form
 	{
-	public:
 
 	private: System::Windows::Forms::RadioButton^ rbtn_MoveLight;
-	public:
 
 	private: System::Windows::Forms::RadioButton^ rbtn_ColorByPosition;
-
-	public:
 
 	private: System::Windows::Forms::RadioButton^ rbtn_MoveCubeToSphere;
 	private: System::Windows::Forms::Button^ btn_ResetLightPosition;
@@ -33,15 +29,13 @@ namespace OpenGL {
 	private: System::Windows::Forms::TrackBar^ trackBar_Green;
 	private: System::Windows::Forms::TrackBar^ trackBar_Blue;
 
-
-
 	private: System::Windows::Forms::TextBox^ textBox_SpecularStrength;
 	private: System::Windows::Forms::TextBox^ textBox_SpecularColor;
 	private: System::Windows::Forms::TextBox^ textBox_R;
 	private: System::Windows::Forms::TextBox^ textBox_G;
 	private: System::Windows::Forms::TextBox^ textBox_B;
 
-		   static bool RenderBlueChannel;
+	public:
 
 		ToolWindow(void)
 		{
