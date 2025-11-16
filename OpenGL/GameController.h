@@ -26,7 +26,7 @@ private:
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
 	Shader m_shaderFont;
-
+	Shader m_shaderLight;
 
 	Camera m_camera;
 	

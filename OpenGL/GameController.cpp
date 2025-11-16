@@ -14,6 +14,7 @@ GameController::GameController() {
 	m_shaderColor = { };
 	m_shaderDiffuse = { };
 	m_shaderFont = { };
+	m_shaderLight = { };
 }
 
 void GameController::Initialize() {
@@ -64,7 +65,8 @@ void GameController::RunGame() {
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
 
-
+	m_shaderLight = Shader();
+	m_shaderLight.LoadShaders("Light.vertexshader", "Light.fragmentshader");
 
 #pragma endregion Shader Create/Compile
 
@@ -72,7 +74,7 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region Mesh Creation
 	Mesh m = Mesh();
-	m.Create(&m_shaderColor, "../Assets/Models/sphere.obj");
+	m.Create(&m_shaderLight, "../Assets/Models/teapot.obj");
 	m.SetPosition({1.0f, 0.0f, 0.0f});
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	m.SetScale({ 0.01f, 0.01f, 0.01f });
