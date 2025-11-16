@@ -110,7 +110,7 @@ void Mesh::BindAttributes() {
 void Mesh::CalculateTransform() {
 	
 	m_world = glm::translate(glm::mat4(1.0f), m_position);
-	m_world = glm::rotate(m_world, m_rotation.y, glm::vec3(0, 1, 0));
+	m_world = glm::rotate(m_world, m_rotation.x, glm::vec3(1, 0, 0));
 	m_world = glm::scale(m_world, m_scale);
 }
 
@@ -132,19 +132,6 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 2.0f, 2.0f, 2.0f });
 
 		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
-		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({ 0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
-		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
-		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
-
-		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
-		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
-		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
-		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
-
-		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
-		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
-		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
-		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
 	}
 	//Configure material
 	m_shader->SetFloat("material.specularStrength", 8);
@@ -156,7 +143,7 @@ void Mesh::Render(glm::mat4 _pv) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader
 
-	m_rotation.y += 0.001f;
+	m_rotation.x += 0.001f;
 	
 	CalculateTransform();
 	SetShaderVariables(_pv);
