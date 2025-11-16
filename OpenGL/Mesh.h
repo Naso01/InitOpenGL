@@ -55,6 +55,8 @@ private:
 	//Lighting
 	glm::vec3 m_cameraPosition;
 	glm::vec3 m_color;
+
+	bool m_hasTexture;
 };
 
 #endif // !MESH_H

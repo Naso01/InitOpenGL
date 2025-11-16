@@ -17,6 +17,8 @@ Mesh::Mesh() {
 	m_rotation = { 0, 0, 0 };
 	m_scale = { 1, 1, 1 };
 	m_world = glm::mat4();
+
+	m_hasTexture = false;
 }
 
 Mesh::~Mesh() {
@@ -62,10 +64,18 @@ void Mesh::Create(Shader* _shader , string _file) {
 		diffuseNap.erase(0, last_slash_idx + 1);
 	}
 
-	m_diffuseTexture = Texture();
-	m_diffuseTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
-	m_specularTexture = Texture();
-	m_specularTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
+	if (diffuseNap != "") 
+		m_hasTexture = true;
+	else
+		m_hasTexture = false;
+
+	if (m_hasTexture) {
+		m_diffuseTexture = Texture();
+		m_diffuseTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
+		m_specularTexture = Texture();
+		m_specularTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
+	}
+		
 	
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -135,8 +145,11 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	}
 	//Configure material
 	m_shader->SetFloat("material.specularStrength", 8);
-	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
-	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
+
+	if (m_hasTexture) {
+		m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
+		m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
+	}
 }
 
 void Mesh::Render(glm::mat4 _pv) {

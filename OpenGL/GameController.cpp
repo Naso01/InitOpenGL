@@ -24,12 +24,14 @@ void GameController::Initialize() {
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);	//Configure global OpenGl state
 	glEnable(GL_BLEND);
-
-
-
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//Face Culling
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	srand((unsigned int)time(0));
 
 	// Create a default perspective camera
@@ -77,7 +79,7 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region Mesh Creation
 	Mesh m = Mesh();
-	m.Create(&m_shaderLight, "../Assets/Models/teapot.obj");
+	m.Create(&m_shaderColor, "../Assets/Models/Sphere.obj");
 	m.SetPosition({1.0f, 0.0f, 0.0f});
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	m.SetScale({ 0.01f, 0.01f, 0.01f });
