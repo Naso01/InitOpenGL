@@ -57,26 +57,32 @@ void Mesh::Create(Shader* _shader , string _file) {
 	}
 
 	//Remove directory if present
-	string diffuseNap = Loader.LoadedMaterials[0].map_Kd;
-	const size_t last_slash_idx = diffuseNap.find_last_of("\\");
-	if (std::string::npos != last_slash_idx) {
+	//diffuseMap
+	string diffuseMap = Loader.LoadedMaterials[0].map_Kd;
+	size_t last_slash_idx = diffuseMap.find_last_of("\\");
+	if (string::npos != last_slash_idx) {
 
-		diffuseNap.erase(0, last_slash_idx + 1);
+		diffuseMap.erase(0, last_slash_idx + 1);
 	}
 
-	if (diffuseNap != "") 
+	string specularMap = Loader.LoadedMaterials[0].map_Ks;
+	last_slash_idx = specularMap.find_last_of("\\");
+	if (string::npos != last_slash_idx) {
+
+		specularMap.erase(0, last_slash_idx + 1);
+	}
+
+	if (diffuseMap != "") {
 		m_hasTexture = true;
+		m_diffuseTexture = Texture();
+		m_diffuseTexture.LoadTexture("../Assets/Textures/" + diffuseMap);
+		m_specularTexture = Texture();
+		m_specularTexture.LoadTexture("../Assets/Textures/" + specularMap);
+	}
 	else
 		m_hasTexture = false;
 
-	if (m_hasTexture) {
-		m_diffuseTexture = Texture();
-		m_diffuseTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
-		m_specularTexture = Texture();
-		m_specularTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
-	}
-		
-	
+
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
@@ -149,6 +155,9 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	if (m_hasTexture) {
 		m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
 		m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
+	}
+	else {
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
 
