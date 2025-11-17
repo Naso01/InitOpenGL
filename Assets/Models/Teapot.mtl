@@ -15,3 +15,4 @@ newmtl 02___Default
 	Ke 0.0000 0.0000 0.0000
 	illum 2
 	map_Kd C:\Users\Nathan\Documents\AA-Sheridan\Semester_5\Computer Graphics and Anim\InitOpenGL\Assets\Textures\Teapot.jpg
+	map_Ks TeapotSpecular.jpg
