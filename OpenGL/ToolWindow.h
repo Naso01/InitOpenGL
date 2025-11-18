@@ -55,11 +55,21 @@ namespace OpenGL {
 		ToolWindow(void)
 		{
 			InitializeComponent();
-			SpecularStrength = trackBar_SpecularStrength->Value;
-			lbl_RedValue->Text = (trackBar_Red->Value / 100).ToString("F2");
-			lbl_GreenValue->Text = (trackBar_Green->Value / 100).ToString("F2");
-			lbl_BlueValue->Text = (trackBar_Blue->Value / 100).ToString("F2");
+			unsigned short specStrValue = trackBar_SpecularStrength->Value; //Specular Strength
+			SpecularStrength = specStrValue;
+			lbl_SpecStrValue->Text = specStrValue.ToString();
 
+			float redValue = trackBar_Red->Value / 100.0f; //Red
+			RenderRedChannel = redValue;
+			lbl_RedValue->Text = redValue.ToString("F2");
+
+			float greenValue = trackBar_Green->Value / 100.0f; //Green
+			RenderGreenChannel = greenValue;
+			lbl_GreenValue->Text = greenValue.ToString("F2");
+
+			float blueValue = trackBar_Blue->Value / 100.0f; //Blue
+			RenderBlueChannel = blueValue;
+			lbl_BlueValue->Text = blueValue.ToString("F2");
 		}
 
 	protected:
