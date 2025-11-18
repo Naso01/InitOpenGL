@@ -37,10 +37,13 @@ namespace OpenGL {
 	private: System::Windows::Forms::TextBox^ textBox_B;
 
 	public:
+		static unsigned short SpecularStrength;
+
 
 		ToolWindow(void)
 		{
 			InitializeComponent();
+			SpecularStrength = 4;
 		}
 
 	protected:
@@ -270,6 +273,22 @@ namespace OpenGL {
 #pragma endregion Windows Form Designer generated code
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 		rbtn_MoveLight->Checked = true;
+
+		trackBar_Red->Minimum = 0;
+		trackBar_Red->Maximum = 300;
+		trackBar_Red->Value = 128;
+
+		trackBar_Green->Minimum = 0;
+		trackBar_Green->Maximum = 300;
+		trackBar_Green->Value = 128;
+
+		trackBar_Blue->Minimum = 0;
+		trackBar_Blue->Maximum = 300;
+		trackBar_Blue->Value = 128;
+
+		trackBar_SpecularStrength->Minimum = 0;
+		trackBar_SpecularStrength->Maximum = 128;
+		trackBar_SpecularStrength->Value = 32;
 	}
 
 
@@ -288,6 +307,7 @@ private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, Syste
 
 }
 private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
+	SpecularStrength = trackBar_SpecularStrength->Value;
 }
 private: System::Void trackBar_Red_Scroll(System::Object^ sender, System::EventArgs^ e) {
 }
