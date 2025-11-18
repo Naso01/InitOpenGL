@@ -30,20 +30,36 @@ namespace OpenGL {
 	private: System::Windows::Forms::TrackBar^ trackBar_Green;
 	private: System::Windows::Forms::TrackBar^ trackBar_Blue;
 
-	private: System::Windows::Forms::TextBox^ textBox_SpecularStrength;
-	private: System::Windows::Forms::TextBox^ textBox_SpecularColor;
+
 	private: System::Windows::Forms::TextBox^ textBox_R;
 	private: System::Windows::Forms::TextBox^ textBox_G;
 	private: System::Windows::Forms::TextBox^ textBox_B;
 
-	public:
-		static unsigned short SpecularStrength;
+	private: System::Windows::Forms::Label^ lbl_SpecularStrength;
+	private: System::Windows::Forms::Label^ lbl_SpecularColor;
 
+	private: System::Windows::Forms::Label^ lbl_RedValue;
+	private: System::Windows::Forms::Label^ lbl_SpecStrValue;
+	private: System::Windows::Forms::Label^ lbl_GreenValue;
+	private: System::Windows::Forms::Label^ lbl_BlueValue;
+
+	public:
+
+//Members
+		static unsigned short SpecularStrength;
+		
+		static float RenderRedChannel;
+		static float RenderGreenChannel;
+		static float RenderBlueChannel;
 
 		ToolWindow(void)
 		{
 			InitializeComponent();
-			SpecularStrength = 4;
+			SpecularStrength = trackBar_SpecularStrength->Value;
+			lbl_RedValue->Text = (trackBar_Red->Value / 100).ToString("F2");
+			lbl_GreenValue->Text = (trackBar_Green->Value / 100).ToString("F2");
+			lbl_BlueValue->Text = (trackBar_Blue->Value / 100).ToString("F2");
+
 		}
 
 	protected:
@@ -84,11 +100,15 @@ namespace OpenGL {
 			this->trackBar_Red = (gcnew System::Windows::Forms::TrackBar());
 			this->trackBar_Green = (gcnew System::Windows::Forms::TrackBar());
 			this->trackBar_Blue = (gcnew System::Windows::Forms::TrackBar());
-			this->textBox_SpecularStrength = (gcnew System::Windows::Forms::TextBox());
-			this->textBox_SpecularColor = (gcnew System::Windows::Forms::TextBox());
 			this->textBox_R = (gcnew System::Windows::Forms::TextBox());
 			this->textBox_G = (gcnew System::Windows::Forms::TextBox());
 			this->textBox_B = (gcnew System::Windows::Forms::TextBox());
+			this->lbl_SpecularStrength = (gcnew System::Windows::Forms::Label());
+			this->lbl_SpecularColor = (gcnew System::Windows::Forms::Label());
+			this->lbl_RedValue = (gcnew System::Windows::Forms::Label());
+			this->lbl_SpecStrValue = (gcnew System::Windows::Forms::Label());
+			this->lbl_GreenValue = (gcnew System::Windows::Forms::Label());
+			this->lbl_BlueValue = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_SpecularStrength))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Red))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Green))->BeginInit();
@@ -193,23 +213,6 @@ namespace OpenGL {
 			this->trackBar_Blue->Value = 100;
 			this->trackBar_Blue->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Blue_Scroll);
 			// 
-			// textBox_SpecularStrength
-			// 
-			this->textBox_SpecularStrength->Location = System::Drawing::Point(28, 77);
-			this->textBox_SpecularStrength->Name = L"textBox_SpecularStrength";
-			this->textBox_SpecularStrength->Size = System::Drawing::Size(100, 20);
-			this->textBox_SpecularStrength->TabIndex = 9;
-			this->textBox_SpecularStrength->Text = L"Specular Strength";
-			this->textBox_SpecularStrength->TextChanged += gcnew System::EventHandler(this, &ToolWindow::textBox1_TextChanged);
-			// 
-			// textBox_SpecularColor
-			// 
-			this->textBox_SpecularColor->Location = System::Drawing::Point(28, 128);
-			this->textBox_SpecularColor->Name = L"textBox_SpecularColor";
-			this->textBox_SpecularColor->Size = System::Drawing::Size(76, 20);
-			this->textBox_SpecularColor->TabIndex = 10;
-			this->textBox_SpecularColor->Text = L"Specular Color";
-			// 
 			// textBox_R
 			// 
 			this->textBox_R->BackColor = System::Drawing::Color::Red;
@@ -238,16 +241,70 @@ namespace OpenGL {
 			this->textBox_B->TabIndex = 14;
 			this->textBox_B->Text = L"B";
 			// 
+			// lbl_SpecularStrength
+			// 
+			this->lbl_SpecularStrength->AutoSize = true;
+			this->lbl_SpecularStrength->Location = System::Drawing::Point(27, 77);
+			this->lbl_SpecularStrength->Name = L"lbl_SpecularStrength";
+			this->lbl_SpecularStrength->Size = System::Drawing::Size(92, 13);
+			this->lbl_SpecularStrength->TabIndex = 15;
+			this->lbl_SpecularStrength->Text = L"Specular Strength";
+			// 
+			// lbl_SpecularColor
+			// 
+			this->lbl_SpecularColor->AutoSize = true;
+			this->lbl_SpecularColor->Location = System::Drawing::Point(27, 128);
+			this->lbl_SpecularColor->Name = L"lbl_SpecularColor";
+			this->lbl_SpecularColor->Size = System::Drawing::Size(76, 13);
+			this->lbl_SpecularColor->TabIndex = 16;
+			this->lbl_SpecularColor->Text = L"Specular Color";
+			// 
+			// lbl_RedValue
+			// 
+			this->lbl_RedValue->AutoSize = true;
+			this->lbl_RedValue->Location = System::Drawing::Point(405, 135);
+			this->lbl_RedValue->Name = L"lbl_RedValue";
+			this->lbl_RedValue->Size = System::Drawing::Size(0, 13);
+			this->lbl_RedValue->TabIndex = 18;
+			// 
+			// lbl_SpecStrValue
+			// 
+			this->lbl_SpecStrValue->AutoSize = true;
+			this->lbl_SpecStrValue->Location = System::Drawing::Point(405, 77);
+			this->lbl_SpecStrValue->Name = L"lbl_SpecStrValue";
+			this->lbl_SpecStrValue->Size = System::Drawing::Size(0, 13);
+			this->lbl_SpecStrValue->TabIndex = 19;
+			// 
+			// lbl_GreenValue
+			// 
+			this->lbl_GreenValue->AutoSize = true;
+			this->lbl_GreenValue->Location = System::Drawing::Point(405, 183);
+			this->lbl_GreenValue->Name = L"lbl_GreenValue";
+			this->lbl_GreenValue->Size = System::Drawing::Size(0, 13);
+			this->lbl_GreenValue->TabIndex = 20;
+			// 
+			// lbl_BlueValue
+			// 
+			this->lbl_BlueValue->AutoSize = true;
+			this->lbl_BlueValue->Location = System::Drawing::Point(405, 234);
+			this->lbl_BlueValue->Name = L"lbl_BlueValue";
+			this->lbl_BlueValue->Size = System::Drawing::Size(0, 13);
+			this->lbl_BlueValue->TabIndex = 21;
+			// 
 			// ToolWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(474, 442);
+			this->Controls->Add(this->lbl_BlueValue);
+			this->Controls->Add(this->lbl_GreenValue);
+			this->Controls->Add(this->lbl_SpecStrValue);
+			this->Controls->Add(this->lbl_RedValue);
+			this->Controls->Add(this->lbl_SpecularColor);
+			this->Controls->Add(this->lbl_SpecularStrength);
 			this->Controls->Add(this->textBox_B);
 			this->Controls->Add(this->textBox_G);
 			this->Controls->Add(this->textBox_R);
-			this->Controls->Add(this->textBox_SpecularColor);
-			this->Controls->Add(this->textBox_SpecularStrength);
 			this->Controls->Add(this->trackBar_Blue);
 			this->Controls->Add(this->trackBar_Green);
 			this->Controls->Add(this->trackBar_Red);
@@ -271,6 +328,7 @@ namespace OpenGL {
 
 		}
 #pragma endregion Windows Form Designer generated code
+
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 		rbtn_MoveLight->Checked = true;
 
@@ -292,28 +350,42 @@ namespace OpenGL {
 	}
 
 
-private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void rbtn_ColorByPosition_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void btn_ResetTeapotPosition_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
-	GameController::SetLightPosition({ 0.0f, 0.0f, 0.1f });
+		private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void rbtn_ColorByPosition_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void btn_ResetTeapotPosition_Click(System::Object^ sender, System::EventArgs^ e) {
+		}
+		private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
+			GameController::SetLightPosition({ 0.0f, 0.0f, 0.1f });
 
-}
-private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
-	SpecularStrength = trackBar_SpecularStrength->Value;
-}
-private: System::Void trackBar_Red_Scroll(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void trackBar_Green_Scroll(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void trackBar_Blue_Scroll(System::Object^ sender, System::EventArgs^ e) {
-}
+		}
+
+		//TrackBars
+		private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
+			unsigned short specStrValue = trackBar_SpecularStrength->Value;
+			SpecularStrength = specStrValue;
+			lbl_SpecStrValue->Text = specStrValue.ToString();
+		}
+		private: System::Void trackBar_Red_Scroll(System::Object^ sender, System::EventArgs^ e) {
+			float redValue = trackBar_Red->Value / 100.0f;
+			RenderRedChannel = redValue;
+			lbl_RedValue->Text = redValue.ToString("F2");
+		}
+		private: System::Void trackBar_Green_Scroll(System::Object^ sender, System::EventArgs^ e) {
+			float greenValue = trackBar_Green->Value / 100.0f;
+			RenderGreenChannel = greenValue;
+			lbl_GreenValue->Text = greenValue.ToString("F2");
+		}
+		private: System::Void trackBar_Blue_Scroll(System::Object^ sender, System::EventArgs^ e) {
+			float blueValue = trackBar_Blue->Value / 100.0f;
+			RenderBlueChannel = blueValue;
+			lbl_BlueValue->Text = blueValue.ToString("F2");
+		}
+
 };
 }

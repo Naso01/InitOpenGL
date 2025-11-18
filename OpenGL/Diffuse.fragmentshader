@@ -23,6 +23,10 @@ struct Light{
 	vec3 specularColor;
 };
 
+uniform float RenderRedChannel;
+uniform float RenderGreenChannel;
+uniform float RenderBlueChannel;
+
 uniform Material material;
 #define NR_LIGHTS 1
 uniform Light light[NR_LIGHTS];

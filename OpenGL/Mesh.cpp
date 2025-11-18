@@ -161,6 +161,32 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	}
 }
 
+void Mesh::SetShaderVariables(glm::mat4 _pv, glm::vec4 _specular) {
+
+	m_shader->SetMat4("World", m_world);
+	m_shader->SetMat4("WVP", _pv * m_world);
+	m_shader->SetVec3("CameraPosition", m_cameraPosition);
+	//Configure lighting
+	for (unsigned int i = 0; i < Lights.size(); i++) {
+
+		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.25f, 0.25f, 0.25f });
+		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
+		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { _specular.r, _specular.g, _specular.b });
+
+		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
+	}
+	//Configure material
+	m_shader->SetFloat("material.specularStrength", _specular.a);
+
+	if (m_hasTexture) {
+		m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
+		m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
+	}
+	else {
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+}
+
 void Mesh::Render(glm::mat4 _pv) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader
@@ -169,6 +195,22 @@ void Mesh::Render(glm::mat4 _pv) {
 	
 	CalculateTransform();
 	SetShaderVariables(_pv);
+	BindAttributes();
+
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size());
+	glDisableVertexAttribArray(m_shader->GetAttrNormals());
+	glDisableVertexAttribArray(m_shader->GetAttrVertices());
+	glDisableVertexAttribArray(m_shader->GetAttrTexCoords());
+}
+
+void Mesh::Render(glm::mat4 _pv, glm::vec4 _specular) {
+
+	glUseProgram(m_shader->GetProgramID()); // Use the shader
+
+	m_rotation.x += 0.001f;
+
+	CalculateTransform();
+	SetShaderVariables(_pv, _specular);
 	BindAttributes();
 
 	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size());

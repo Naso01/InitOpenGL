@@ -104,16 +104,35 @@ void GameController::RunGame() {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen
 
+#pragma region ToolWindow
+		//Specular Strength
+		//GLint loc = glGetUniformLocation(m_shaderDiffuse.GetProgramID(), "material.specularStrength");
+		//glUniform1f(loc, OpenGL::ToolWindow::SpecularStrength);
+
+		//Specular Color
+		//loc = glGetUniformLocation(m_shaderDiffuse.GetProgramID(), "light[0].specularColor");
+		//glUniform3f(
+			//loc,
+		glm::vec4 specular = {
+			OpenGL::ToolWindow::RenderRedChannel,
+			OpenGL::ToolWindow::RenderGreenChannel,
+			OpenGL::ToolWindow::RenderBlueChannel,
+			OpenGL::ToolWindow::SpecularStrength
+		};
+		
+
+#pragma endregion ToolWindow
+
 		//Box
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
-			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView());
+			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specular);
 		}
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//Fomt
-		f.RenderText("it has a flower texture", 10, 500, 0.5f, { 1.0f, 1.0f, 0.0f });
+		//f.RenderText(to_string(OpenGL::ToolWindow::SpecularStrength), 10, 500, 0.5f, {1.0f, 1.0f, 0.0f});
 		f.RenderText("The cake is a lie", 2000, 1000, 0.5f, { 1.0f, 0.0f, 0.0f });
 		f.RenderText("This is a teapot", 500, 100, 0.5f, { 1.0f, 1.0f, 1.0f });
 

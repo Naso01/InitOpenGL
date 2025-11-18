@@ -24,9 +24,9 @@ public:
 	//Methods
 	void Create(Shader * _shader, string _file);
 	void Cleanup();
-	void Render(glm::mat4 _wvp);
+	void Render(glm::mat4 _pv);
+	void Render(glm::mat4 _pv, glm::vec4 _specular);
 	void CalculateTransform();
-
 
 	//Members
 	static vector<Mesh> Lights;
@@ -34,6 +34,8 @@ public:
 private:
 	//Methods
 	void SetShaderVariables(glm::mat4 _pv);
+	void SetShaderVariables(glm::mat4 _pv, glm::vec4 _specular);
+
 	void BindAttributes();
 	string Concat(string _s1, int _index, string _s2);
 
