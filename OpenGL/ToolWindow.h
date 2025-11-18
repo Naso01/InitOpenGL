@@ -152,33 +152,42 @@ namespace OpenGL {
 			// 
 			this->trackBar_SpecularStrength->AccessibleName = L"";
 			this->trackBar_SpecularStrength->Location = System::Drawing::Point(125, 77);
+			this->trackBar_SpecularStrength->Maximum = 128;
+			this->trackBar_SpecularStrength->Minimum = 1;
 			this->trackBar_SpecularStrength->Name = L"trackBar_SpecularStrength";
 			this->trackBar_SpecularStrength->Size = System::Drawing::Size(284, 45);
 			this->trackBar_SpecularStrength->TabIndex = 5;
+			this->trackBar_SpecularStrength->Value = 4;
 			this->trackBar_SpecularStrength->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_SpecularStrength_Scroll);
 			// 
 			// trackBar_Red
 			// 
 			this->trackBar_Red->Location = System::Drawing::Point(125, 129);
+			this->trackBar_Red->Maximum = 300;
 			this->trackBar_Red->Name = L"trackBar_Red";
 			this->trackBar_Red->Size = System::Drawing::Size(284, 45);
 			this->trackBar_Red->TabIndex = 6;
+			this->trackBar_Red->Value = 100;
 			this->trackBar_Red->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Red_Scroll);
 			// 
 			// trackBar_Green
 			// 
 			this->trackBar_Green->Location = System::Drawing::Point(125, 180);
+			this->trackBar_Green->Maximum = 300;
 			this->trackBar_Green->Name = L"trackBar_Green";
 			this->trackBar_Green->Size = System::Drawing::Size(284, 45);
 			this->trackBar_Green->TabIndex = 7;
+			this->trackBar_Green->Value = 100;
 			this->trackBar_Green->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Green_Scroll);
 			// 
 			// trackBar_Blue
 			// 
 			this->trackBar_Blue->Location = System::Drawing::Point(125, 231);
+			this->trackBar_Blue->Maximum = 300;
 			this->trackBar_Blue->Name = L"trackBar_Blue";
 			this->trackBar_Blue->Size = System::Drawing::Size(284, 45);
 			this->trackBar_Blue->TabIndex = 8;
+			this->trackBar_Blue->Value = 100;
 			this->trackBar_Blue->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Blue_Scroll);
 			// 
 			// textBox_SpecularStrength
