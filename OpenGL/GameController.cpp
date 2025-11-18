@@ -1,8 +1,10 @@
-#include "GameController.h"
+﻿#include "GameController.h"
 #include "WindowController.h"
 #include <glm/gtc/random.hpp>
 #include "Fonts.h"
 #include "ToolWindow.h"
+
+bool GameController::m_leftMouseHeld = false;
 
 GameController::GameController() {
 	
@@ -23,6 +25,7 @@ void GameController::Initialize() {
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow(); // Call this first, as it creates a window required by GLEW
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
+	glfwSetMouseButtonCallback(glfwWindow, MouseClickCallback);
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
 	glEnable(GL_DEPTH_TEST);	//Configure global OpenGl state
 	glEnable(GL_BLEND);
@@ -38,6 +41,52 @@ void GameController::Initialize() {
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
 
+void MouseClickCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		if (action == GLFW_PRESS)
+			GameController::m_leftMouseHeld = true;
+
+		if (action == GLFW_RELEASE)
+			GameController::m_leftMouseHeld = false;
+	}
+}
+
+void GameController::MoveLight(GLFWwindow* _window)
+{
+	if (!m_leftMouseHeld || Mesh::Lights.empty())
+		return;
+
+	double mouseX, mouseY;
+	glfwGetCursorPos(_window, &mouseX, &mouseY);
+
+	int width, height;
+	glfwGetWindowSize(_window, &width, &height);
+
+	float cx = float(mouseX - width * 0.5f);
+	float cy = float(height * 0.5f - mouseY);
+
+	// Safe normalization
+	glm::vec2 direction(0.0f);
+	if (cx != 0 || cy != 0)
+		direction = glm::normalize(glm::vec2(cx, cy));
+
+	float dist = glm::length(glm::vec2(cx, cy));
+	float maxDist = glm::length(glm::vec2(width * 0.5f, height * 0.5f));
+	float speedFactor = dist / maxDist;
+
+	// If you have deltaTime available use this instead:
+	//float speed = 2.0f * speedFactor * deltaTime;
+	float speed = 0.001f * speedFactor;
+
+	glm::vec3 pos = Mesh::Lights[0].GetPosition();
+	pos.x += direction.x * speed;
+	pos.y += direction.y * speed;
+
+	GameController::SetLightPosition(pos);
+}
+
 void GameController::RenderToolWindow() {
 	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
 	System::Windows::Forms::Application::Run(window);
@@ -49,6 +98,8 @@ void GameController::SetLightPosition(glm::vec3 _pos) {
 
 void GameController::RunGame() {
 	
+	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow();
+
 	//Show the C++/CLI tool window
 #pragma region ToolWindow
 	System::Threading::Thread^ uiThread =
@@ -131,13 +182,13 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
-		//Fomt
-		//f.RenderText(to_string(OpenGL::ToolWindow::SpecularStrength), 10, 500, 0.5f, {1.0f, 1.0f, 0.0f});
-		f.RenderText("The cake is a lie", 2000, 1000, 0.5f, { 1.0f, 0.0f, 0.0f });
-		f.RenderText("This is a teapot", 500, 100, 0.5f, { 1.0f, 1.0f, 1.0f });
+		//Font
+		//f.RenderText("Light Pos: " + to_string(lightPos.x) + ", " + to_string(lightPos.y), 20, 20, 0.5f, { 1,1,0 });
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
+		
+		MoveLight(glfwWindow);
 
 	} while (glfwGetKey(WindowController::GetInstance().GetWindow(), GLFW_KEY_ESCAPE) != GLFW_PRESS && // Check if the ESC key was pressed
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed

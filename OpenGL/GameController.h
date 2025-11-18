@@ -19,10 +19,14 @@ public:
 	void RunGame();
 	
 	static void SetLightPosition(glm::vec3 _pos);
+	
+	//Member
+	static bool m_leftMouseHeld;
 
 private:
 	//Methods
 	static void RenderToolWindow();
+	void MoveLight(GLFWwindow* _window);
 
 	//Members
 	Shader m_shaderColor;
@@ -35,4 +39,5 @@ private:
 	vector<Mesh> m_meshBoxes;
 };
 
+void MouseClickCallback(GLFWwindow* window, int button, int action, int mods);
 #endif //!GAME_CONTROLLER_H
