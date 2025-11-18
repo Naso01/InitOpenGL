@@ -18,6 +18,8 @@ public:
 	void Initialize();
 	void RunGame();
 	
+	static void SetLightPosition(glm::vec3 _pos);
+
 private:
 	//Methods
 	static void RenderToolWindow();
@@ -31,7 +33,6 @@ private:
 	Camera m_camera;
 	
 	vector<Mesh> m_meshBoxes;
-	//Mesh m_meshLight;
 };
 
 #endif //!GAME_CONTROLLER_H

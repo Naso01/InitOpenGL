@@ -72,7 +72,7 @@ void Mesh::Create(Shader* _shader , string _file) {
 		specularMap.erase(0, last_slash_idx + 1);
 	}
 
-	if (diffuseMap != "") {
+	if (diffuseMap != "" and specularMap != "") {
 		m_hasTexture = true;
 		m_diffuseTexture = Texture();
 		m_diffuseTexture.LoadTexture("../Assets/Textures/" + diffuseMap);

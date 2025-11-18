@@ -274,6 +274,8 @@ private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sende
 private: System::Void btn_ResetTeapotPosition_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
+	GameController::SetLightPosition({ 0.0f, 0.0f, 0.1f });
+
 }
 private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
 }

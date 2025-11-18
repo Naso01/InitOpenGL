@@ -27,6 +27,7 @@ public:
 	void Render(glm::mat4 _wvp);
 	void CalculateTransform();
 
+
 	//Members
 	static vector<Mesh> Lights;
 

@@ -7,7 +7,7 @@
 GameController::GameController() {
 	
 	//m_meshBoxes.clear();	- Implemented by default by the compiler 
-	//m_meshLight = { };
+	//m_meshLights.clear();
 
 	m_camera = { };
 
@@ -41,6 +41,10 @@ void GameController::Initialize() {
 void GameController::RenderToolWindow() {
 	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
 	System::Windows::Forms::Application::Run(window);
+}
+
+void GameController::SetLightPosition(glm::vec3 _pos) {
+	Mesh::Lights[0].SetPosition(_pos);
 }
 
 void GameController::RunGame() {
@@ -80,7 +84,7 @@ void GameController::RunGame() {
 #pragma region Mesh Creation
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/Sphere.obj");
-	m.SetPosition({0.0f, 0.0f, 0.1f});
+	m.SetPosition({0.0f, 0.0f, 1.1f});
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	m.SetScale({ 0.005f, 0.005f, 0.005f });
 	Mesh::Lights.push_back(m);
