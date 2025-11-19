@@ -144,9 +144,9 @@ void GameController::MoveCubesToSphere(bool _moveCubeToSphere) {
 }
 
 void GameController::CreateCube() {
-	float distance = 0.5f;
-
-	glm::vec3 spawnPos = ()
+	glm::vec3 spawnPos = { glm::linearRand(0.0f, 2.0f),
+		glm::linearRand(0.0f, 2.0f),
+		glm::linearRand(0.0f, 2.0f) };
 
 	// Add cube
 	m_meshBoxes.emplace_back();
@@ -156,6 +156,23 @@ void GameController::CreateCube() {
 	cube.SetCameraPosition(m_camera.GetPosition());
 	cube.SetScale({ 0.02f, 0.02f, 0.02f });
 	cube.SetPosition(spawnPos);
+}
+
+void GameController::UpdateCubeMovement(float _deltaTime)
+{
+	glm::vec3 spherePos = m_meshBoxes[0].GetPosition();
+
+	for (auto& cube : m_meshBoxes)
+	{
+		glm::vec3 cubePos = cube.GetPosition();
+
+		glm::vec3 direction = glm::normalize(spherePos - cubePos);
+
+		float speed = 0.025f;  
+
+		cubePos += direction * speed * _deltaTime;
+		cube.SetPosition(cubePos);
+	}
 }
 
 void GameController::RunGame() {
@@ -215,9 +232,22 @@ void GameController::RunGame() {
 
 	bool colorbyPosition = false;
 
+	double lastTime = glfwGetTime();
+	int fps = 0;
+	string fpsS = "0";
+
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen
+
+		double currentTime = glfwGetTime();
+		fps++;
+		if(currentTime - lastTime >= 1.0){
+			fpsS = "FPS: " + to_string(fps);
+			fps = 0;
+			lastTime += 1.0f;
+		}
+		f.RenderText(fpsS, 100, 100, 0.5f, {1.0f, 1.0f, 0.0f});
 
 #pragma region ToolWindow
 		//Specular Strength
@@ -243,7 +273,7 @@ void GameController::RunGame() {
 			m_meshBoxes[0].SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
 			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
 		}
-		
+		/*
 		if (OpenGL::ToolWindow::MoveCubesToSphereMode)
 		{
 			if (m_windowController->IsLeftMouseDown())
@@ -251,6 +281,7 @@ void GameController::RunGame() {
 				CreateCubeAtClickPosition();
 			}
 		}
+		*/
 
 		//Box
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {

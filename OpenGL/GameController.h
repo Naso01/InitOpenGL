@@ -24,6 +24,8 @@ public:
 	void MoveCubesToSphere(bool _moveCubeToSphere);
 	void CreateCube();
 
+	void UpdateCubeMovement(float _deltaTime);
+
 	//Member
 	static bool m_leftMouseHeld;
 	static GameController* Active;
