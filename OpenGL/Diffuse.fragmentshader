@@ -23,9 +23,7 @@ struct Light{
 	vec3 specularColor;
 };
 
-uniform float RenderRedChannel;
-uniform float RenderGreenChannel;
-uniform float RenderBlueChannel;
+uniform bool UsePositionColor;
 
 uniform Material material;
 #define NR_LIGHTS 1
@@ -33,10 +31,12 @@ uniform Light light[NR_LIGHTS];
 
 void main()
 {
+    
+
     vec4 finalColor = vec4(0);
+
     for(int i = 0; i < NR_LIGHTS; i++)
     {
-    
         vec3 lightDir = normalize(light[i].position - retFragPos); // Normalize, for correct dot product result
         float lambertianStrength = dot(lightDir, retNormal); // Add lambertian lighting
         vec3 refl = reflect(-lightDir, retNormal);
