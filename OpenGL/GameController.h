@@ -18,11 +18,12 @@ public:
 	void Initialize();
 	void RunGame();
 	
-	static void SetLightPosition(glm::vec3 _pos);
+	void SetMeshPosition(glm::vec3 _pos);
 	void SetColorByPosition(bool _ColorByPosition);
 	
 	//Member
 	static bool m_leftMouseHeld;
+	static GameController* Active;
 
 private:
 	//Methods

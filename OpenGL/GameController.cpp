@@ -5,6 +5,7 @@
 #include "ToolWindow.h"
 
 bool GameController::m_leftMouseHeld = false;
+GameController* GameController::Active = nullptr;
 
 GameController::GameController() {
 	
@@ -17,6 +18,7 @@ GameController::GameController() {
 	m_shaderDiffuse = { };
 	m_shaderFont = { };
 	m_shaderLight = { };
+	Active = this;
 }
 
 void GameController::Initialize() {
@@ -92,7 +94,7 @@ void GameController::MoveLight(GLFWwindow* _window)
 		pos.x += direction.x * speed;
 		pos.y += direction.y * speed;
 
-		SetLightPosition(pos);
+		SetMeshPosition(pos);
 	}
 }
 
@@ -101,8 +103,14 @@ void GameController::RenderToolWindow() {
 	System::Windows::Forms::Application::Run(window);
 }
 
-void GameController::SetLightPosition(glm::vec3 _pos) {
-	Mesh::Lights[0].SetPosition(_pos);
+void GameController::SetMeshPosition(glm::vec3 _pos) {
+	if (OpenGL::ToolWindow::ColorByPosition) {
+		m_meshBoxes[0].SetPosition(_pos);
+	}
+	else {
+		Mesh::Lights[0].SetPosition(_pos);
+	}
+	
 }
 
 void GameController::SetColorByPosition(bool _ColorByPosition) {
@@ -149,7 +157,7 @@ void GameController::RunGame() {
 #pragma region Mesh Creation
 	Mesh m = Mesh();
 	m.Create(&m_shaderColor, "../Assets/Models/Sphere.obj");
-	m.SetPosition({1.0f, 1.0f, 0.1f});
+	m.SetPosition({0.0f, 0.0f, 0.1f});
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	m.SetScale({ 0.005f, 0.005f, 0.005f });
 	Mesh::Lights.push_back(m);

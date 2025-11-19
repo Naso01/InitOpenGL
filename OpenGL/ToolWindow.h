@@ -46,6 +46,7 @@ namespace OpenGL {
 	public:
 
 //Members
+		
 		static unsigned short SpecularStrength;
 		
 		static float RenderRedChannel;
@@ -375,10 +376,10 @@ namespace OpenGL {
 		private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		}
 		private: System::Void btn_ResetTeapotPosition_Click(System::Object^ sender, System::EventArgs^ e) {
+			GameController::Active->SetMeshPosition({ 0.0f, 0.0f, 0.0f });
 		}
 		private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
-			GameController::SetLightPosition({ 0.0f, 0.0f, 0.1f });
-
+			GameController::Active->SetMeshPosition({ 0.0f, 0.0f, 0.1f });
 		}
 
 		//TrackBars
