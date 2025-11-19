@@ -37,8 +37,6 @@ void main()
     {
         vec3 posColor = abs(retFragPos * 0.2);
         posColor = clamp(posColor, 0.0, 1.0);
-
-        // multiply base texture by tint
         diffuseTex *= posColor;
     }
 

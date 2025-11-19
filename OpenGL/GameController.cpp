@@ -175,8 +175,11 @@ void GameController::RunGame() {
 #pragma endregion ToolWindow
 
 
-		GLuint loc = glGetUniformLocation(m_shaderDiffuse.GetProgramID(), "UsePositionColor");
-		glUniform1f(loc, OpenGL::ToolWindow::ColorByPosition);
+		GLint loc = glGetUniformLocation(m_shaderDiffuse.GetProgramID(), "UsePositionColor");
+		glUniform1i(loc, OpenGL::ToolWindow::ColorByPosition);
+
+		std::cout << "UsePositionColor: " << OpenGL::ToolWindow::ColorByPosition << std::endl;
+		std::cout << "Uniform Loc: " << loc << std::endl;
 
 		//Box
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {

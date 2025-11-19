@@ -73,7 +73,7 @@ namespace OpenGL {
 			RenderBlueChannel = blueValue;
 			lbl_BlueValue->Text = blueValue.ToString("F2");
 
-			ColorByPosition == rbtn_ColorByPosition->Checked;
+			ColorByPosition = rbtn_ColorByPosition->Checked;
 		}
 
 	protected:
@@ -370,7 +370,7 @@ namespace OpenGL {
 		}
 		private: System::Void rbtn_ColorByPosition_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 
-			ColorByPosition == rbtn_ColorByPosition->Checked;
+			ColorByPosition = rbtn_ColorByPosition->Checked;
 		}
 		private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		}
