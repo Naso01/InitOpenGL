@@ -174,6 +174,10 @@ void GameController::RunGame() {
 
 #pragma endregion ToolWindow
 
+
+		GLuint loc = glGetUniformLocation(m_shaderDiffuse.GetProgramID(), "UsePositionColor");
+		glUniform1f(loc, OpenGL::ToolWindow::ColorByPosition);
+
 		//Box
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
 			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specular);

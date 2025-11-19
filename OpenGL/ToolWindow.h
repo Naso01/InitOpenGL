@@ -52,6 +52,8 @@ namespace OpenGL {
 		static float RenderGreenChannel;
 		static float RenderBlueChannel;
 
+		static bool ColorByPosition;
+
 		ToolWindow(void)
 		{
 			InitializeComponent();
@@ -70,6 +72,8 @@ namespace OpenGL {
 			float blueValue = trackBar_Blue->Value / 100.0f; //Blue
 			RenderBlueChannel = blueValue;
 			lbl_BlueValue->Text = blueValue.ToString("F2");
+
+			ColorByPosition == rbtn_ColorByPosition->Checked;
 		}
 
 	protected:
@@ -365,6 +369,8 @@ namespace OpenGL {
 		private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		}
 		private: System::Void rbtn_ColorByPosition_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+
+			ColorByPosition == rbtn_ColorByPosition->Checked;
 		}
 		private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		}
