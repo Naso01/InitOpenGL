@@ -55,7 +55,7 @@ void MouseClickCallback(GLFWwindow* window, int button, int action, int mods)
 
 void GameController::MoveLight(GLFWwindow* _window)
 {
-	if (!m_leftMouseHeld || Mesh::Lights.empty())
+	if (!m_leftMouseHeld || Mesh::Lights.empty() || m_meshBoxes.empty())
 		return;
 
 	double mouseX, mouseY;
@@ -80,11 +80,20 @@ void GameController::MoveLight(GLFWwindow* _window)
 	//float speed = 2.0f * speedFactor * deltaTime;
 	float speed = 0.001f * speedFactor;
 
-	glm::vec3 pos = Mesh::Lights[0].GetPosition();
-	pos.x += direction.x * speed;
-	pos.y += direction.y * speed;
+	if (OpenGL::ToolWindow::ColorByPosition) {
+		glm::vec3 pos = m_meshBoxes[0].GetPosition();
+		pos.x += direction.x * speed;
+		pos.y += direction.y * speed;
 
-	GameController::SetLightPosition(pos);
+		m_meshBoxes[0].SetPosition(pos);
+	}
+	else {
+		glm::vec3 pos = Mesh::Lights[0].GetPosition();
+		pos.x += direction.x * speed;
+		pos.y += direction.y * speed;
+
+		SetLightPosition(pos);
+	}
 }
 
 void GameController::RenderToolWindow() {
@@ -183,7 +192,7 @@ void GameController::RunGame() {
 
 
 		if (OpenGL::ToolWindow::ColorByPosition != colorbyPosition) {
-			SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
+			m_meshBoxes[0].SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
 			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
 		}
 			
