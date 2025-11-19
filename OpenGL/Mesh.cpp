@@ -30,16 +30,6 @@ void Mesh::Cleanup() {
 	m_specularTexture.Cleanup();
 }
 
-string Mesh::RemoveFolder(string _map) {
-
-	const size_t last_slash_idx = _map.find_last_of("\\/");
-	if (string::npos != last_slash_idx) {
-		_map.erase(0, last_slash_idx + 1);
-	}
-
-	return _map;
-}
-
 void Mesh::Create(Shader* _shader , string _file) {
 
 	m_shader = _shader;
