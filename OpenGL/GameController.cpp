@@ -118,6 +118,46 @@ void GameController::SetColorByPosition(bool _ColorByPosition) {
 	m_meshBoxes[0].SetColorByPosition(_ColorByPosition);
 }
 
+void GameController::MoveCubesToSphere(bool _moveCubeToSphere) {
+	
+	for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
+		m_meshBoxes[count].Cleanup();
+	}
+	m_meshBoxes.clear();
+
+	if (_moveCubeToSphere) {
+		Mesh sphere = Mesh();
+		sphere.Create(&m_shaderDiffuse, "../Assets/Models/sphere.obj");
+		sphere.SetCameraPosition(m_camera.GetPosition());
+		sphere.SetScale({ 0.02f, 0.02f, 0.02f });
+		sphere.SetPosition({ 0.0f, 0.0f, 0.0f });
+		m_meshBoxes.push_back(sphere);
+	}
+	else {
+		Mesh teapot = Mesh();
+		teapot.Create(&m_shaderDiffuse, "../Assets/Models/teapot.obj");
+		teapot.SetCameraPosition(m_camera.GetPosition());
+		teapot.SetScale({ 0.02f, 0.02f, 0.02f });
+		teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
+		m_meshBoxes.push_back(teapot);
+	}
+}
+
+void GameController::CreateCube() {
+	float distance = 0.5f;
+
+	glm::vec3 spawnPos = ()
+
+	// Add cube
+	m_meshBoxes.emplace_back();
+	auto& cube = m_meshBoxes.back();
+
+	cube.Create(&m_shaderDiffuse, "../Assets/Models/cube.obj");
+	cube.SetCameraPosition(m_camera.GetPosition());
+	cube.SetScale({ 0.02f, 0.02f, 0.02f });
+	cube.SetPosition(spawnPos);
+}
+
 void GameController::RunGame() {
 	
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow();
@@ -203,7 +243,15 @@ void GameController::RunGame() {
 			m_meshBoxes[0].SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
 			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
 		}
-			
+		
+		if (OpenGL::ToolWindow::MoveCubesToSphereMode)
+		{
+			if (m_windowController->IsLeftMouseDown())
+			{
+				CreateCubeAtClickPosition();
+			}
+		}
+
 		//Box
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
 			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specular);

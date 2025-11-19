@@ -21,6 +21,9 @@ public:
 	void SetMeshPosition(glm::vec3 _pos);
 	void SetColorByPosition(bool _ColorByPosition);
 	
+	void MoveCubesToSphere(bool _moveCubeToSphere);
+	void CreateCube();
+
 	//Member
 	static bool m_leftMouseHeld;
 	static GameController* Active;

@@ -54,6 +54,8 @@ namespace OpenGL {
 		static float RenderBlueChannel;
 
 		static bool ColorByPosition;
+		static bool MoveCubesToSphereMode;
+
 
 		ToolWindow(void)
 		{
@@ -75,6 +77,8 @@ namespace OpenGL {
 			lbl_BlueValue->Text = blueValue.ToString("F2");
 
 			ColorByPosition = rbtn_ColorByPosition->Checked;
+			MoveCubesToSphereMode = false;
+
 		}
 
 	protected:
@@ -374,6 +378,8 @@ namespace OpenGL {
 			ColorByPosition = rbtn_ColorByPosition->Checked;
 		}
 		private: System::Void rbtn_MoveCubeToSphere_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+			GameController::Active->MoveCubesToSphere(rbtn_MoveCubeToSphere->Checked);
+			MoveCubesToSphereMode = rbtn_MoveCubeToSphere->Checked;
 		}
 		private: System::Void btn_ResetTeapotPosition_Click(System::Object^ sender, System::EventArgs^ e) {
 			GameController::Active->SetMeshPosition({ 0.0f, 0.0f, 0.0f });
