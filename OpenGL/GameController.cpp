@@ -75,10 +75,10 @@ void GameController::RunGame() {
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh box = CreateMesh(m_shaderDiffuse, "Cube.obj", { 0.5f, 0.5f, 0.5f },
+	Mesh brickwall = CreateMesh(m_shaderDiffuse, "wall.obj", { 0.5f, 0.5f, 0.5f },
 		{ 1.0f, 0.0f, 5.0f });
-	box.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(box);
+	brickwall.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(brickwall);
 
 	Skybox m_skybox = Skybox();
 	m_skybox.Create(&m_shaderSkybox, "../Assets/Models/Skybox.obj",
