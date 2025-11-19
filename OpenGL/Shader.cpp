@@ -27,7 +27,7 @@ void Shader::SetTextureSampler(const char* _name, GLuint _texUnit, int _texUnitI
 		glUniform1i(loc, _texUnitID);
 	}
 }
-
+//***TODO: use overloading instead of using multiple functions??
 void Shader::SetVec3(const char* _name, glm::vec3 _value) {
 	GLint loc = glGetUniformLocation(m_programID, _name);
 	if (loc != -1) {
@@ -46,6 +46,13 @@ void Shader::SetFloat(const char* _name, float _value) {
 	GLint loc = glGetUniformLocation(m_programID, _name);
 	if (loc != -1) {
 		glUniform1f(loc, _value);
+	}
+}
+
+void Shader::SetInt(const char* _name, int _value) {
+	GLint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1) {
+		glUniform1i(loc, _value);
 	}
 }
 
