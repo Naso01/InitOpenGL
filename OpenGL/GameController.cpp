@@ -75,11 +75,17 @@ void GameController::RunGame() {
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh brickwall = CreateMesh(m_shaderDiffuse, "wall.obj", { 0.5f, 0.5f, 0.5f },
-		{ 1.0f, 0.0f, 5.0f });
-	brickwall.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(brickwall);
+	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.20f, 0.20f, 0.20f }, 
+														{-0.25f, 0.25f, 0.25f});
+	box.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(box);
 
+	Mesh wall = CreateMesh(m_shaderDiffuse, "wall.obj", { 0.05f, 0.05f, 0.05f },
+														{ 0.0f, 0.0f, 0.0f });
+	wall.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(wall);
+
+	/*
 	Skybox m_skybox = Skybox();
 	m_skybox.Create(&m_shaderSkybox, "../Assets/Models/Skybox.obj",
 		{ "../Assets/Textures/Skybox/right.jpg",
@@ -88,19 +94,19 @@ void GameController::RunGame() {
 		  "../Assets/Textures/Skybox/bottom.jpg",
 		  "../Assets/Textures/Skybox/front.jpg",
 		  "../Assets/Textures/Skybox/back.jpg" });
+	*/
 #pragma endregion CreateMeshes
+
+#pragma region CreateFonts
 
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 40);
 
+#pragma endregion CreateFonts
 #pragma region Render
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
-
-		m_camera.Rotate();
-		glm::mat4 view = glm::mat4(glm::mat3(m_camera.GetView()));
-		m_skybox.Render(m_camera.GetProjection() * view);
 
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {

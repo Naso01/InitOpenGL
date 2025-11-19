@@ -65,20 +65,6 @@ void Mesh::Create(Shader* _shader , string _file) {
 			m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.Y);
 		}
 	}
-
-	//Remove directory if present
-	string diffuseNap = Loader.LoadedMaterials[0].map_Kd;
-	const size_t last_slash_idx = diffuseNap.find_last_of("\\");
-	if (std::string::npos != last_slash_idx) {
-
-		diffuseNap.erase(0, last_slash_idx + 1);
-	}
-
-	m_diffuseTexture = Texture();
-	m_diffuseTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
-	m_specularTexture = Texture();
-	m_specularTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
-	
 #pragma endregion LoadMesh
 
 	m_diffuseTexture = Texture();
