@@ -19,6 +19,7 @@ public:
 	void RunGame();
 	
 	static void SetLightPosition(glm::vec3 _pos);
+	void SetColorByPosition(bool _ColorByPosition);
 	
 	//Member
 	static bool m_leftMouseHeld;

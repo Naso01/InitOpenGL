@@ -96,6 +96,11 @@ void GameController::SetLightPosition(glm::vec3 _pos) {
 	Mesh::Lights[0].SetPosition(_pos);
 }
 
+void GameController::SetColorByPosition(bool _ColorByPosition) {
+
+	m_meshBoxes[0].SetColorByPosition(_ColorByPosition);
+}
+
 void GameController::RunGame() {
 	
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow();
@@ -151,6 +156,8 @@ void GameController::RunGame() {
 	Fonts f = Fonts();
 	f.Create(&m_shaderFont, "arial.ttf", 100);
 
+	bool colorbyPosition = false;
+
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen
@@ -175,12 +182,11 @@ void GameController::RunGame() {
 #pragma endregion ToolWindow
 
 
-		GLint loc = glGetUniformLocation(m_shaderDiffuse.GetProgramID(), "UsePositionColor");
-		glUniform1i(loc, OpenGL::ToolWindow::ColorByPosition);
-
-		std::cout << "UsePositionColor: " << OpenGL::ToolWindow::ColorByPosition << std::endl;
-		std::cout << "Uniform Loc: " << loc << std::endl;
-
+		if (OpenGL::ToolWindow::ColorByPosition != colorbyPosition) {
+			SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
+			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
+		}
+			
 		//Box
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
 			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specular);

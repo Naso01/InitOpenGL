@@ -21,7 +21,7 @@ struct Light{
     vec3 specularColor;
 };
 
-uniform bool UsePositionColor;
+uniform bool ColorByPosition;
 
 uniform Material material;
 #define NR_LIGHTS 1
@@ -33,10 +33,10 @@ void main()
 
     vec3 diffuseTex = texture(material.diffuseTexture, retTexCoord).rgb;
 
-    if (UsePositionColor)
+    if (ColorByPosition)
     {
-        vec3 posColor = abs(retFragPos * 0.2);
-        posColor = clamp(posColor, 0.0, 1.0);
+        vec3 posColor = abs(retFragPos);
+       posColor = clamp(posColor, 0.0, 1.0);
         diffuseTex *= posColor;
     }
 
@@ -53,9 +53,7 @@ void main()
         vec3 lambertian = lambertianStrength * diffuseTex * light[i].diffuseColor;
 
         // specular remains unaffected (you can tint it too if you want)
-        vec3 specular = specularStrength *
-                        texture(material.specularTexture, retTexCoord).rgb *
-                        light[i].specularColor;
+        vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light[i].specularColor;
 
         finalColor += vec4(ambient + lambertian + specular, 1.0f);
     }

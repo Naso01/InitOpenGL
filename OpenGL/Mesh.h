@@ -20,6 +20,7 @@ public:
 	void SetColor(glm::vec3 _color) { m_color = _color; }
 	glm::vec3 GetColor() { return m_color; }
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }
+	void SetColorByPosition(bool _colorByPosition) { m_colorByPosition = _colorByPosition; }
 
 	//Methods
 	void Create(Shader * _shader, string _file);
@@ -60,6 +61,7 @@ private:
 	glm::vec3 m_color;
 
 	bool m_hasTexture;
+	bool m_colorByPosition;
 };
 
 #endif // !MESH_H
