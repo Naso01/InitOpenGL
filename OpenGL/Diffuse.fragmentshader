@@ -41,21 +41,31 @@ void main()
     }
 
     for(int i = 0; i < NR_LIGHTS; i++)
-    {
-        vec3 lightDir = normalize(light[i].position - retFragPos);
-        float lambertianStrength = dot(lightDir, retNormal);
-        vec3 refl = reflect(-lightDir, retNormal);
-        float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f),
-                                     material.specularStrength);
-
-        // use tinted diffuseTex instead of sampling again
+    { 
+    
         vec3 ambient = diffuseTex * light[i].ambientColor / NR_LIGHTS;
-        vec3 lambertian = lambertianStrength * diffuseTex * light[i].diffuseColor;
 
-        // specular remains unaffected (you can tint it too if you want)
-        vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light[i].specularColor;
+        if(!ColorByPosition)
+        {
+            vec3 lightDir = normalize(light[i].position - retFragPos);
+            float lambertianStrength = dot(lightDir, retNormal);
+            vec3 refl = reflect(-lightDir, retNormal);
+            float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f),
+                                         material.specularStrength);
 
-        finalColor += vec4(ambient + lambertian + specular, 1.0f);
+            // use tinted diffuseTex instead of sampling again
+       
+            vec3 lambertian = lambertianStrength * diffuseTex * light[i].diffuseColor;
+
+            // specular remains unaffected (you can tint it too if you want)
+            vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light[i].specularColor;
+
+            finalColor += vec4(ambient + lambertian + specular, 1.0f);
+        }
+        else
+        {
+            finalColor += vec4(ambient, 1.0f);
+        }
     }
 
     FragColor = finalColor;
