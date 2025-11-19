@@ -9,6 +9,7 @@ Mesh::Mesh() {
 	
 	m_diffuseTexture = { };
 	m_specularTexture = { };
+	m_normalTexture = { };
 	
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
@@ -44,6 +45,7 @@ void Mesh::Create(Shader* _shader , string _file) {
 
 	m_shader = _shader;
 
+#pragma region LoadMesh
 	//Initialize Loader
 	objl::Loader Loader;
 	M_ASSERT(Loader.LoadFile(_file) == true, "Failed to load mesh."); // Load .obj File
@@ -77,6 +79,24 @@ void Mesh::Create(Shader* _shader , string _file) {
 	m_specularTexture = Texture();
 	m_specularTexture.LoadTexture("../Assets/Textures/" + diffuseNap);
 	
+#pragma endregion LoadMesh
+
+	m_diffuseTexture = Texture();
+	if (Loader.LoadedMaterials[0].map_Kd != "")
+		m_diffuseTexture.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Kd));
+	else
+		m_diffuseTexture.LoadTexture("../Assets/Textures/NullTexture.png"); //If texture does not exists, display null texture
+
+	m_specularTexture = Texture();
+	if (Loader.LoadedMaterials[0].map_Ks != "") 
+		m_specularTexture.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Ks));
+
+	m_normalTexture = Texture();
+	if (Loader.LoadedMaterials[0].map_bump != "") {
+		m_normalTexture.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Ks));
+		m_enableNormalMap = true;
+	}
+
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
@@ -134,6 +154,8 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetMat4("World", m_world);
 	m_shader->SetMat4("WVP", _pv * m_world);
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
+	m_shader->SetInt("EnableNormalMap", m_enableNormalMap);
+
 	//Configure lighting
 	for (unsigned int i = 0; i < Lights.size(); i++) {
 
@@ -150,6 +172,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetFloat("material.specularStrength", 8);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
 	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
+	m_shader->SetTextureSampler("material.normalTexture", GL_TEXTURE2, 2, m_normalTexture.GetTexture());
 }
 
 void Mesh::Render(glm::mat4 _pv) {

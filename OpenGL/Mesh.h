@@ -42,6 +42,8 @@ private:
 	Texture m_diffuseTexture;
 	Texture m_specularTexture;
 	Texture m_normalTexture;
+	bool m_enableNormalMap;
+
 	GLuint m_vertexBuffer;//GPU Buffer
 	GLuint m_indexBuffer; //GPU Buffer
 	
