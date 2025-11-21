@@ -4,7 +4,7 @@ in vec3 retNormal; // MUST use same name as out variable used by vertex shader
 in vec2 retTexCoord;
 in vec3 retFragPos;
 in vec3 retViewDirection;
-in mat4 retWorld;
+in mat3 retTBN;
 
 out vec4 FragColor;
 
@@ -46,14 +46,16 @@ void main()
     {
     
         vec3 lightDir = normalize(light[i].position - retFragPos); // Normalize, for correct dot product result
+        
         vec3 normal = retNormal;
         if(EnableNormalMap)
         {
             normal = texture(material.normalTexture, retTexCoord).rgb;
             normal = normal * 2.0f - 1.0f;
-            normal = normalize(mat3(retWorld) * normal);
+            normal = normalize(mat3(retTBN) * normal);
 
         }
+
         float lambertianStrength = dot(lightDir, retNormal); // Add lambertian lighting
         vec3 refl = reflect(-lightDir, retNormal);
         float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength); //Specular component
