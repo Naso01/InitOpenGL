@@ -175,6 +175,7 @@ void Mesh::BindAttributes() {
 		GL_FALSE,					//normalized?
 		stride * sizeof(float),			//stride (floats per vertex definition
 		(void*)(6 * sizeof(float)));//Array buffer offset
+	m_elementSize = 8;
 #pragma endregion BindVertexData
 
 #pragma region BindNormalMapData
@@ -197,9 +198,9 @@ void Mesh::BindAttributes() {
 			GL_FALSE,					//normalized?
 			stride * sizeof(float),			//stride (floats per vertex definition
 			(void*)(11 * sizeof(float)));//Array buffer offset
-		//m_elementSize += 6;
+		m_elementSize += 6;
 	}
-
+#pragma endregion BindNormalMapData
 }
 
 void Mesh::CalculateTransform() {
@@ -250,7 +251,7 @@ void Mesh::Render(glm::mat4 _pv) {
 	SetShaderVariables(_pv);
 	BindAttributes();
 
-	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size());
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / m_elementSize);
 	glDisableVertexAttribArray(m_shader->GetAttrNormals());
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 	glDisableVertexAttribArray(m_shader->GetAttrTexCoords());

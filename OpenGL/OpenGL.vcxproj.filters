@@ -28,14 +28,14 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{65daa69e-4073-4cf8-9679-9dc320cb405a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Forms">
-      <UniqueIdentifier>{cfe7241a-0f36-43b9-8dc7-aaa0ed2b4ee8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Rendering">
       <UniqueIdentifier>{4f5efae5-d7fc-430f-a580-5f0ca77fa7ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{a5fef6e1-68f6-45f5-8749-4804f15cb551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forms">
+      <UniqueIdentifier>{cfe7241a-0f36-43b9-8dc7-aaa0ed2b4ee8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
