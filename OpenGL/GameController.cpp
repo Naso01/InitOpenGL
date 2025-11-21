@@ -75,10 +75,10 @@ void GameController::RunGame() {
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh fighter = CreateMesh(m_shaderDiffuse, "fighter.obj",	{0.002f, 0.002f, 0.002f }, 
+	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.2f, 0.2f, 0.2f },
 														{0.0f, 0.0f, 0.0f});
-	fighter.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(fighter);
+	box.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(box);
 
 	/*
 	Skybox m_skybox = Skybox();
@@ -99,20 +99,34 @@ void GameController::RunGame() {
 
 #pragma endregion CreateFonts
 #pragma region Render
+
+	double lastTime = glfwGetTime();
+	int fps = 0;
+	string fpsS = "0";
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
 
+		double currentTime = glfwGetTime();
+		fps++;
+		if (currentTime - lastTime >= 1.0) {
+			fpsS = "FPS: " + to_string(fps);
+			fps = 0;
+			lastTime += 1.0f;
+		}
+		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
+
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
+			for (int x = 0; x < 1000; x++)
+				m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//Font
-		f.RenderText("Testing text", 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
+		
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
