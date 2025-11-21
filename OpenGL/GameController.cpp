@@ -71,19 +71,14 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region CreateMeshes
 	Mesh m = CreateMesh(m_shaderColor, "teapot.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 1.0f,  0.0f,  0.0f });
+												 { 0.0f,  0.8f,  1.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.20f, 0.20f, 0.20f }, 
-														{-0.25f, 0.25f, 0.25f});
-	box.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(box);
-
-	Mesh wall = CreateMesh(m_shaderDiffuse, "wall.obj", { 0.05f, 0.05f, 0.05f },
-														{ 0.0f, 0.0f, 0.0f });
-	wall.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(wall);
+	Mesh fighter = CreateMesh(m_shaderDiffuse, "fighter.obj",	{0.002f, 0.002f, 0.002f }, 
+														{0.0f, 0.0f, 0.0f});
+	fighter.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(fighter);
 
 	/*
 	Skybox m_skybox = Skybox();

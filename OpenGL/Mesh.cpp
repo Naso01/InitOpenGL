@@ -1,6 +1,5 @@
 #include "Mesh.h"
 #include "Shader.h"
-#include "OBJ_Loader.h"
 
 vector <Mesh> Mesh::Lights;
 
@@ -41,6 +40,25 @@ string Mesh::RemoveFolder(string _map) {
 	return _map;
 }
 
+void Mesh::CalculateTangents(vector<objl::Vertex> _vertices, objl::Vector3& _tangent, objl::Vector3& _bitangent) {
+
+	//calculate tangent/bitangent vectors of both triangles
+	objl::Vector3 edge1 = _vertices[1].Position - _vertices[0].Position;
+	objl::Vector3 edge2 = _vertices[2].Position - _vertices[0].Position;
+	objl::Vector2 deltaUV1 = _vertices[1].TextureCoordinate - _vertices[0].TextureCoordinate;
+	objl::Vector2 deltaUV2 = _vertices[2].TextureCoordinate - _vertices[0].TextureCoordinate;
+
+	float f = 1.0f / (deltaUV1.X * deltaUV2.Y - deltaUV2.X * deltaUV1.Y);
+
+	_tangent.X = f * (deltaUV2.Y * edge1.X - deltaUV1.Y * edge2.X);
+	_tangent.Y = f * (deltaUV2.Y * edge1.Y - deltaUV1.Y * edge2.Y);
+	_tangent.Z = f * (deltaUV2.Y * edge1.Z - deltaUV1.Y * edge2.Z);
+
+	_bitangent.X = f * (-deltaUV2.X * edge1.X + deltaUV1.X * edge2.X);
+	_bitangent.Y = f * (-deltaUV2.X * edge1.Y + deltaUV1.X * edge2.Y);
+	_bitangent.Z = f * (-deltaUV2.X * edge1.Z + deltaUV1.X * edge2.Z);
+}
+
 void Mesh::Create(Shader* _shader , string _file) {
 
 	m_shader = _shader;
@@ -53,6 +71,23 @@ void Mesh::Create(Shader* _shader , string _file) {
 	for (unsigned int i = 0; i < Loader.LoadedMeshes.size(); i++) {
 
 		objl::Mesh curMesh = Loader.LoadedMeshes[i];
+		vector<objl::Vector3> tangents;
+		vector<objl::Vector3> bitangents;
+		vector<objl::Vertex> triangle;
+		objl::Vector3 tangent;
+		objl::Vector3 bitangent;
+		//Tangent Bitangent
+		for (unsigned int j = 0; j < curMesh.Vertices.size() - 2; j++) {
+
+			triangle.clear();
+			triangle.push_back(curMesh.Vertices[j]);
+			triangle.push_back(curMesh.Vertices[j+1]);
+			triangle.push_back(curMesh.Vertices[j+2]);
+			CalculateTangents(triangle, tangent, bitangent);
+			tangents.push_back(tangent);
+			bitangents.push_back(bitangent);
+		}
+		//Vertex Data
 		for (unsigned int j = 0; j < curMesh.Vertices.size(); j++) {
 
 			m_vertexData.push_back(curMesh.Vertices[j].Position.X);
@@ -63,6 +98,17 @@ void Mesh::Create(Shader* _shader , string _file) {
 			m_vertexData.push_back(curMesh.Vertices[j].Normal.Z);
 			m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.X);
 			m_vertexData.push_back(curMesh.Vertices[j].TextureCoordinate.Y);
+
+			if (Loader.LoadedMaterials[0].map_bump != "") {
+
+				int index = j / 3;
+				m_vertexData.push_back(tangents[index].X);
+				m_vertexData.push_back(tangents[index].Y);
+				m_vertexData.push_back(tangents[index].Z);
+				m_vertexData.push_back(bitangents[index].X);
+				m_vertexData.push_back(bitangents[index].Y);
+				m_vertexData.push_back(bitangents[index].Z);
+			}
 		}
 	}
 #pragma endregion LoadMesh
@@ -79,13 +125,15 @@ void Mesh::Create(Shader* _shader , string _file) {
 
 	m_normalTexture = Texture();
 	if (Loader.LoadedMaterials[0].map_bump != "") {
-		m_normalTexture.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Ks));
+		string path = "../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_bump);
+		m_normalTexture.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_bump));
 		m_enableNormalMap = true;
 	}
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -94,39 +142,70 @@ void Mesh::BindAttributes() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); //Bind the vertex buffer
 
+	int stride = 8;
+
+	if (m_enableNormalMap) {
+		stride += 6; //Include tangent and bitangent components
+	}
+#pragma region BindVertexData
 	//1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices());
 	glVertexAttribPointer(m_shader->GetAttrVertices(), // The attribute we want to configure
-		3,							//size (3 vertices per primitive)
+		3,							//size (3 components)
 		GL_FLOAT,					//type
 		GL_FALSE,					//normalized?
-		8 * sizeof(float),			//stride (8 floats per vertex definition
+		stride * sizeof(float),			//stride (floats per vertex definition
 		(void*)0);//Array buffer offset
 
 	//2nd attribute buffer : normals
 	glEnableVertexAttribArray(m_shader->GetAttrNormals());
 	glVertexAttribPointer(m_shader->GetAttrNormals(),	//The attribute we want to configure
-		3,							//size (3 vertices per primitive)
+		3,							//size (3 components)
 		GL_FLOAT,					//type
 		GL_FALSE,					//normalized?
-		8 * sizeof(float),			//stride (8 floats per vertex definition
+		stride * sizeof(float),			//stride (floats per vertex definition
 		(void*)(3 * sizeof(float)));//Array buffer offset
 
 
 	// 3rd attribute buffer :  texCoords
 	glEnableVertexAttribArray(m_shader->GetAttrTexCoords());
 	glVertexAttribPointer(m_shader->GetAttrTexCoords(),//The attribute we want to configure
-		2,							//size (3 vertices per primitive)
+		2,							//size (2 components)
 		GL_FLOAT,					//type
 		GL_FALSE,					//normalized?
-		8 * sizeof(float),			//stride (8 floats per vertex definition
+		stride * sizeof(float),			//stride (floats per vertex definition
 		(void*)(6 * sizeof(float)));//Array buffer offset
+#pragma endregion BindVertexData
+
+#pragma region BindNormalMapData
+	if (m_enableNormalMap) {
+
+		//4th attribute buffer : tangent
+		glEnableVertexAttribArray(m_shader->GetAttrTangents());
+		glVertexAttribPointer(m_shader->GetAttrTangents(),	//The attribute we want to configure
+			3,							//size (3 components)
+			GL_FLOAT,					//type
+			GL_FALSE,					//normalized?
+			stride * sizeof(float),			//stride (floats per vertex definition
+			(void*)(8 * sizeof(float)));//Array buffer offset
+
+		//5th attribute buffer : bitangent
+		glEnableVertexAttribArray(m_shader->GetAttrBitangents());
+		glVertexAttribPointer(m_shader->GetAttrBitangents(),	//The attribute we want to configure
+			3,							//size (3 components)
+			GL_FLOAT,					//type
+			GL_FALSE,					//normalized?
+			stride * sizeof(float),			//stride (floats per vertex definition
+			(void*)(11 * sizeof(float)));//Array buffer offset
+		//m_elementSize += 6;
+	}
+
 }
 
 void Mesh::CalculateTransform() {
 	
 	m_world = glm::translate(glm::mat4(1.0f), m_position);
-	m_world = glm::rotate(m_world, m_rotation.y, glm::vec3(0, 1, 0));
+	m_world = glm::rotate(m_world, glm::radians(m_rotation.x), glm::vec3(1, 0, 0));
 	m_world = glm::scale(m_world, m_scale);
 }
 
@@ -153,7 +232,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({ 0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
 		m_shader->SetFloat(Concat("light[", i, "].coneAngle").c_str(), glm::radians(5.0f));
 		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
-	}
+	} 
 	//Configure material
 	m_shader->SetFloat("material.specularStrength", 8);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
@@ -165,7 +244,7 @@ void Mesh::Render(glm::mat4 _pv) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader
 
-	m_rotation.y += 0.001f;
+	//m_rotation.x += 0.01f;
 	
 	CalculateTransform();
 	SetShaderVariables(_pv);
