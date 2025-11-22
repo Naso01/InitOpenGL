@@ -29,7 +29,7 @@ uniform Material material;
 #define NR_LIGHTS 1
 uniform Light light[NR_LIGHTS];
 
-uniform bool EnableNormalMap = false;
+uniform bool EnableNormalMap;
 
 void main()
 {
