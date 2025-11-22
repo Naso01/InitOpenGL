@@ -39,16 +39,17 @@ void GameController::Initialize() {
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
 
-//Custom Method
-Mesh GameController::CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position) {
+//Create Mesh Wrapper Method
+Mesh GameController::CreateMesh(Shader _shader, string _obj,  glm::vec3 _scale, glm::vec3 _position, int _instanceCount) {
 
 	Mesh m = Mesh();
-	m.Create(&_shader, "../Assets/Models/"+ _obj);
+	m.Create(&_shader, "../Assets/Models/" + _obj, _instanceCount);
 	m.SetScale(_scale);
 	m.SetPosition(_position);
 
 	return m;
 }
+
 
 void GameController::RunGame() {
 	
@@ -79,7 +80,8 @@ void GameController::RunGame() {
 	Mesh::Lights.push_back(m);
 
 	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.2f, 0.2f, 0.2f },
-														{0.0f, 0.0f, 0.0f});
+														{0.0f, 0.0f, 0.0f},
+														1000);
 	box.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(box);
 

@@ -18,7 +18,7 @@ public:
 	//Methods
 	void Initialize();
 	void RunGame();
-	Mesh CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position);
+	Mesh CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position, int _instanceCount = 1);
 
 private:
 	//Members
@@ -30,6 +30,7 @@ private:
 	
 	vector<Mesh> m_meshes;
 	Skybox m_skybox;
+	GLuint vao;
 };
 
 #endif //!GAME_CONTROLLER_H
