@@ -32,6 +32,9 @@ void GameController::Initialize() {
 
 	srand((unsigned int)time(0));
 
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
 	// Create a default perspective camera
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
