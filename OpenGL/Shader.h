@@ -18,6 +18,7 @@ public:
 	GLuint GetAttrTangents() { return m_attrTangents; }
 	GLuint GetAttrBitangents() { return m_attrBitangents; }
 	GLuint GetAttrTexCoords() { return m_attrTexCoords; }
+	GLuint GetAttrInstanceMatrix() { return m_attrInstanceMatrix; }
 	GLuint GetAttrWVP() { return m_attrWVP; }
 
 	// Methods
@@ -45,7 +46,7 @@ private:
 
 	GLuint m_attrTangents;
 	GLuint m_attrBitangents;
-
+	GLuint m_attrInstanceMatrix;
 	GLuint m_attrTexCoords;
 	GLuint m_attrWVP; // Handle for the WorldViewProjection matrix
 

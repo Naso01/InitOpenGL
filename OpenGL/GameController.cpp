@@ -75,7 +75,7 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region CreateMeshes
 	Mesh m = CreateMesh(m_shaderColor, "teapot.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 0.0f,  0.8f,  1.0f });
+												 { 0.0f,  6.0f,  6.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
@@ -123,8 +123,7 @@ void GameController::RunGame() {
 
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			for (int x = 0; x < 1000; x++)
-				m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
+			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {

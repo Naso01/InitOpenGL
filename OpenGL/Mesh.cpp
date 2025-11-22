@@ -17,6 +17,10 @@ Mesh::Mesh() {
 	m_rotation = { 0, 0, 0 };
 	m_scale = { 1, 1, 1 };
 	m_world = glm::mat4();
+
+	m_instanceCount = 1;
+	m_enableInstancing = false;
+	m_elementSize = 0;
 }
 
 Mesh::~Mesh() {
@@ -59,9 +63,13 @@ void Mesh::CalculateTangents(vector<objl::Vertex> _vertices, objl::Vector3& _tan
 	_bitangent.Z = f * (-deltaUV2.X * edge1.Z + deltaUV1.X * edge2.Z);
 }
 
-void Mesh::Create(Shader* _shader , string _file) {
+void Mesh::Create(Shader* _shader , string _file, int _instanceCount) {
 
 	m_shader = _shader;
+	m_instanceCount = _instanceCount;
+	if (m_instanceCount > 1) {
+		m_enableInstancing = true;
+	}
 
 #pragma region LoadMesh
 	//Initialize Loader
@@ -130,10 +138,33 @@ void Mesh::Create(Shader* _shader , string _file) {
 		m_enableNormalMap = true;
 	}
 
+
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	if (m_enableInstancing) {
+
+		glGenBuffers(1, &m_instanceBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_instanceBuffer);
+
+		srand(glfwGetTime()); // initialize random seed
+		for (unsigned int i = 0; i < m_instanceCount; i++) {
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-20 + rand() % 40, -10 + rand() % 20, -10 + rand() % 20));
+
+			for (int x = 0; x < 4; x++) {
+				for (int y = 0; y < 4; y++) {
+					m_instanceData.push_back(model[x][y]);
+				}
+			}
+		}
+
+		glBufferData(GL_ARRAY_BUFFER, m_instanceCount * sizeof(glm::mat4), m_instanceData.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 }
 
 
@@ -201,6 +232,51 @@ void Mesh::BindAttributes() {
 		m_elementSize += 6;
 	}
 #pragma endregion BindNormalMapData
+
+#pragma region BindInstancingData
+	if (m_enableInstancing) {
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_instanceBuffer); //Bind the instance buffer
+
+		//Set attrubute pointers for instance matrix (4 times vec4)
+		glEnableVertexAttribArray(m_shader->GetAttrInstanceMatrix());
+		glVertexAttribPointer(m_shader->GetAttrInstanceMatrix(),	//The attribute we want to configure
+			4,							//size (4 components)
+			GL_FLOAT,					//type
+			GL_FALSE,					//normalized?
+			sizeof(glm::mat4),			//stride
+			(void*)0);//instance buffer offset
+
+		glEnableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 1);
+		glVertexAttribPointer(m_shader->GetAttrInstanceMatrix() + 1,	//The attribute we want to configure
+			4,							//size (4 components)
+			GL_FLOAT,					//type
+			GL_FALSE,					//normalized?
+			sizeof(glm::mat4),			//stride
+			(void*)(sizeof(glm::vec4)));//instance buffer offset
+
+		glEnableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 2);
+		glVertexAttribPointer(m_shader->GetAttrInstanceMatrix() + 2,	//The attribute we want to configure
+			4,							//size (4 components)
+			GL_FLOAT,					//type
+			GL_FALSE,					//normalized?
+			sizeof(glm::mat4),			//stride
+			(void*)(2 * sizeof(glm::vec4)));//instance buffer offset
+
+		glEnableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 3);
+		glVertexAttribPointer(m_shader->GetAttrInstanceMatrix() + 3,	//The attribute we want to configure
+			4,							//size (4 components)
+			GL_FLOAT,					//type
+			GL_FALSE,					//normalized?
+			sizeof(glm::mat4),			//stride
+			(void*)(3 * sizeof(glm::vec4)));//instance buffer offset
+
+		glVertexAttribDivisor(m_shader->GetAttrInstanceMatrix(), 1);
+		glVertexAttribDivisor(m_shader->GetAttrInstanceMatrix() + 1, 1);
+		glVertexAttribDivisor(m_shader->GetAttrInstanceMatrix() + 2, 1);
+		glVertexAttribDivisor(m_shader->GetAttrInstanceMatrix() + 3, 1);
+	}
+#pragma endregion BindInstancingData
 }
 
 void Mesh::CalculateTransform() {
@@ -221,6 +297,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	m_shader->SetMat4("WVP", _pv * m_world);
 	m_shader->SetVec3("CameraPosition", m_cameraPosition);
 	m_shader->SetInt("EnableNormalMap", m_enableNormalMap);
+	m_shader->SetInt("EnableInstancing", m_enableInstancing);
 
 	//Configure lighting
 	for (unsigned int i = 0; i < Lights.size(); i++) {
@@ -251,8 +328,26 @@ void Mesh::Render(glm::mat4 _pv) {
 	SetShaderVariables(_pv);
 	BindAttributes();
 
-	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / m_elementSize);
+	if (m_enableInstancing) {
+		glDrawArraysInstanced(GL_TRIANGLES, 0, m_vertexData.size() / m_elementSize, m_instanceCount);
+	}
+	else {
+		glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size() / m_elementSize);
+	}
+
 	glDisableVertexAttribArray(m_shader->GetAttrNormals());
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
 	glDisableVertexAttribArray(m_shader->GetAttrTexCoords());
+
+	if (m_enableNormalMap) {
+		glDisableVertexAttribArray(m_shader->GetAttrTangents());
+		glDisableVertexAttribArray(m_shader->GetAttrBitangents());
+	}
+
+	if (m_enableInstancing) {
+		glDisableVertexAttribArray(m_shader->GetAttrInstanceMatrix());
+		glDisableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 1);
+		glDisableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 2);
+		glDisableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 3);
+	}
 }

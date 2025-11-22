@@ -47,13 +47,17 @@ private:
 
 	bool m_enableNormalMap;
 	int m_elementSize;
+	bool m_enableInstancing;
+	int m_instanceCount;
 
 	GLuint m_vertexBuffer;//GPU Buffer
 	GLuint m_indexBuffer; //GPU Buffer
-	
+	GLuint m_instanceBuffer; //GPU Buffer
+
 	vector<GLfloat> m_vertexData; //Store vertex data in RAM
-	vector<GLubyte> m_indexData; //Store index data in RAMw
-	
+	vector<GLubyte> m_indexData; //Store index data in RAM
+	vector<GLfloat> m_instanceData; // Store instance data in RAM
+
 	//Transform
 	glm::vec3 m_position;
 	glm::vec3 m_rotation;
