@@ -87,14 +87,14 @@ void GameController::MoveLight(GLFWwindow* _window)
 		pos.x += direction.x * speed;
 		pos.y += direction.y * speed;
 
-		m_meshBoxes[0].SetPosition(pos);
+		SetMeshPosition(pos);
 	}
 	else {
 		glm::vec3 pos = Mesh::Lights[0].GetPosition();
 		pos.x += direction.x * speed;
 		pos.y += direction.y * speed;
 
-		SetMeshPosition(pos);
+		SetLightPosition(pos);
 	}
 }
 
@@ -103,14 +103,14 @@ void GameController::RenderToolWindow() {
 	System::Windows::Forms::Application::Run(window);
 }
 
-void GameController::SetMeshPosition(glm::vec3 _pos) {
-	if (OpenGL::ToolWindow::ColorByPosition) {
-		m_meshBoxes[0].SetPosition(_pos);
-	}
-	else {
+void GameController::SetLightPosition(glm::vec3 _pos) {
+
 		Mesh::Lights[0].SetPosition(_pos);
-	}
-	
+}
+
+void GameController::SetMeshPosition(glm::vec3 _pos) {
+
+	m_meshBoxes[0].SetPosition(_pos);
 }
 
 void GameController::SetColorByPosition(bool _ColorByPosition) {

@@ -19,6 +19,7 @@ public:
 	void RunGame();
 	
 	void SetMeshPosition(glm::vec3 _pos);
+	void SetLightPosition(glm::vec3 _pos);
 	void SetColorByPosition(bool _ColorByPosition);
 	
 	void MoveCubesToSphere(bool _moveCubeToSphere);

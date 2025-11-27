@@ -385,7 +385,7 @@ namespace OpenGL {
 			GameController::Active->SetMeshPosition({ 0.0f, 0.0f, 0.0f });
 		}
 		private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
-			GameController::Active->SetMeshPosition({ 0.0f, 0.0f, 0.1f });
+			GameController::Active->SetLightPosition({ 0.0f, 0.0f, 0.1f });
 		}
 
 		//TrackBars
