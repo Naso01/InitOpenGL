@@ -8,11 +8,14 @@ GameController::GameController() {
 	//m_meshes.clear();
 	m_skybox = { };
 	m_camera = { };
+	m_postProcessor = { };
+
 	//Shader
 	m_shaderColor = { };
 	m_shaderDiffuse = { };
 	m_shaderFont = { };
-	m_shaderSkybox = { };
+	m_shaderPost = { };
+	//m_shaderSkybox = { };
 }
 
 void GameController::Initialize() {
@@ -21,14 +24,14 @@ void GameController::Initialize() {
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow(); // Call this first, as it creates a window required by GLEW
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
-	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
-	glEnable(GL_DEPTH_TEST);	//Configure global OpenGl state
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	glClearColor(0.0f, 0.0f, 0.0f, 1); // Black background
+	glEnable(GL_DEPTH_TEST);
 	//Face Culling
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	glCullFace(GL_BACK);	//Configure global OpenGl state
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	srand((unsigned int)time(0));
 
@@ -36,7 +39,9 @@ void GameController::Initialize() {
 	glBindVertexArray(vao);
 
 	// Create a default perspective camera
-	m_camera = Camera(WindowController::GetInstance().GetResolution());
+	Resolution r = WindowController::GetInstance().GetResolution();
+	glViewport(0, 0, r.width, r.height);
+	m_camera = Camera(r);
 }
 
 //Create Mesh Wrapper Method
@@ -65,8 +70,8 @@ void GameController::RunGame() {
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
-	m_shaderSkybox = Shader();
-	m_shaderSkybox.LoadShaders("Skybox.vertexshader", "Skybox.fragmentshader");
+	m_shaderPost = Shader();
+	m_shaderPost.LoadShaders("PostProcessor.vertexshader", "PostProcessor.fragmentshader");
 
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
@@ -75,15 +80,15 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region CreateMeshes
 	Mesh m = CreateMesh(m_shaderColor, "teapot.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 0.0f,  6.0f,  6.0f });
+												 { 0.0f,  0.8f,  1.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.2f, 0.2f, 0.2f },
+	Mesh cube = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.1f, 0.1f, 0.1f },
 														{0.0f, 0.0f, 0.0f},
-														1000);
-	box.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(box);
+														10);
+	cube.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(cube);
 
 	/*
 	Skybox m_skybox = Skybox();
@@ -103,6 +108,11 @@ void GameController::RunGame() {
 	f.Create(&m_shaderFont, "arial.ttf", 40);
 
 #pragma endregion CreateFonts
+
+	m_postProcessor = PostProcessor();
+	m_postProcessor.Create(&m_shaderPost);
+
+
 #pragma region Render
 
 	double lastTime = glfwGetTime();
@@ -112,14 +122,7 @@ void GameController::RunGame() {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
 
-		double currentTime = glfwGetTime();
-		fps++;
-		if (currentTime - lastTime >= 1.0) {
-			fpsS = "FPS: " + to_string(fps);
-			fps = 0;
-			lastTime += 1.0f;
-		}
-		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
+		m_postProcessor.Start();
 
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
@@ -129,8 +132,18 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
+		//Timer / FPS
+		double currentTime = glfwGetTime();
+		fps++;
+		if (currentTime - lastTime >= 1.0) {
+			fpsS = "FPS: " + to_string(fps);
+			fps = 0;
+			lastTime += 1.0f;
+		}
+		m_postProcessor.End();
+
 		//Font
-		
+		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
 
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
@@ -146,10 +159,15 @@ void GameController::RunGame() {
 	for (unsigned int count = 0; count < m_meshes.size(); count++) {
 		m_meshes[count].Cleanup();
 	}
+	
+	f.Cleanup();
+	m_shaderFont.Cleanup();
+	
+	m_postProcessor.Cleanup();
+	m_shaderPost.Cleanup();
+	 
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
-	m_skybox.Cleanup();
-	m_shaderSkybox.Cleanup();
 
 #pragma endregion Cleanup
 }
