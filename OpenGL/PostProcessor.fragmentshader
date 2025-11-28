@@ -10,16 +10,22 @@ void main(){
 	vec3 col = texture(ScreenTexture, retTexCoord).rgb;
 	
 	//Regular post processing
-	//FragColor = vec4(col, 1.0);
+	FragColor = vec4(col, 1.0);
 
+	/*
 	//Inversion
 	//FragColor = vec4(vec3(1.0 - texture(ScreenTexture, retTexCoord)), 1.0);
+	*/
 
+	/*
 	// "Fake" GrayScale
-	//float average = (col.r + col.g + col.b) / 3;
-	//FragColor = vec4(average, average, average, 1.0);
+	float average = (col.r + col.g + col.b) / 3;
+	FragColor = vec4(average, average, average, 1.0);
+	*/
 
+	/*
 	// "True" GrayScale
 	float average = 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b;
 	FragColor = vec4(average, average, average, 1.0);
+	*/
 }
