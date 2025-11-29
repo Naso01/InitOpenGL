@@ -47,6 +47,7 @@ private:
 	Camera m_camera;
 	
 	vector<Mesh> m_meshes;
+	Mesh m_meshSphere;
 	Skybox m_skybox;
 	GLuint vao;
 };

@@ -8,7 +8,7 @@ bool GameController::m_leftMouseHeld = false;
 GameController* GameController::Active = nullptr;
 
 GameController::GameController() {
-	
+	m_meshSphere = { };
 	//m_meshes.clear();
 	m_skybox = { };
 	m_camera = { };
@@ -225,6 +225,10 @@ void GameController::RunGame() {
 	teapot.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(teapot);
 
+	m_meshSphere = CreateMesh(&m_shaderDiffuse, "sphere.obj", { 0.02f, 0.02f, 0.02f },
+		{ 0.0f, 0.0f, 0.0f });
+	m_meshSphere.SetCameraPosition(m_camera.GetPosition());
+
 #pragma endregion CreateMeshes
 
 #pragma region CreateFonts
@@ -277,15 +281,24 @@ void GameController::RunGame() {
 		};
 #pragma endregion ToolWindow
 
+		
+		if (OpenGL::ToolWindow::MoveCubesToSphereMode) {
+			m_meshSphere.Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
+		}
+		else {
+			//Mesh
+			for (unsigned int count = 0; count < m_meshes.size(); count++) {
+				m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
+			}
+		}
+
 		if (OpenGL::ToolWindow::ColorByPosition != colorbyPosition) {
-			m_meshes[0].SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
+			for (unsigned int count = 0; count < m_meshes.size(); count++) {
+				m_meshes[count].SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
+			}
 			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
 		}
 
-		//Box
-		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
-		}
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
