@@ -137,10 +137,12 @@ void GameController::SetColorByPosition(bool _ColorByPosition) {
 
 void GameController::MoveCubesToSphere(bool _moveCubeToSphere) {
 
-	for (unsigned int count = 0; count < m_meshes.size(); count++) {
-		m_meshes[count].Cleanup();
+	for (auto& mesh : m_meshes) {
+		mesh.Cleanup();
 	}
+
 	m_meshes.clear();
+	m_meshes.shrink_to_fit();
 
 	if (_moveCubeToSphere) {
 		Mesh sphere = Mesh();
@@ -159,6 +161,7 @@ void GameController::MoveCubesToSphere(bool _moveCubeToSphere) {
 		m_meshes.push_back(teapot);
 	}
 }
+
 
 void GameController::CreateCube() {
 	glm::vec3 spawnPos = { glm::linearRand(0.0f, 2.0f),
