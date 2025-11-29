@@ -18,7 +18,7 @@ public:
 	//Methods
 	void Initialize();
 	void RunGame();
-	Mesh CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position, int _instanceCount = 1);
+	Mesh CreateMesh(Shader* _shader, string _obj, glm::vec3 _scale, glm::vec3 _position, int _instanceCount = 1);
 
 	void SetMeshPosition(glm::vec3 _pos);
 	void SetLightPosition(glm::vec3 _pos);

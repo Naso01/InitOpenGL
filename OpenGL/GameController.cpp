@@ -19,12 +19,25 @@ GameController::GameController() {
 	m_shaderSkybox = { };
 }
 
+void MouseClickCallback(GLFWwindow* window, int button, int action, int mods) {
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT) {
+
+		if (action == GLFW_PRESS)
+			GameController::m_leftMouseHeld = true;
+
+		if (action == GLFW_RELEASE)
+			GameController::m_leftMouseHeld = false;
+	}
+}
+
 void GameController::Initialize() {
 
 	// Create a default window
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow(); // Call this first, as it creates a window required by GLEW
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to initialize GLEW."); // Initialize GLEW
 	glfwSetInputMode(glfwWindow, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
+	glfwSetMouseButtonCallback(glfwWindow, MouseClickCallback);
 	glClearColor(0.1f, 0.1f, 0.1f, 0.0f); // Grey background
 	glEnable(GL_DEPTH_TEST);	//Configure global OpenGl state
 	glEnable(GL_BLEND);
@@ -43,27 +56,17 @@ void GameController::Initialize() {
 	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
 
+
+
 //Create Mesh Wrapper Method
-Mesh GameController::CreateMesh(Shader _shader, string _obj,  glm::vec3 _scale, glm::vec3 _position, int _instanceCount) {
+Mesh GameController::CreateMesh(Shader* _shader, string _obj,  glm::vec3 _scale, glm::vec3 _position, int _instanceCount) {
 
 	Mesh m = Mesh();
-	m.Create(&_shader, "../Assets/Models/" + _obj, _instanceCount);
+	m.Create(_shader, "../Assets/Models/" + _obj, _instanceCount);
 	m.SetScale(_scale);
 	m.SetPosition(_position);
 
 	return m;
-}
-
-void MouseClickCallback(GLFWwindow* window, int button, int action, int mods)
-{
-	if (button == GLFW_MOUSE_BUTTON_LEFT)
-	{
-		if (action == GLFW_PRESS)
-			GameController::m_leftMouseHeld = true;
-
-		if (action == GLFW_RELEASE)
-			GameController::m_leftMouseHeld = false;
-	}
 }
 
 void GameController::MoveMesh(GLFWwindow* _window)
@@ -217,15 +220,15 @@ void GameController::RunGame() {
 
 	//Create meshes
 #pragma region CreateMeshes
-	Mesh m = CreateMesh(m_shaderColor, "teapot.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 0.0f,  6.0f,  6.0f });
+	Mesh m = CreateMesh(&m_shaderColor, "teapot.obj", { 0.005f, 0.005f, 0.005f },
+												 { 0.0f,  0.0f,  0.1f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.2f, 0.2f, 0.2f },
+	Mesh teapot = CreateMesh(&m_shaderDiffuse, "teapot.obj",	{ 0.02f, 0.02f, 0.02f },
 														{0.0f, 0.0f, 0.0f});
-	box.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(box);
+	teapot.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(teapot);
 
 #pragma endregion CreateMeshes
 
@@ -293,6 +296,8 @@ void GameController::RunGame() {
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
 	m_shaderSkybox.Cleanup();
+
+	System::Windows::Forms::Application::ExitThread();
 
 #pragma endregion Cleanup
 }
