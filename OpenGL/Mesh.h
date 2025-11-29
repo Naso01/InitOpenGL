@@ -21,11 +21,13 @@ public:
 	void SetColor(glm::vec3 _color) { m_color = _color; }
 	glm::vec3 GetColor() { return m_color; }
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }
+	void SetColorByPosition(bool _colorByPosition) { m_colorByPosition = _colorByPosition; }
 
 	//Methods
 	void Create(Shader * _shader, string _file, int _instanceCount = 1);
 	void Cleanup();
 	void Render(glm::mat4 _wvp);
+	void Render(glm::mat4 _pv, glm::vec4 _specular);
 	void CalculateTransform();
 
 	//Members
@@ -33,7 +35,7 @@ public:
 
 private:
 	//Methods
-	void SetShaderVariables(glm::mat4 _pv);
+	void SetShaderVariables(glm::mat4 _pv, glm::vec4 _specular = {2.0f, 2.0f, 2.0f, 8.0f});
 	void BindAttributes();
 	string Concat(string _s1, int _index, string _s2);
 	string RemoveFolder(string _map);
@@ -67,6 +69,9 @@ private:
 	//Lighting
 	glm::vec3 m_cameraPosition;
 	glm::vec3 m_color;
+
+	bool m_hasTexture;
+	bool m_colorByPosition;
 };
 
 #endif // !MESH_H

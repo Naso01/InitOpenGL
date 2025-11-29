@@ -2,6 +2,10 @@
 #include "WindowController.h"
 #include <glm/gtc/random.hpp>
 #include "Fonts.h"
+#include "ToolWindow.h"
+
+bool GameController::m_leftMouseHeld = false;
+GameController* GameController::Active = nullptr;
 
 GameController::GameController() {
 	
@@ -50,26 +54,165 @@ Mesh GameController::CreateMesh(Shader _shader, string _obj,  glm::vec3 _scale, 
 	return m;
 }
 
+void MouseClickCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		if (action == GLFW_PRESS)
+			GameController::m_leftMouseHeld = true;
+
+		if (action == GLFW_RELEASE)
+			GameController::m_leftMouseHeld = false;
+	}
+}
+
+void GameController::MoveMesh(GLFWwindow* _window)
+{
+	if (!m_leftMouseHeld || Mesh::Lights.empty() || m_meshes.empty())
+		return;
+
+	double mouseX, mouseY;
+	glfwGetCursorPos(_window, &mouseX, &mouseY);
+
+	int width, height;
+	glfwGetWindowSize(_window, &width, &height);
+
+	float cx = float(mouseX - width * 0.5f);
+	float cy = float(height * 0.5f - mouseY);
+
+	// Safe normalization
+	glm::vec2 direction(0.0f);
+	if (cx != 0 || cy != 0)
+		direction = glm::normalize(glm::vec2(cx, cy));
+
+	float dist = glm::length(glm::vec2(cx, cy));
+	float maxDist = glm::length(glm::vec2(width * 0.5f, height * 0.5f));
+	float speedFactor = dist / maxDist;
+
+	// If you have deltaTime available use this instead:
+	//float speed = 2.0f * speedFactor * deltaTime;
+	float speed = 0.001f * speedFactor;
+
+	if (OpenGL::ToolWindow::ColorByPosition) {
+		glm::vec3 pos = m_meshes[0].GetPosition();
+		pos.x += direction.x * speed;
+		pos.y += direction.y * speed;
+
+		SetMeshPosition(pos);
+	}
+	else {
+		glm::vec3 pos = Mesh::Lights[0].GetPosition();
+		pos.x += direction.x * speed;
+		pos.y += direction.y * speed;
+
+		SetLightPosition(pos);
+	}
+}
+
+void GameController::RenderToolWindow() {
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	System::Windows::Forms::Application::Run(window);
+}
+
+void GameController::SetLightPosition(glm::vec3 _pos) {
+
+	Mesh::Lights[0].SetPosition(_pos);
+}
+
+void GameController::SetMeshPosition(glm::vec3 _pos) {
+
+	m_meshes[0].SetPosition(_pos);
+}
+
+void GameController::SetColorByPosition(bool _ColorByPosition) {
+
+	m_meshes[0].SetColorByPosition(_ColorByPosition);
+}
+
+void GameController::MoveCubesToSphere(bool _moveCubeToSphere) {
+
+	for (unsigned int count = 0; count < m_meshes.size(); count++) {
+		m_meshes[count].Cleanup();
+	}
+	m_meshes.clear();
+
+	if (_moveCubeToSphere) {
+		Mesh sphere = Mesh();
+		sphere.Create(&m_shaderDiffuse, "../Assets/Models/sphere.obj");
+		sphere.SetCameraPosition(m_camera.GetPosition());
+		sphere.SetScale({ 0.02f, 0.02f, 0.02f });
+		sphere.SetPosition({ 0.0f, 0.0f, 0.0f });
+		m_meshes.push_back(sphere);
+	}
+	else {
+		Mesh teapot = Mesh();
+		teapot.Create(&m_shaderDiffuse, "../Assets/Models/teapot.obj");
+		teapot.SetCameraPosition(m_camera.GetPosition());
+		teapot.SetScale({ 0.02f, 0.02f, 0.02f });
+		teapot.SetPosition({ 0.0f, 0.0f, 0.0f });
+		m_meshes.push_back(teapot);
+	}
+}
+
+void GameController::CreateCube() {
+	glm::vec3 spawnPos = { glm::linearRand(0.0f, 2.0f),
+		glm::linearRand(0.0f, 2.0f),
+		glm::linearRand(0.0f, 2.0f) };
+
+	// Add cube
+	m_meshes.emplace_back();
+	auto& cube = m_meshes.back();
+
+	cube.Create(&m_shaderDiffuse, "../Assets/Models/cube.obj");
+	cube.SetCameraPosition(m_camera.GetPosition());
+	cube.SetScale({ 0.02f, 0.02f, 0.02f });
+	cube.SetPosition(spawnPos);
+}
+
+void GameController::UpdateCubeMovement(float _deltaTime)
+{
+	glm::vec3 spherePos = m_meshes[0].GetPosition();
+
+	for (auto& cube : m_meshes)
+	{
+		glm::vec3 cubePos = cube.GetPosition();
+
+		glm::vec3 direction = glm::normalize(spherePos - cubePos);
+
+		float speed = 0.025f;
+
+		cubePos += direction * speed * _deltaTime;
+		cube.SetPosition(cubePos);
+	}
+}
 
 void GameController::RunGame() {
 	
-	//Show the C++/CLI tool window
-	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	//window->Show();
+	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow();
+
+#pragma region ToolWindow
+	System::Threading::Thread^ uiThread =
+		gcnew System::Threading::Thread(
+			gcnew System::Threading::ThreadStart(&GameController::RenderToolWindow)
+		);
+
+	uiThread->SetApartmentState(System::Threading::ApartmentState::STA);
+	uiThread->IsBackground = true;
+	uiThread->Start();
+#pragma endregion ToolWindow
+
 
 	//Create and compile our GLSL program from the shaders
 #pragma region SetupShaders
 	m_shaderColor = Shader();
 	m_shaderColor.LoadShaders("Color.vertexshader", "Color.fragmentshader");
-	
+
 	m_shaderDiffuse = Shader();
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
-	m_shaderSkybox = Shader();
-	m_shaderSkybox.LoadShaders("Skybox.vertexshader", "Skybox.fragmentshader");
-
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
+
 #pragma endregion SetupShaders
 
 	//Create meshes
@@ -80,21 +223,10 @@ void GameController::RunGame() {
 	Mesh::Lights.push_back(m);
 
 	Mesh box = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.2f, 0.2f, 0.2f },
-														{0.0f, 0.0f, 0.0f},
-														1000);
+														{0.0f, 0.0f, 0.0f});
 	box.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(box);
 
-	/*
-	Skybox m_skybox = Skybox();
-	m_skybox.Create(&m_shaderSkybox, "../Assets/Models/Skybox.obj",
-		{ "../Assets/Textures/Skybox/right.jpg",
-		  "../Assets/Textures/Skybox/left.jpg",
-		  "../Assets/Textures/Skybox/top.jpg",
-		  "../Assets/Textures/Skybox/bottom.jpg",
-		  "../Assets/Textures/Skybox/front.jpg",
-		  "../Assets/Textures/Skybox/back.jpg" });
-	*/
 #pragma endregion CreateMeshes
 
 #pragma region CreateFonts
@@ -121,6 +253,16 @@ void GameController::RunGame() {
 		}
 		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
 
+
+#pragma region ToolWindow
+		glm::vec4 specular = {
+			OpenGL::ToolWindow::RenderRedChannel,
+			OpenGL::ToolWindow::RenderGreenChannel,
+			OpenGL::ToolWindow::RenderBlueChannel,
+			OpenGL::ToolWindow::SpecularStrength
+		};
+#pragma endregion ToolWindow
+
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
 			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
@@ -135,6 +277,8 @@ void GameController::RunGame() {
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 
+		MoveMesh(glfwWindow);
+
 	} while (glfwGetKey(WindowController::GetInstance().GetWindow(), GLFW_KEY_ESCAPE) != GLFW_PRESS && // Check if the ESC key was pressed
 		glfwWindowShouldClose(WindowController::GetInstance().GetWindow()) == 0); // Check if the window was closed
 #pragma endregion Render
@@ -148,7 +292,6 @@ void GameController::RunGame() {
 	}
 	m_shaderDiffuse.Cleanup();
 	m_shaderColor.Cleanup();
-	m_skybox.Cleanup();
 	m_shaderSkybox.Cleanup();
 
 #pragma endregion Cleanup

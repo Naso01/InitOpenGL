@@ -20,7 +20,25 @@ public:
 	void RunGame();
 	Mesh CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position, int _instanceCount = 1);
 
+	void SetMeshPosition(glm::vec3 _pos);
+	void SetLightPosition(glm::vec3 _pos);
+	void SetColorByPosition(bool _ColorByPosition);
+
+	void MoveCubesToSphere(bool _moveCubeToSphere);
+	void CreateCube();
+
+	void UpdateCubeMovement(float _deltaTime);
+
+	//Member
+	static bool m_leftMouseHeld;
+	static GameController* Active;
+
 private:
+	//Methods
+	//Methods
+	static void RenderToolWindow();
+	void MoveMesh(GLFWwindow* _window);
+
 	//Members
 	Shader m_shaderColor;
 	Shader m_shaderDiffuse;
