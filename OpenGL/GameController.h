@@ -47,10 +47,6 @@ private:
 	Camera m_camera;
 	
 	vector<Mesh> m_meshes;
-	Mesh m_meshSphere;
-	vector<glm::vec3> m_cubePositions;
-	Mesh m_meshCube;
-
 	Skybox m_skybox;
 	GLuint vao;
 };
