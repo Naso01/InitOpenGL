@@ -318,14 +318,14 @@ void Mesh::SetShaderVariables(glm::mat4 _pv, glm::vec4 _specular) {
 	m_shader->SetTextureSampler("material.normalTexture", GL_TEXTURE2, 2, m_normalTexture.GetTexture());
 }
 
-void Mesh::Render(glm::mat4 _pv) {
+void Mesh::Render(glm::mat4 _pv, glm::vec4 _specular) {
 
 	glUseProgram(m_shader->GetProgramID()); // Use the shader
 
 	m_rotation.x += 0.01f;
 	
 	CalculateTransform();
-	SetShaderVariables(_pv);
+	SetShaderVariables(_pv, _specular);
 	BindAttributes();
 
 	if (m_enableInstancing) {

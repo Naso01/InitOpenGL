@@ -26,8 +26,7 @@ public:
 	//Methods
 	void Create(Shader * _shader, string _file, int _instanceCount = 1);
 	void Cleanup();
-	void Render(glm::mat4 _wvp);
-	void Render(glm::mat4 _pv, glm::vec4 _specular);
+	void Render(glm::mat4 _pv, glm::vec4 _specular = { 2.0f, 2.0f, 2.0f, 8.0f });
 	void CalculateTransform();
 
 	//Members
@@ -35,7 +34,7 @@ public:
 
 private:
 	//Methods
-	void SetShaderVariables(glm::mat4 _pv, glm::vec4 _specular = {2.0f, 2.0f, 2.0f, 8.0f});
+	void SetShaderVariables(glm::mat4 _pv, glm::vec4 _specular);
 	void BindAttributes();
 	string Concat(string _s1, int _index, string _s2);
 	string RemoveFolder(string _map);

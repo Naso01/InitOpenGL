@@ -238,6 +238,9 @@ void GameController::RunGame() {
 	f.Create(&m_shaderFont, "arial.ttf", 40);
 
 #pragma endregion CreateFonts
+
+	bool colorbyPosition = false;
+
 #pragma region Render
 
 	double lastTime = glfwGetTime();
@@ -258,7 +261,7 @@ void GameController::RunGame() {
 
 
 #pragma region ToolWindow
-		glm::vec4 specular = {
+		glm::vec4 specularData = {
 			OpenGL::ToolWindow::RenderRedChannel,
 			OpenGL::ToolWindow::RenderGreenChannel,
 			OpenGL::ToolWindow::RenderBlueChannel,
@@ -266,9 +269,14 @@ void GameController::RunGame() {
 		};
 #pragma endregion ToolWindow
 
+		if (OpenGL::ToolWindow::ColorByPosition != colorbyPosition) {
+			m_meshes[0].SetColorByPosition(OpenGL::ToolWindow::ColorByPosition);
+			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
+		}
+
 		//Box
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
+			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
 		}
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
