@@ -17,6 +17,7 @@ GameController::GameController() {
 	m_shaderDiffuse = { };
 	m_shaderFont = { };
 	m_shaderSkybox = { };
+	Active = this;
 }
 
 void MouseClickCallback(GLFWwindow* window, int button, int action, int mods) {
@@ -124,6 +125,8 @@ void GameController::SetLightPosition(glm::vec3 _pos) {
 
 void GameController::SetMeshPosition(glm::vec3 _pos) {
 
+	if (m_meshes.empty())
+		return;
 	m_meshes[0].SetPosition(_pos);
 }
 
@@ -193,17 +196,6 @@ void GameController::RunGame() {
 	
 	GLFWwindow* glfwWindow = WindowController::GetInstance().GetWindow();
 
-#pragma region ToolWindow
-	System::Threading::Thread^ uiThread =
-		gcnew System::Threading::Thread(
-			gcnew System::Threading::ThreadStart(&GameController::RenderToolWindow)
-		);
-
-	uiThread->SetApartmentState(System::Threading::ApartmentState::STA);
-	uiThread->IsBackground = true;
-	uiThread->Start();
-#pragma endregion ToolWindow
-
 
 	//Create and compile our GLSL program from the shaders
 #pragma region SetupShaders
@@ -240,6 +232,19 @@ void GameController::RunGame() {
 #pragma endregion CreateFonts
 
 	bool colorbyPosition = false;
+
+
+
+#pragma region ToolWindow
+	System::Threading::Thread^ uiThread =
+		gcnew System::Threading::Thread(
+			gcnew System::Threading::ThreadStart(&GameController::RenderToolWindow)
+		);
+
+	uiThread->SetApartmentState(System::Threading::ApartmentState::STA);
+	uiThread->IsBackground = true;
+	uiThread->Start();
+#pragma endregion ToolWindow
 
 #pragma region Render
 
