@@ -21,6 +21,7 @@ Mesh::Mesh() {
 	m_instanceCount = 1;
 	m_enableInstancing = false;
 	m_elementSize = 0;
+	m_colorByPosition = false;
 }
 
 Mesh::~Mesh() {
@@ -28,10 +29,27 @@ Mesh::~Mesh() {
 }
 
 void Mesh::Cleanup() {
-	
-	glDeleteBuffers(1, &m_vertexBuffer);
+
+	if (m_vertexBuffer != 0) {
+		glDeleteBuffers(1, &m_vertexBuffer);
+		m_vertexBuffer = 0;
+	}
+	if (m_instanceBuffer != 0) {
+		glDeleteBuffers(1, &m_instanceBuffer);
+		m_instanceBuffer = 0;
+	}
+	if (m_indexBuffer != 0) {
+		glDeleteBuffers(1, &m_indexBuffer);
+		m_indexBuffer = 0;
+	}
+
 	m_diffuseTexture.Cleanup();
 	m_specularTexture.Cleanup();
+	m_normalTexture.Cleanup();
+
+	m_vertexData.clear();
+	m_indexData.clear();
+	m_instanceData.clear();
 }
 
 string Mesh::RemoveFolder(string _map) {
@@ -64,7 +82,11 @@ void Mesh::CalculateTangents(vector<objl::Vertex> _vertices, objl::Vector3& _tan
 }
 
 void Mesh::Create(Shader* _shader , string _file, int _instanceCount) {
-
+	
+	m_vertexData.clear();
+	m_instanceData.clear();
+	m_indexData.clear();
+	
 	m_shader = _shader;
 	m_instanceCount = _instanceCount;
 	if (m_instanceCount > 1) {
@@ -359,4 +381,48 @@ void Mesh::Render(glm::mat4 _pv, glm::vec4 _specular) {
 		glDisableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 2);
 		glDisableVertexAttribArray(m_shader->GetAttrInstanceMatrix() + 3);
 	}
+}
+
+void Mesh::UpdateInstanceData(const std::vector<glm::vec3>& positions)
+{
+	// Build model matrices from positions and current mesh scale
+	m_instanceData.clear();
+
+	for (const auto& pos : positions) {
+		glm::mat4 model = glm::mat4(1.0f);
+
+		// translate
+		model = glm::translate(model, pos);
+
+		// apply mesh's scale
+		model = glm::scale(model, m_scale);
+
+		// optionally could apply rotation per-instance here
+
+		// push matrix elements column-major (glm stores column-major)
+		for (int col = 0; col < 4; ++col) {
+			for (int row = 0; row < 4; ++row) {
+				m_instanceData.push_back(model[col][row]);
+			}
+		}
+	}
+
+	// If we don't have an instance buffer yet, create it
+	if (m_instanceBuffer == 0) {
+		glGenBuffers(1, &m_instanceBuffer);
+	}
+
+	// Bind & upload (use DYNAMIC_DRAW because we'll update every frame)
+	glBindBuffer(GL_ARRAY_BUFFER, m_instanceBuffer);
+	if (!m_instanceData.empty()) {
+		glBufferData(GL_ARRAY_BUFFER, m_instanceData.size() * sizeof(GLfloat), m_instanceData.data(), GL_DYNAMIC_DRAW);
+	}
+	else {
+		// zero-size fallback
+		glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	m_instanceCount = static_cast<int>(positions.size());
+	m_enableInstancing = (m_instanceCount > 0);
 }

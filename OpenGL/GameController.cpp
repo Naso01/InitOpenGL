@@ -10,6 +10,7 @@ GameController* GameController::Active = nullptr;
 GameController::GameController() {
 	
 	//m_meshes.clear();
+	m_meshSphere = { };
 	m_skybox = { };
 	m_camera = { };
 	//Shader
@@ -163,36 +164,42 @@ void GameController::MoveCubesToSphere(bool _moveCubeToSphere) {
 }
 
 
-void GameController::CreateCube() {
-	glm::vec3 spawnPos = { glm::linearRand(0.0f, 2.0f),
-		glm::linearRand(0.0f, 2.0f),
-		glm::linearRand(0.0f, 2.0f) };
+void GameController::CreateCube()
+{
+	// generate random spawn location
+	float x = ((rand() % 100) - 50) * 0.2f;
+	float y = ((rand() % 100) - 50) * 0.2f;
+	float z = ((rand() % 100) - 50) * 0.2f;
 
-	// Add cube
-	m_meshes.emplace_back();
-	auto& cube = m_meshes.back();
+	glm::vec3 spawn(x, y, z);
 
-	cube.Create(&m_shaderDiffuse, "../Assets/Models/cube.obj");
-	cube.SetCameraPosition(m_camera.GetPosition());
-	cube.SetScale({ 0.02f, 0.02f, 0.02f });
-	cube.SetPosition(spawnPos);
+	// Add to cube list
+	m_cubePositions.push_back(spawn);
+
+	// Update mesh instance data
+	m_meshCube.UpdateInstanceData(m_cubePositions);
 }
+
 
 void GameController::UpdateCubeMovement(float _deltaTime)
 {
-	glm::vec3 spherePos = m_meshes[0].GetPosition();
+	glm::vec3 spherePos = m_meshSphere.GetPosition();
 
-	for (auto& cube : m_meshes)
+	for (auto& cubePos : m_cubePositions)
 	{
-		glm::vec3 cubePos = cube.GetPosition();
+		glm::vec3 dir = spherePos - cubePos;
 
-		glm::vec3 direction = glm::normalize(spherePos - cubePos);
-
-		float speed = 0.025f;
-
-		cubePos += direction * speed * _deltaTime;
-		cube.SetPosition(cubePos);
+		float dist = glm::length(dir);
+		if (dist > 0.01f)
+		{
+			dir = glm::normalize(dir);
+			cubePos += dir * dt * 1.0f; // 1.0f = speed, tune as you like
+		}
 	}
+
+	// After movement, update instance buffer
+	m_meshCube.UpdateInstanceData(m_cubePositions);
+
 }
 
 void GameController::RunGame() {
@@ -224,6 +231,14 @@ void GameController::RunGame() {
 														{0.0f, 0.0f, 0.0f});
 	teapot.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(teapot);
+
+	m_meshSphere = CreateMesh(&m_shaderDiffuse, "sphere.obj", { 0.02f, 0.02f, 0.02f },
+		{ 0.0f, 0.0f, 0.0f });
+	m_meshSphere.SetCameraPosition(m_camera.GetPosition());
+
+	// Create cube mesh with 1 initial instance
+	m_meshCube.Create(&m_shaderDiffuse, "models/cube.obj", 1);
+
 
 #pragma endregion CreateMeshes
 
@@ -282,10 +297,17 @@ void GameController::RunGame() {
 			colorbyPosition = OpenGL::ToolWindow::ColorByPosition;
 		}
 
-		//Box
-		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
+		//Mesh
+		if (OpenGL::ToolWindow::MoveCubesToSphereMode) {
+			m_meshSphere.Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
+
 		}
+		else {
+			for (unsigned int count = 0; count < m_meshes.size(); count++) {
+				m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView(), specularData);
+			}
+		}
+
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());

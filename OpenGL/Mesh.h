@@ -28,6 +28,7 @@ public:
 	void Cleanup();
 	void Render(glm::mat4 _pv, glm::vec4 _specular = { 2.0f, 2.0f, 2.0f, 8.0f });
 	void CalculateTransform();
+	void UpdateInstanceData(const std::vector<glm::vec3>& positions);
 
 	//Members
 	static vector<Mesh> Lights;
