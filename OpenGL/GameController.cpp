@@ -71,7 +71,7 @@ void GameController::RunGame() {
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
 	m_shaderPost = Shader();
-	m_shaderPost.LoadShaders("PostProcessor.vertexshader", "KernelEffect.fragmentshader");
+	m_shaderPost.LoadShaders("PostProcessor.vertexshader", "PostProcessor.fragmentshader");
 
 	m_shaderFont = Shader();
 	m_shaderFont.LoadShaders("Font.vertexshader", "Font.fragmentshader");
