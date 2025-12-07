@@ -17,14 +17,18 @@ namespace OpenGL {
 	public:
 		static bool RenderRedChannel;
 		static bool RenderGreenChannel;
-		static bool RenderBlueChannel;
+	private: System::Windows::Forms::RadioButton^ rdb_movelight;
+	public:
+	private: System::Windows::Forms::RadioButton^ rdb_transformation;
+	private: System::Windows::Forms::RadioButton^ rtb_waterscene;
+
+	private: System::Windows::Forms::Button^ btn_resetlightposition;
+
+		   static bool RenderBlueChannel;
 
 		ToolWindow(void)
 		{
 			InitializeComponent();
-			RenderRedChannel = checkBoxRedChannel->Checked;
-			RenderGreenChannel = checkBoxGreenChannel->Checked;
-			RenderBlueChannel = checkBoxBlueChannel->Checked;
 		}
 
 	protected:
@@ -45,9 +49,9 @@ namespace OpenGL {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-	private: System::Windows::Forms::CheckBox^ checkBoxRedChannel;
-	private: System::Windows::Forms::CheckBox^ checkBoxGreenChannel;
-	private: System::Windows::Forms::CheckBox^ checkBoxBlueChannel;
+
+
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -56,52 +60,63 @@ namespace OpenGL {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->checkBoxRedChannel = (gcnew System::Windows::Forms::CheckBox());
-			this->checkBoxGreenChannel = (gcnew System::Windows::Forms::CheckBox());
-			this->checkBoxBlueChannel = (gcnew System::Windows::Forms::CheckBox());
+			this->rdb_movelight = (gcnew System::Windows::Forms::RadioButton());
+			this->rdb_transformation = (gcnew System::Windows::Forms::RadioButton());
+			this->rtb_waterscene = (gcnew System::Windows::Forms::RadioButton());
+			this->btn_resetlightposition = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
-			// checkBoxRedChannel
+			// rdb_movelight
 			// 
-			this->checkBoxRedChannel->AutoSize = true;
-			this->checkBoxRedChannel->Location = System::Drawing::Point(12, 12);
-			this->checkBoxRedChannel->Name = L"checkBoxRedChannel";
-			this->checkBoxRedChannel->Size = System::Drawing::Size(90, 17);
-			this->checkBoxRedChannel->TabIndex = 0;
-			this->checkBoxRedChannel->Text = L"Red Channel";
-			this->checkBoxRedChannel->UseVisualStyleBackColor = true;
-			this->checkBoxRedChannel->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::checkBoxRedChannel_CheckedChanged);
+			this->rdb_movelight->AutoSize = true;
+			this->rdb_movelight->Location = System::Drawing::Point(12, 12);
+			this->rdb_movelight->Name = L"rdb_movelight";
+			this->rdb_movelight->Size = System::Drawing::Size(78, 17);
+			this->rdb_movelight->TabIndex = 0;
+			this->rdb_movelight->TabStop = true;
+			this->rdb_movelight->Text = L"Move Light";
+			this->rdb_movelight->UseVisualStyleBackColor = true;
 			// 
-			// checkBoxGreenChannel
+			// rdb_transformation
 			// 
-			this->checkBoxGreenChannel->AutoSize = true;
-			this->checkBoxGreenChannel->Location = System::Drawing::Point(12, 35);
-			this->checkBoxGreenChannel->Name = L"checkBoxGreenChannel";
-			this->checkBoxGreenChannel->Size = System::Drawing::Size(90, 17);
-			this->checkBoxGreenChannel->TabIndex = 1;
-			this->checkBoxGreenChannel->Text = L"Green Channel";
-			this->checkBoxGreenChannel->UseVisualStyleBackColor = true;
-			this->checkBoxGreenChannel->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::checkBoxGreenChannel_CheckedChanged);
+			this->rdb_transformation->AutoSize = true;
+			this->rdb_transformation->Location = System::Drawing::Point(12, 294);
+			this->rdb_transformation->Name = L"rdb_transformation";
+			this->rdb_transformation->Size = System::Drawing::Size(95, 17);
+			this->rdb_transformation->TabIndex = 1;
+			this->rdb_transformation->TabStop = true;
+			this->rdb_transformation->Text = L"Transformation";
+			this->rdb_transformation->UseVisualStyleBackColor = true;
 			// 
-			// checkBoxBlueChannel
+			// rtb_waterscene
 			// 
-			this->checkBoxBlueChannel->AutoSize = true;
-			this->checkBoxBlueChannel->Location = System::Drawing::Point(12, 58);
-			this->checkBoxBlueChannel->Name = L"checkBoxBlueChannel";
-			this->checkBoxBlueChannel->Size = System::Drawing::Size(90, 17);
-			this->checkBoxBlueChannel->TabIndex = 2;
-			this->checkBoxBlueChannel->Text = L"Blue Channel";
-			this->checkBoxBlueChannel->UseVisualStyleBackColor = true;
-			this->checkBoxBlueChannel->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::checkBoxBlueChannel_CheckedChanged);
+			this->rtb_waterscene->AutoSize = true;
+			this->rtb_waterscene->Location = System::Drawing::Point(19, 476);
+			this->rtb_waterscene->Name = L"rtb_waterscene";
+			this->rtb_waterscene->Size = System::Drawing::Size(88, 17);
+			this->rtb_waterscene->TabIndex = 2;
+			this->rtb_waterscene->TabStop = true;
+			this->rtb_waterscene->Text = L"Water Scene";
+			this->rtb_waterscene->UseVisualStyleBackColor = true;
+			// 
+			// btn_resetlightposition
+			// 
+			this->btn_resetlightposition->Location = System::Drawing::Point(12, 35);
+			this->btn_resetlightposition->Name = L"btn_resetlightposition";
+			this->btn_resetlightposition->Size = System::Drawing::Size(133, 29);
+			this->btn_resetlightposition->TabIndex = 4;
+			this->btn_resetlightposition->Text = L"Reset Light Position";
+			this->btn_resetlightposition->UseVisualStyleBackColor = true;
 			// 
 			// ToolWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 261);
-			this->Controls->Add(this->checkBoxRedChannel);
-			this->Controls->Add(this->checkBoxGreenChannel);
-			this->Controls->Add(this->checkBoxBlueChannel);
+			this->ClientSize = System::Drawing::Size(599, 650);
+			this->Controls->Add(this->btn_resetlightposition);
+			this->Controls->Add(this->rtb_waterscene);
+			this->Controls->Add(this->rdb_transformation);
+			this->Controls->Add(this->rdb_movelight);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedToolWindow;
 			this->Name = L"ToolWindow";
 			this->Text = L"ToolWindow";
@@ -113,15 +128,6 @@ namespace OpenGL {
 		}
 #pragma endregion
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
-	}
-	private: System::Void checkBoxRedChannel_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		RenderRedChannel = checkBoxRedChannel->Checked;
-	}
-	private: System::Void checkBoxGreenChannel_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		RenderGreenChannel = checkBoxGreenChannel->Checked;
-	}
-	private: System::Void checkBoxBlueChannel_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		RenderBlueChannel = checkBoxBlueChannel->Checked;
 	}
 };
 }
