@@ -79,16 +79,15 @@ void GameController::RunGame() {
 
 	//Create meshes
 #pragma region CreateMeshes
-	Mesh m = CreateMesh(m_shaderColor, "teapot.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 0.0f,  0.8f,  1.0f });
+	Mesh m = CreateMesh(m_shaderColor, "sphere.obj", { 0.01f, 0.01f, 0.01f }, 
+												 { 0.0f,  0.0f,  1.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh cube = CreateMesh(m_shaderDiffuse, "cube.obj",	{0.1f, 0.1f, 0.1f },
-														{0.0f, 0.0f, 0.0f},
-														10);
-	cube.SetCameraPosition(m_camera.GetPosition());
-	m_meshes.push_back(cube);
+	Mesh fighterjet = CreateMesh(m_shaderDiffuse, "fighter.obj",	{0.1f, 0.1f, 0.1f },
+														{0.0f, 0.0f, 0.0f});
+	fighterjet.SetCameraPosition(m_camera.GetPosition());
+	m_meshes.push_back(fighterjet);
 
 	/*
 	Skybox m_skybox = Skybox();
@@ -124,7 +123,7 @@ void GameController::RunGame() {
 
 		m_postProcessor.Start();
 
-		//Box
+		//Meshes
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
 			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
