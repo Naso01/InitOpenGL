@@ -40,14 +40,29 @@ namespace OpenGL {
 	private: System::Windows::Forms::Label^ lbl_BlueValue;
 
 	public:
-		static bool RenderRedChannel;
-		static bool RenderGreenChannel;
-		static bool RenderBlueChannel;
+		static float RenderRedChannel;
+		static float RenderGreenChannel;
+		static float RenderBlueChannel;
+		static unsigned short SpecularStrength;
 
 		ToolWindow(void)
 		{
 			InitializeComponent();
+			unsigned short specStrValue = trackBar_SpecularStrength->Value; //Specular Strength
+			SpecularStrength = specStrValue;
+			lbl_SpecStrValue->Text = specStrValue.ToString();
 
+			float redValue = trackBar_Red->Value / 100.0f; //Red
+			RenderRedChannel = redValue;
+			lbl_RedValue->Text = redValue.ToString("F2");
+
+			float greenValue = trackBar_Green->Value / 100.0f; //Green
+			RenderGreenChannel = greenValue;
+			lbl_GreenValue->Text = greenValue.ToString("F2");
+
+			float blueValue = trackBar_Blue->Value / 100.0f; //Blue
+			RenderBlueChannel = blueValue;
+			lbl_BlueValue->Text = blueValue.ToString("F2");
 		}
 
 	protected:
@@ -277,15 +292,28 @@ namespace OpenGL {
 
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
-private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void trackBar_Red_Scroll(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void trackBar_Blue_Scroll(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-};
+	private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		unsigned short specStrValue = trackBar_SpecularStrength->Value;	
+		SpecularStrength = specStrValue;
+		lbl_SpecStrValue->Text = specStrValue.ToString();
+	}
+	private: System::Void trackBar_Red_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		float redValue = trackBar_Red->Value / 100.0f;
+		RenderRedChannel = redValue;
+		lbl_RedValue->Text = redValue.ToString("F2");
+	}
+		
+	private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {	
+		float greenValue = trackBar_Green->Value / 100.0f;
+		RenderGreenChannel = greenValue;
+		lbl_GreenValue->Text = greenValue.ToString("F2");
+	}
+	private: System::Void trackBar_Blue_Scroll(System::Object^ sender, System::EventArgs^ e) {
+		float blueValue = trackBar_Blue->Value / 100.0f;
+		RenderBlueChannel = blueValue;
+		lbl_BlueValue->Text = blueValue.ToString("F2");
+	}
+	private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	}
+	};
 }
