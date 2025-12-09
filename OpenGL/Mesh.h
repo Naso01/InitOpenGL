@@ -19,6 +19,7 @@ public:
 	void SetPosition(glm::vec3 _position) { m_position = _position; }
 	void SetScale(glm::vec3 _scale) { m_scale = _scale; }
 	void SetColor(glm::vec3 _color) { m_color = _color; }
+	void SetRotation(glm::vec3 _rotation) { m_rotation = _rotation; }
 	glm::vec3 GetColor() { return m_color; }
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }
 	void SetSpecularStrength(float _strength) { m_specularStrength = _strength; }

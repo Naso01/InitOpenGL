@@ -140,10 +140,15 @@ void GameController::RunGame() {
 	};
 
 	glm::vec3 newSpecularColor;
+	glm::vec3 mouseMovement;
 
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
+
+		mouseMovement = m_inputController.GetMovementVector();
+
+#pragma region Light Settings
 
 		newSpecularColor = {
 			OpenGL::ToolWindow::RenderRedChannel,
@@ -162,6 +167,17 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
 			m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
 		}
+
+		if(mouseMovement != glm::vec3(0.0f))
+		{
+			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+				glm::vec3 currentPosition = Mesh::Lights[count].GetPosition();
+				Mesh::Lights[count].SetPosition(currentPosition + mouseMovement);
+			}
+		}
+#pragma endregion Light Settings
+
+
 		m_postProcessor.Start();
 
 		//Meshes
@@ -172,6 +188,7 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
+
 		//Timer / FPS
 		double currentTime = glfwGetTime();
 		fps++;

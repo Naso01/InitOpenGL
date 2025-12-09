@@ -19,14 +19,10 @@ public:
     virtual ~InputController();
 
     // Methods
-    void Initialize();                     // Set callbacks, etc.
-    void Update(glm::vec3& _meshPosition);                         // Called every frame
-    ClickQuadrant GetClickedQuadrant();    // Determines which quadrant was clicked
-    glm::vec2 GetMousePosition();          // Normalized or raw mouse pos
+    void Initialize();               
+    glm::vec3 GetMovementVector();                         
 
 private:
-    // Helpers
-    ClickQuadrant DetermineQuadrant(const glm::vec2& mousePos);
 
     // Members
     GLFWwindow* m_window;

@@ -5,9 +5,11 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "Skybox.h"
-#include "WindowController.h"
 #include "Camera.h"
 #include "PostProcessor.h"
+#include "InputController.h"
+
+class InputController;
 
 class GameController : public Singleton<GameController>
 {
@@ -35,6 +37,7 @@ private:
 	vector<Mesh> m_meshes;
 	Skybox m_skybox;
 	GLuint vao;
+	InputController m_inputController;
 };
 
 #endif //!GAME_CONTROLLER_H

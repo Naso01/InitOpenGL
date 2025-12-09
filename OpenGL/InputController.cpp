@@ -1,59 +1,40 @@
 ﻿#include "InputController.h"
 #include "WindowController.h"
 
-// Constructor
 InputController::InputController()
 {
     m_window = WindowController::GetInstance().GetWindow();
 }
 
-InputController::~InputController()
-{
-}
+InputController::~InputController() {}
 
-// Update: call once per frame
-void InputController::Update(glm::vec3& _meshPosition)
+glm::vec3 InputController::GetMovementVector()
 {
-    // Check left mouse click
+    glm::vec3 movement(0.0f);
+
+    // Only act when left click is pressed
     if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS)
-        return;
+        return movement;
 
-    // Get mouse position
+    // Mouse pos
     double mouseX, mouseY;
     glfwGetCursorPos(m_window, &mouseX, &mouseY);
 
     Resolution r = WindowController::GetInstance().GetResolution();
 
-    // Convert into quadrants
     bool left = mouseX < (r.width * 0.5);
     bool top = mouseY < (r.height * 0.5);
 
-    // Movement step
-    const float speed = 0.1f;
+    const float speed = 0.001f;
 
-    // Determine quadrant
     if (left && top)
-    {
-        // Top-left → move light up-left
-        _meshPosition.x -= speed;
-        _meshPosition.y += speed;
-    }
+        movement = { -speed,  speed, 0.0f }; // up-left
     else if (!left && top)
-    {
-        // Top-right → move light up-right
-        _meshPosition.x += speed;
-        _meshPosition.y += speed;
-    }
+        movement = { speed,  speed, 0.0f }; // up-right
     else if (left && !top)
-    {
-        // Bottom-left → move down-left
-        _meshPosition.x -= speed;
-        _meshPosition.y -= speed;
-    }
+        movement = { -speed, -speed, 0.0f }; // down-left
     else
-    {
-        // Bottom-right → move down-right
-        _meshPosition.x += speed;
-        _meshPosition.y -= speed;
-    }
+        movement = { speed, -speed, 0.0f }; // down-right
+
+    return movement;
 }

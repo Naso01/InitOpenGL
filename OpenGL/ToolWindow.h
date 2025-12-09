@@ -43,7 +43,35 @@ namespace OpenGL {
 		static float RenderRedChannel;
 		static float RenderGreenChannel;
 		static float RenderBlueChannel;
-		static unsigned short SpecularStrength;
+	private: System::Windows::Forms::RadioButton^ rbtn_transform;
+
+	private: System::Windows::Forms::RadioButton^ rbtn_spacescene;
+	private: System::Windows::Forms::Button^ btn_resettransform;
+	private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
+	private: System::Windows::Forms::Label^ lbl_frequency;
+	private: System::Windows::Forms::Label^ lbl_amplitude;
+	private: System::Windows::Forms::CheckBox^ box_translate;
+	private: System::Windows::Forms::CheckBox^ box_rotate;
+	private: System::Windows::Forms::CheckBox^ box_scale;
+	private: System::Windows::Forms::TrackBar^ trackBar_Frequency;
+	private: System::Windows::Forms::TrackBar^ trackBar_Amplitude;
+	private: System::Windows::Forms::Label^ lbl_frequencyvalue;
+	private: System::Windows::Forms::Label^ lbl_amplitudevalue;
+	private: System::Windows::Forms::CheckBox^ box_wireframe;
+	private: System::Windows::Forms::CheckBox^ box_tintblue;
+
+
+	private: System::Windows::Forms::RadioButton^ rbtn_waterscene;
+
+
+	public:
+
+
+	public:
+
+	public:
+
+		   static unsigned short SpecularStrength;
 
 		ToolWindow(void)
 		{
@@ -108,10 +136,28 @@ namespace OpenGL {
 			this->lbl_SpecStrValue = (gcnew System::Windows::Forms::Label());
 			this->lbl_GreenValue = (gcnew System::Windows::Forms::Label());
 			this->lbl_BlueValue = (gcnew System::Windows::Forms::Label());
+			this->rbtn_transform = (gcnew System::Windows::Forms::RadioButton());
+			this->rbtn_spacescene = (gcnew System::Windows::Forms::RadioButton());
+			this->btn_resettransform = (gcnew System::Windows::Forms::Button());
+			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->lbl_frequency = (gcnew System::Windows::Forms::Label());
+			this->lbl_amplitude = (gcnew System::Windows::Forms::Label());
+			this->box_translate = (gcnew System::Windows::Forms::CheckBox());
+			this->box_rotate = (gcnew System::Windows::Forms::CheckBox());
+			this->box_scale = (gcnew System::Windows::Forms::CheckBox());
+			this->trackBar_Frequency = (gcnew System::Windows::Forms::TrackBar());
+			this->trackBar_Amplitude = (gcnew System::Windows::Forms::TrackBar());
+			this->lbl_frequencyvalue = (gcnew System::Windows::Forms::Label());
+			this->lbl_amplitudevalue = (gcnew System::Windows::Forms::Label());
+			this->box_wireframe = (gcnew System::Windows::Forms::CheckBox());
+			this->box_tintblue = (gcnew System::Windows::Forms::CheckBox());
+			this->rbtn_waterscene = (gcnew System::Windows::Forms::RadioButton());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_SpecularStrength))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Red))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Green))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Blue))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Frequency))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Amplitude))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// rbtn_MoveLight
@@ -256,11 +302,181 @@ namespace OpenGL {
 			this->lbl_BlueValue->Size = System::Drawing::Size(0, 13);
 			this->lbl_BlueValue->TabIndex = 21;
 			// 
+			// rbtn_transform
+			// 
+			this->rbtn_transform->AutoSize = true;
+			this->rbtn_transform->Location = System::Drawing::Point(13, 324);
+			this->rbtn_transform->Name = L"rbtn_transform";
+			this->rbtn_transform->Size = System::Drawing::Size(72, 17);
+			this->rbtn_transform->TabIndex = 22;
+			this->rbtn_transform->TabStop = true;
+			this->rbtn_transform->Text = L"Transform";
+			this->rbtn_transform->UseVisualStyleBackColor = true;
+			this->rbtn_transform->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::rbtn_transform_CheckedChanged);
+			// 
+			// rbtn_spacescene
+			// 
+			this->rbtn_spacescene->AutoSize = true;
+			this->rbtn_spacescene->Location = System::Drawing::Point(13, 697);
+			this->rbtn_spacescene->Name = L"rbtn_spacescene";
+			this->rbtn_spacescene->Size = System::Drawing::Size(90, 17);
+			this->rbtn_spacescene->TabIndex = 24;
+			this->rbtn_spacescene->TabStop = true;
+			this->rbtn_spacescene->Text = L"Space Scene";
+			this->rbtn_spacescene->UseVisualStyleBackColor = true;
+			this->rbtn_spacescene->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::rbtn_spacescene_CheckedChanged);
+			// 
+			// btn_resettransform
+			// 
+			this->btn_resettransform->Location = System::Drawing::Point(30, 357);
+			this->btn_resettransform->Name = L"btn_resettransform";
+			this->btn_resettransform->Size = System::Drawing::Size(123, 23);
+			this->btn_resettransform->TabIndex = 25;
+			this->btn_resettransform->Text = L"Reset Transform";
+			this->btn_resettransform->UseVisualStyleBackColor = true;
+			this->btn_resettransform->Click += gcnew System::EventHandler(this, &ToolWindow::btn_resettransform_Click);
+			// 
+			// lbl_frequency
+			// 
+			this->lbl_frequency->AutoSize = true;
+			this->lbl_frequency->Location = System::Drawing::Point(34, 554);
+			this->lbl_frequency->Name = L"lbl_frequency";
+			this->lbl_frequency->Size = System::Drawing::Size(57, 13);
+			this->lbl_frequency->TabIndex = 26;
+			this->lbl_frequency->Text = L"Frequency";
+			// 
+			// lbl_amplitude
+			// 
+			this->lbl_amplitude->AutoSize = true;
+			this->lbl_amplitude->Location = System::Drawing::Point(38, 605);
+			this->lbl_amplitude->Name = L"lbl_amplitude";
+			this->lbl_amplitude->Size = System::Drawing::Size(53, 13);
+			this->lbl_amplitude->TabIndex = 27;
+			this->lbl_amplitude->Text = L"Amplitude";
+			// 
+			// box_translate
+			// 
+			this->box_translate->AutoSize = true;
+			this->box_translate->Location = System::Drawing::Point(48, 386);
+			this->box_translate->Name = L"box_translate";
+			this->box_translate->Size = System::Drawing::Size(70, 17);
+			this->box_translate->TabIndex = 28;
+			this->box_translate->Text = L"Translate";
+			this->box_translate->UseVisualStyleBackColor = true;
+			this->box_translate->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::box_translate_CheckedChanged);
+			// 
+			// box_rotate
+			// 
+			this->box_rotate->AutoSize = true;
+			this->box_rotate->Location = System::Drawing::Point(48, 409);
+			this->box_rotate->Name = L"box_rotate";
+			this->box_rotate->Size = System::Drawing::Size(58, 17);
+			this->box_rotate->TabIndex = 29;
+			this->box_rotate->Text = L"Rotate";
+			this->box_rotate->UseVisualStyleBackColor = true;
+			this->box_rotate->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::box_rotate_CheckedChanged);
+			// 
+			// box_scale
+			// 
+			this->box_scale->AutoSize = true;
+			this->box_scale->Location = System::Drawing::Point(48, 432);
+			this->box_scale->Name = L"box_scale";
+			this->box_scale->Size = System::Drawing::Size(53, 17);
+			this->box_scale->TabIndex = 30;
+			this->box_scale->Text = L"Scale";
+			this->box_scale->UseVisualStyleBackColor = true;
+			this->box_scale->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::box_scale_CheckedChanged);
+			// 
+			// trackBar_Frequency
+			// 
+			this->trackBar_Frequency->Location = System::Drawing::Point(97, 554);
+			this->trackBar_Frequency->Maximum = 400;
+			this->trackBar_Frequency->Name = L"trackBar_Frequency";
+			this->trackBar_Frequency->Size = System::Drawing::Size(284, 45);
+			this->trackBar_Frequency->TabIndex = 31;
+			this->trackBar_Frequency->Value = 100;
+			this->trackBar_Frequency->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Frequency_Scroll);
+			// 
+			// trackBar_Amplitude
+			// 
+			this->trackBar_Amplitude->Location = System::Drawing::Point(97, 605);
+			this->trackBar_Amplitude->Maximum = 400;
+			this->trackBar_Amplitude->Name = L"trackBar_Amplitude";
+			this->trackBar_Amplitude->Size = System::Drawing::Size(284, 45);
+			this->trackBar_Amplitude->TabIndex = 32;
+			this->trackBar_Amplitude->Value = 100;
+			this->trackBar_Amplitude->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Amplitude_Scroll);
+			// 
+			// lbl_frequencyvalue
+			// 
+			this->lbl_frequencyvalue->AutoSize = true;
+			this->lbl_frequencyvalue->Location = System::Drawing::Point(381, 554);
+			this->lbl_frequencyvalue->Name = L"lbl_frequencyvalue";
+			this->lbl_frequencyvalue->Size = System::Drawing::Size(0, 13);
+			this->lbl_frequencyvalue->TabIndex = 33;
+			// 
+			// lbl_amplitudevalue
+			// 
+			this->lbl_amplitudevalue->AutoSize = true;
+			this->lbl_amplitudevalue->Location = System::Drawing::Point(381, 605);
+			this->lbl_amplitudevalue->Name = L"lbl_amplitudevalue";
+			this->lbl_amplitudevalue->Size = System::Drawing::Size(0, 13);
+			this->lbl_amplitudevalue->TabIndex = 34;
+			// 
+			// box_wireframe
+			// 
+			this->box_wireframe->AutoSize = true;
+			this->box_wireframe->Location = System::Drawing::Point(37, 656);
+			this->box_wireframe->Name = L"box_wireframe";
+			this->box_wireframe->Size = System::Drawing::Size(112, 17);
+			this->box_wireframe->TabIndex = 36;
+			this->box_wireframe->Text = L"Wireframe Render";
+			this->box_wireframe->UseVisualStyleBackColor = true;
+			this->box_wireframe->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::box_wireframe_CheckedChanged);
+			// 
+			// box_tintblue
+			// 
+			this->box_tintblue->AutoSize = true;
+			this->box_tintblue->Location = System::Drawing::Point(37, 679);
+			this->box_tintblue->Name = L"box_tintblue";
+			this->box_tintblue->Size = System::Drawing::Size(68, 17);
+			this->box_tintblue->TabIndex = 37;
+			this->box_tintblue->Text = L"Tint Blue";
+			this->box_tintblue->UseVisualStyleBackColor = true;
+			this->box_tintblue->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::box_tintblue_CheckedChanged);
+			// 
+			// rbtn_waterscene
+			// 
+			this->rbtn_waterscene->AutoSize = true;
+			this->rbtn_waterscene->Location = System::Drawing::Point(13, 531);
+			this->rbtn_waterscene->Name = L"rbtn_waterscene";
+			this->rbtn_waterscene->Size = System::Drawing::Size(88, 17);
+			this->rbtn_waterscene->TabIndex = 40;
+			this->rbtn_waterscene->TabStop = true;
+			this->rbtn_waterscene->Text = L"Water Scene";
+			this->rbtn_waterscene->UseVisualStyleBackColor = true;
+			this->rbtn_waterscene->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::rbtn_waterscene_CheckedChanged);
+			// 
 			// ToolWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(522, 726);
+			this->Controls->Add(this->rbtn_waterscene);
+			this->Controls->Add(this->box_tintblue);
+			this->Controls->Add(this->box_wireframe);
+			this->Controls->Add(this->lbl_amplitudevalue);
+			this->Controls->Add(this->lbl_frequencyvalue);
+			this->Controls->Add(this->trackBar_Amplitude);
+			this->Controls->Add(this->trackBar_Frequency);
+			this->Controls->Add(this->box_scale);
+			this->Controls->Add(this->box_rotate);
+			this->Controls->Add(this->box_translate);
+			this->Controls->Add(this->lbl_amplitude);
+			this->Controls->Add(this->lbl_frequency);
+			this->Controls->Add(this->btn_resettransform);
+			this->Controls->Add(this->rbtn_spacescene);
+			this->Controls->Add(this->rbtn_transform);
 			this->Controls->Add(this->lbl_BlueValue);
 			this->Controls->Add(this->lbl_GreenValue);
 			this->Controls->Add(this->lbl_SpecStrValue);
@@ -285,6 +501,8 @@ namespace OpenGL {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Red))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Green))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Blue))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Frequency))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar_Amplitude))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -293,6 +511,7 @@ namespace OpenGL {
 
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
+#pragma region Light
 	private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		unsigned short specStrValue = trackBar_SpecularStrength->Value;	
 		SpecularStrength = specStrValue;
@@ -319,6 +538,40 @@ namespace OpenGL {
 	}
 	private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	
+
+#pragma endregion Light
+#pragma region Transform
+private: System::Void rbtn_transform_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void btn_resettransform_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void box_translate_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void box_rotate_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void box_scale_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+#pragma endregion Transform
+
+#pragma region Water Scene
+private: System::Void rbtn_waterscene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void trackBar_Frequency_Scroll(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void trackBar_Amplitude_Scroll(System::Object^ sender, System::EventArgs^ e) {
+}
+#pragma endregion Water Scene
+
+#pragma region Scene
+private: System::Void box_wireframe_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void box_tintblue_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+#pragma endregion Scene
+
+	   //Space Scene
+private: System::Void rbtn_spacescene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+
 };
 }
