@@ -2,6 +2,7 @@
 #include "WindowController.h"
 #include <glm/gtc/random.hpp>
 #include "Fonts.h"
+#include "ToolWindow.h"
 
 GameController::GameController() {
 	
@@ -59,8 +60,8 @@ Mesh GameController::CreateMesh(Shader _shader, string _obj,  glm::vec3 _scale, 
 void GameController::RunGame() {
 	
 	//Show the C++/CLI tool window
-	//OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	//window->Show();
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	window->Show();
 
 	//Create and compile our GLSL program from the shaders
 #pragma region SetupShaders
@@ -117,9 +118,36 @@ void GameController::RunGame() {
 	double lastTime = glfwGetTime();
 	int fps = 0;
 	string fpsS = "0";
+
+	unsigned short specularStrength = 0;
+	float redValue = 1.0f;
+	float greenValue = 1.0f;
+	float blueValue = 1.0f;
+	glm::vec3 specularColor = {
+		OpenGL::ToolWindow::RenderRedChannel,
+		OpenGL::ToolWindow::RenderGreenChannel,
+		OpenGL::ToolWindow::RenderBlueChannel
+	};
+
+	glm::vec3 newSpecularColor;
+
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
+
+		newSpecularColor = {
+			OpenGL::ToolWindow::RenderRedChannel,
+			OpenGL::ToolWindow::RenderGreenChannel,
+			OpenGL::ToolWindow::RenderBlueChannel
+		};
+		//if render color channels changed
+		if (specularColor != newSpecularColor)
+		{
+			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+				Mesh::Lights[count].SetSpecularColor(newSpecularColor);
+			}
+			specularColor = newSpecularColor;
+		}
 
 		m_postProcessor.Start();
 

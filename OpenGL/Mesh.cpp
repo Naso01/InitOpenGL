@@ -21,6 +21,9 @@ Mesh::Mesh() {
 	m_instanceCount = 1;
 	m_enableInstancing = false;
 	m_elementSize = 0;
+
+	m_specularColor = { 1.0f, 1.0f, 1.0f };
+	m_specularStrength = 1;
 }
 
 Mesh::~Mesh() {
@@ -302,9 +305,9 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 	//Configure lighting
 	for (unsigned int i = 0; i < Lights.size(); i++) {
 
-		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.25f, 0.25f, 0.25f });
+		m_shader->SetVec3(Concat("light[", i, "].ambientColor").c_str(), { 0.15f, 0.15f, 0.15f });
 		m_shader->SetVec3(Concat("light[", i, "].diffuseColor").c_str(), Lights[i].GetColor());
-		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), { 2.0f, 2.0f, 2.0f });
+		m_shader->SetVec3(Concat("light[", i, "].specularColor").c_str(), Lights[i].GetSpecularColor());
 
 		m_shader->SetVec3(Concat("light[", i, "].position").c_str(), Lights[i].GetPosition());
 		m_shader->SetVec3(Concat("light[", i, "].direction").c_str(), glm::normalize(glm::vec3({ 0.0f + i * 0.1f, 0, 0.0f + i * 0.1f }) - Lights[i].GetPosition()));
@@ -312,7 +315,7 @@ void Mesh::SetShaderVariables(glm::mat4 _pv) {
 		m_shader->SetFloat(Concat("light[", i, "].falloff").c_str(), 200);
 	} 
 	//Configure material
-	m_shader->SetFloat("material.specularStrength", 8);
+	m_shader->SetFloat("material.specularStrength", m_specularStrength);
 	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_diffuseTexture.GetTexture());
 	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_specularTexture.GetTexture());
 	m_shader->SetTextureSampler("material.normalTexture", GL_TEXTURE2, 2, m_normalTexture.GetTexture());

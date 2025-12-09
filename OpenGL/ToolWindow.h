@@ -166,6 +166,7 @@ namespace OpenGL {
 			this->trackBar_Green->Size = System::Drawing::Size(284, 45);
 			this->trackBar_Green->TabIndex = 7;
 			this->trackBar_Green->Value = 100;
+			this->trackBar_Green->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Green_Scroll);
 			// 
 			// trackBar_Blue
 			// 
@@ -302,18 +303,22 @@ namespace OpenGL {
 		RenderRedChannel = redValue;
 		lbl_RedValue->Text = redValue.ToString("F2");
 	}
-		
-	private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {	
+	private: System::Void trackBar_Green_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		float greenValue = trackBar_Green->Value / 100.0f;
 		RenderGreenChannel = greenValue;
 		lbl_GreenValue->Text = greenValue.ToString("F2");
-	}
+	}	
+
 	private: System::Void trackBar_Blue_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		float blueValue = trackBar_Blue->Value / 100.0f;
 		RenderBlueChannel = blueValue;
 		lbl_BlueValue->Text = blueValue.ToString("F2");
 	}
+	private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {	
+
+	}
 	private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	};
+	
+};
 }

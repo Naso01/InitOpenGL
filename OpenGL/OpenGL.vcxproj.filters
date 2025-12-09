@@ -69,6 +69,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Framework</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessor.cpp">
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameController.h">
@@ -107,6 +110,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessor.h">
+      <Filter>Header Files\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader">
@@ -137,6 +143,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Skybox.vertexshader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="KernelEffect.fragmentshader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="KernelEffect.vertexshader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PostProcessor.fragmentshader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PostProcessor.vertexshader">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
