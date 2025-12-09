@@ -80,11 +80,11 @@ void GameController::RunGame() {
 	//Create meshes
 #pragma region CreateMeshes
 	Mesh m = CreateMesh(m_shaderColor, "sphere.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 0.0f,  0.0f,  1.0f });
+												 { 0.0f,  0.0f,  5.0f });
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh fighterjet = CreateMesh(m_shaderDiffuse, "fighter.obj",	{0.1f, 0.1f, 0.1f },
+	Mesh fighterjet = CreateMesh(m_shaderDiffuse, "fighter.obj",	{0.005f, 0.005f, 0.005f },
 														{0.0f, 0.0f, 0.0f});
 	fighterjet.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(fighterjet);
