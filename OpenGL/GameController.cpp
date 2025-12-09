@@ -149,6 +149,10 @@ void GameController::RunGame() {
 			specularColor = newSpecularColor;
 		}
 
+		for (unsigned int count = 0; count < m_meshes.size(); count++) {
+			m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
+		}
+
 		m_postProcessor.Start();
 
 		//Meshes
