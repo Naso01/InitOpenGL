@@ -22,19 +22,41 @@ glm::vec3 InputController::GetMovementVector()
 
     Resolution r = WindowController::GetInstance().GetResolution();
 
-    bool left = mouseX < (r.width * 0.5);
-    bool top = mouseY < (r.height * 0.5);
+    // Screen center
+    double centerX = r.width * 0.5;
+    double centerY = r.height * 0.5;
 
-    const float speed = 0.001f;
+    // Vector from center → mouse
+    double dx = mouseX - centerX;
+    double dy = centerY - mouseY;
+    // NOTE: invert Y because OpenGL coords + screen coords flipped
 
-    if (left && top)
-        movement = { -speed,  speed, 0.0f }; // up-left
-    else if (!left && top)
-        movement = { speed,  speed, 0.0f }; // up-right
-    else if (left && !top)
-        movement = { -speed, -speed, 0.0f }; // down-left
-    else
-        movement = { speed, -speed, 0.0f }; // down-right
+    // Compute distance from center
+    double dist = sqrt(dx * dx + dy * dy);
+
+    // Normalize direction
+    double len = sqrt(dx * dx + dy * dy);
+    if (len < 0.0001)
+        return movement;
+
+    double ndx = dx / len;   // normalized x direction
+    double ndy = dy / len;   // normalized y direction
+
+    // Scale: farther = faster
+    double maxDist = sqrt(centerX * centerX + centerY * centerY);
+    double intensity = dist / maxDist; // 0 to 1
+
+    // Clamp intensity
+    intensity = glm::clamp(intensity, 0.0, 1.0);
+
+    // Base speed
+    const float baseSpeed = 0.01f;
+
+    // Final movement
+    float speed = baseSpeed * (float)intensity;
+
+    movement.x += (float)ndx * speed;
+    movement.y += (float)ndy * speed;
 
     return movement;
 }

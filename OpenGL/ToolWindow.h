@@ -40,9 +40,7 @@ namespace OpenGL {
 	private: System::Windows::Forms::Label^ lbl_BlueValue;
 
 	public:
-		static float RenderRedChannel;
-		static float RenderGreenChannel;
-		static float RenderBlueChannel;
+
 	private: System::Windows::Forms::RadioButton^ rbtn_transform;
 
 	private: System::Windows::Forms::RadioButton^ rbtn_spacescene;
@@ -62,16 +60,13 @@ namespace OpenGL {
 
 
 	private: System::Windows::Forms::RadioButton^ rbtn_waterscene;
-
-
 	public:
-
-
-	public:
-
-	public:
-
-		   static unsigned short SpecularStrength;
+		   
+		static unsigned short SpecularStrength;
+		static float RenderRedChannel;
+		static float RenderGreenChannel;
+		static float RenderBlueChannel;
+		static bool MoveLight;
 
 		ToolWindow(void)
 		{
@@ -91,6 +86,8 @@ namespace OpenGL {
 			float blueValue = trackBar_Blue->Value / 100.0f; //Blue
 			RenderBlueChannel = blueValue;
 			lbl_BlueValue->Text = blueValue.ToString("F2");
+
+			MoveLight = rbtn_MoveLight->Checked;
 		}
 
 	protected:
@@ -512,6 +509,9 @@ namespace OpenGL {
 	private: System::Void ToolWindow_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 #pragma region Light
+	private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+		MoveLight = rbtn_MoveLight->Checked;
+	}
 	private: System::Void trackBar_SpecularStrength_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		unsigned short specStrValue = trackBar_SpecularStrength->Value;	
 		SpecularStrength = specStrValue;
@@ -536,8 +536,7 @@ namespace OpenGL {
 	private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {	
 
 	}
-	private: System::Void rbtn_MoveLight_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-	}
+	
 
 #pragma endregion Light
 #pragma region Transform

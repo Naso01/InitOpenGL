@@ -149,30 +149,31 @@ void GameController::RunGame() {
 		mouseMovement = m_inputController.GetMovementVector();
 
 #pragma region Light Settings
-
-		newSpecularColor = {
-			OpenGL::ToolWindow::RenderRedChannel,
-			OpenGL::ToolWindow::RenderGreenChannel,
-			OpenGL::ToolWindow::RenderBlueChannel
-		};
-		//if render color channels changed
-		if (specularColor != newSpecularColor)
-		{
-			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
-				Mesh::Lights[count].SetSpecularColor(newSpecularColor);
+		if(OpenGL::ToolWindow::MoveLight){
+			newSpecularColor = {
+				OpenGL::ToolWindow::RenderRedChannel,
+				OpenGL::ToolWindow::RenderGreenChannel,
+				OpenGL::ToolWindow::RenderBlueChannel
+			};
+			//if render color channels changed
+			if (specularColor != newSpecularColor)
+			{
+				for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+					Mesh::Lights[count].SetSpecularColor(newSpecularColor);
+				}
+				specularColor = newSpecularColor;
 			}
-			specularColor = newSpecularColor;
-		}
 
-		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
-		}
+			for (unsigned int count = 0; count < m_meshes.size(); count++) {
+				m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
+			}
 
-		if(mouseMovement != glm::vec3(0.0f))
-		{
-			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
-				glm::vec3 currentPosition = Mesh::Lights[count].GetPosition();
-				Mesh::Lights[count].SetPosition(currentPosition + mouseMovement);
+			if(mouseMovement != glm::vec3(0.0f))
+			{
+				for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+					glm::vec3 currentPosition = Mesh::Lights[count].GetPosition();
+					Mesh::Lights[count].SetPosition(currentPosition + mouseMovement);
+				}
 			}
 		}
 #pragma endregion Light Settings
