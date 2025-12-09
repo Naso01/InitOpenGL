@@ -20,6 +20,7 @@ public:
 	void Initialize();
 	void RunGame();
 	Mesh CreateMesh(Shader _shader, string _obj, glm::vec3 _scale, glm::vec3 _position, int _instanceCount = 1);
+	static void RenderToolWindow();
 
 private:
 	//Members

@@ -56,13 +56,13 @@ Mesh GameController::CreateMesh(Shader _shader, string _obj,  glm::vec3 _scale, 
 	return m;
 }
 
+void GameController::RenderToolWindow() {
+	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
+	System::Windows::Forms::Application::Run(window);
+}
 
 void GameController::RunGame() {
 	
-	//Show the C++/CLI tool window
-	OpenGL::ToolWindow^ window = gcnew OpenGL::ToolWindow();
-	window->Show();
-
 	//Create and compile our GLSL program from the shaders
 #pragma region SetupShaders
 	m_shaderColor = Shader();
@@ -112,6 +112,16 @@ void GameController::RunGame() {
 	m_postProcessor = PostProcessor();
 	m_postProcessor.Create(&m_shaderPost);
 
+#pragma region ToolWindow
+		System::Threading::Thread^ uiThread =
+		gcnew System::Threading::Thread(
+			gcnew System::Threading::ThreadStart(&GameController::RenderToolWindow)
+		);
+
+	uiThread->SetApartmentState(System::Threading::ApartmentState::STA);
+	uiThread->IsBackground = true;
+	uiThread->Start();
+#pragma endregion ToolWindow
 
 #pragma region Render
 
@@ -152,7 +162,6 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < m_meshes.size(); count++) {
 			m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
 		}
-
 		m_postProcessor.Start();
 
 		//Meshes
@@ -173,9 +182,13 @@ void GameController::RunGame() {
 		}
 		m_postProcessor.End();
 
+		System::Drawing::Point mousePos = OpenGL::ToolWindow::MousePosition;
+
+		string strMousePosition = "Mouse Pos: " + to_string(mousePos.X) + "   " + to_string(mousePos.Y);
+
 		//Font
 		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
-
+		f.RenderText(strMousePosition, 100, 150, 0.5f, {1.0f, 1.0f, 0.0f});
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 

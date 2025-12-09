@@ -127,8 +127,8 @@ void Mesh::Create(Shader* _shader , string _file, int _instanceCount) {
 	m_diffuseTexture = Texture();
 	if (Loader.LoadedMaterials[0].map_Kd != "")
 		m_diffuseTexture.LoadTexture("../Assets/Textures/" + RemoveFolder(Loader.LoadedMaterials[0].map_Kd));
-	else
-		m_diffuseTexture.LoadTexture("../Assets/Textures/NullTexture.png"); //If texture does not exists, display null texture
+	//else
+		//m_diffuseTexture.LoadTexture("../Assets/Textures/NullTexture.png"); //If texture does not exists, display null texture
 
 	m_specularTexture = Texture();
 	if (Loader.LoadedMaterials[0].map_Ks != "") 
