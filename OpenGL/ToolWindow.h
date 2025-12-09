@@ -61,12 +61,13 @@ namespace OpenGL {
 
 	private: System::Windows::Forms::RadioButton^ rbtn_waterscene;
 	public:
-		   
+		//---------------- Static Variables ------------------------------------------------------------------------
 		static unsigned short SpecularStrength;
 		static float RenderRedChannel;
 		static float RenderGreenChannel;
 		static float RenderBlueChannel;
 		static bool MoveLight;
+		static bool ResetLightPosition;
 
 		ToolWindow(void)
 		{
@@ -534,7 +535,7 @@ namespace OpenGL {
 		lbl_BlueValue->Text = blueValue.ToString("F2");
 	}
 	private: System::Void btn_ResetLightPosition_Click(System::Object^ sender, System::EventArgs^ e) {	
-
+		ResetLightPosition = true;
 	}
 	
 

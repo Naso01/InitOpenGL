@@ -176,6 +176,15 @@ void GameController::RunGame() {
 				}
 			}
 		}
+		//Reset Light Position
+		if (OpenGL::ToolWindow::ResetLightPosition) {
+		
+			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+				Mesh::Lights[count].SetPosition({ 0.0f, 0.0f, 5.0f });
+			}
+			OpenGL::ToolWindow::ResetLightPosition = false;
+		}
+
 #pragma endregion Light Settings
 
 
