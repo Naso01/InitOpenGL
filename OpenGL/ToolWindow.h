@@ -79,6 +79,8 @@ namespace OpenGL {
 		static bool WaterSceneEnabled;
 		static bool WireframeEnabled;
 		static bool TintBlueEnabled;
+		static float Frequency;
+		static float Amplitude;
 
 		ToolWindow(void)
 		{
@@ -113,6 +115,10 @@ namespace OpenGL {
 			WaterSceneEnabled = rbtn_waterscene->Checked;
 			WireframeEnabled = box_wireframe->Checked;
 			TintBlueEnabled = box_tintblue->Checked;
+			Frequency = trackBar_Frequency->Value / 100.0f;
+			lbl_frequencyvalue->Text = Frequency.ToString("F2");
+			Amplitude = trackBar_Amplitude->Value / 100.0f;
+			lbl_amplitudevalue->Text = Amplitude.ToString("F2");
 		}
 
 	protected:
@@ -422,11 +428,11 @@ namespace OpenGL {
 			// trackBar_Amplitude
 			// 
 			this->trackBar_Amplitude->Location = System::Drawing::Point(97, 605);
-			this->trackBar_Amplitude->Maximum = 400;
+			this->trackBar_Amplitude->Maximum = 100;
 			this->trackBar_Amplitude->Name = L"trackBar_Amplitude";
 			this->trackBar_Amplitude->Size = System::Drawing::Size(284, 45);
 			this->trackBar_Amplitude->TabIndex = 32;
-			this->trackBar_Amplitude->Value = 100;
+			this->trackBar_Amplitude->Value = 1;
 			this->trackBar_Amplitude->Scroll += gcnew System::EventHandler(this, &ToolWindow::trackBar_Amplitude_Scroll);
 			// 
 			// lbl_frequencyvalue
@@ -588,8 +594,12 @@ private: System::Void rbtn_waterscene_CheckedChanged(System::Object^ sender, Sys
 	WaterSceneEnabled = rbtn_waterscene->Checked;
 }
 private: System::Void trackBar_Frequency_Scroll(System::Object^ sender, System::EventArgs^ e) {
+	Frequency = trackBar_Frequency->Value / 100.0f;
+	lbl_frequencyvalue->Text = Frequency.ToString("F2");
 }
 private: System::Void trackBar_Amplitude_Scroll(System::Object^ sender, System::EventArgs^ e) {
+	Amplitude = trackBar_Amplitude->Value / 100.0f;
+	lbl_amplitudevalue->Text = Amplitude.ToString("F2");
 }
 private: System::Void box_wireframe_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 	WireframeEnabled = box_wireframe->Checked;

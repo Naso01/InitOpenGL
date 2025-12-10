@@ -4,11 +4,26 @@ in vec2 retTexCoord;
 out vec4 FragColor;
 
 uniform sampler2D ScreenTexture;
+uniform bool WaterScene;
 uniform bool BlueTint;
+uniform float Time;
+uniform float Amplitude;
+uniform float Frequency;
+
 void main(){
 	
-	vec3 col = texture(ScreenTexture, retTexCoord).rgb;
-	
+	vec2 uv = retTexCoord;
+
+
+        // Horizontal sine-based wave
+        float wave = sin(uv.x * Frequency + Time) * Amplitude;
+        
+        // Apply to Y coordinate for ripples
+        uv.y += wave;
+    
+
+	vec3 col = texture(ScreenTexture, uv).rgb;
+
 	if(!BlueTint){
 		//Regular post processing
 		FragColor = vec4(col, 1.0);

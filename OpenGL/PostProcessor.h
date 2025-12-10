@@ -22,6 +22,7 @@ public:
 	//Accessors
 	void SetBlueTint(bool _enabled) { m_blueTintEnabled = _enabled; }
 	void SetWireFrame(bool _enabled) { m_wireframeEnabled = _enabled; }
+
 private:
 	//Members
 	GLuint m_framebuffer;
@@ -29,8 +30,12 @@ private:
 	GLuint m_renderBufferObject;
 	GLuint m_vertexBuffer; // GPU vertex buffer
 	Shader* m_postShader;
+
 	bool m_blueTintEnabled;
 	bool m_wireframeEnabled;
+	float m_time;
+	float m_frequency;
+	float m_amplitude;
 
 	//Methods
 	void CreateVertices();

@@ -10,6 +10,10 @@ PostProcessor::PostProcessor() {
 	m_postShader = 0;
 	m_vertexBuffer = 0;
     m_blueTintEnabled = false;
+    m_wireframeEnabled = false;
+    m_time = 0;
+    m_frequency = 0;
+    m_amplitude = 0;
 }
 
 PostProcessor:: ~PostProcessor() { }
@@ -119,13 +123,16 @@ void PostProcessor::End()
     glUseProgram(m_postShader->GetProgramID()); // Use our shader
     m_postShader->SetTextureSampler("ScreenTexture", GL_TEXTURE0, 0, m_textureColorbuffer);
     m_postShader->SetInt("BlueTint", m_blueTintEnabled);
+	m_postShader->SetFloat("Time", glfwGetTime());
+	m_postShader->SetFloat("Amplitude", 0.05);
+	m_postShader->SetFloat("Frequency", 4.0f);
 
     BindVertices();
 
     if(m_wireframeEnabled)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
