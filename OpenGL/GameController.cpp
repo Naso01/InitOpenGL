@@ -258,16 +258,16 @@ void GameController::RunGame() {
 
 		//Font
 		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
-		f.RenderText("Mouse Pos: " + to_string(mousePos.X) + "   " + to_string(mousePos.Y), 100, 150, 0.5f, {1.0f, 1.0f, 0.0f});
+		f.RenderText("Mouse Pos: " + to_string(mousePos.X) + "   " + to_string(mousePos.Y), 100, 125, 0.5f, {1.0f, 1.0f, 0.0f});
 
 		string leftMouseButtonState = (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) ? "Down" : "Up";
-		f.RenderText("Left Mouse Button:" + leftMouseButtonState, 100, 200, 0.5f, { 1.0f, 1.0f, 0.0f });
+		f.RenderText("Left Mouse Button:" + leftMouseButtonState, 100, 150, 0.5f, { 1.0f, 1.0f, 0.0f });
 		string middleMouseButtonState = (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) ? "Down" : "Up";
-		f.RenderText("Middle Mouse Button:" + middleMouseButtonState, 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
+		f.RenderText("Middle Mouse Button:" + middleMouseButtonState, 100, 175, 0.5f, { 1.0f, 1.0f, 0.0f });
 
-		f.RenderText("Fighter Position:"+ glm::to_string(m_meshes[0].GetPosition()), 100, 300, 0.5f, {1.0f, 1.0f, 0.0f});
-		f.RenderText("Fighter Rotation:" + glm::to_string(m_meshes[0].GetRotation()), 100, 350, 0.5f, { 1.0f, 1.0f, 0.0f });
-		f.RenderText("Fighter Scale:" + glm::to_string(m_meshes[0].GetScale()), 100, 400, 0.5f, { 1.0f, 1.0f, 0.0f });
+		f.RenderText("Fighter Position:"+ glm::to_string(m_meshes[0].GetPosition()), 100, 200, 0.5f, {1.0f, 1.0f, 0.0f});
+		f.RenderText("Fighter Rotation:" + glm::to_string(m_meshes[0].GetRotation()), 100, 225, 0.5f, { 1.0f, 1.0f, 0.0f });
+		f.RenderText("Fighter Scale:" + glm::to_string(m_meshes[0].GetScale()), 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 
