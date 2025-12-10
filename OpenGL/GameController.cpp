@@ -249,6 +249,9 @@ void GameController::RunGame() {
 			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 				Mesh::Lights[count].SetPosition(glm::vec3{0.5f, 1.0f, 11.0f});
 			}
+				
+			m_postProcessor.SetBlueTint(OpenGL::ToolWindow::TintBlueEnabled);
+
 
 			//Fish
 			m_meshes[1].Render(m_camera.GetProjection()* m_camera.GetView());
@@ -284,6 +287,9 @@ void GameController::RunGame() {
 		string middleMouseButtonState = (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) ? "Down" : "Up";
 		f.RenderText("Middle Mouse Button:" + middleMouseButtonState, 100, 175, 0.5f, { 1.0f, 1.0f, 0.0f });
 		
+		//if(OpenGL::ToolWindow::WireframeEnabled)
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 		m_postProcessor.End();
 		
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers

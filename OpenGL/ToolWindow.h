@@ -77,6 +77,9 @@ namespace OpenGL {
 		static bool ScaleEnabled;
 		//Water Scene
 		static bool WaterSceneEnabled;
+		static bool WireframeEnabled;
+		static bool TintBlueEnabled;
+
 		ToolWindow(void)
 		{
 			InitializeComponent();
@@ -108,6 +111,8 @@ namespace OpenGL {
 			ScaleEnabled = box_scale->Checked;
 
 			WaterSceneEnabled = rbtn_waterscene->Checked;
+			WireframeEnabled = box_wireframe->Checked;
+			TintBlueEnabled = box_tintblue->Checked;
 		}
 
 	protected:
@@ -586,15 +591,14 @@ private: System::Void trackBar_Frequency_Scroll(System::Object^ sender, System::
 }
 private: System::Void trackBar_Amplitude_Scroll(System::Object^ sender, System::EventArgs^ e) {
 }
-#pragma endregion Water Scene
-
-#pragma region Scene
 private: System::Void box_wireframe_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	WireframeEnabled = box_wireframe->Checked;
 }
 private: System::Void box_tintblue_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	TintBlueEnabled = box_tintblue->Checked;
 }
-#pragma endregion Scene
 
+#pragma endregion Water Scene
 	   //Space Scene
 private: System::Void rbtn_spacescene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 }

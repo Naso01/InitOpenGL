@@ -9,6 +9,7 @@ PostProcessor::PostProcessor() {
 	m_renderBufferObject = 0;
 	m_postShader = 0;
 	m_vertexBuffer = 0;
+    m_blueTintEnabled = false;
 }
 
 PostProcessor:: ~PostProcessor() { }
@@ -117,6 +118,7 @@ void PostProcessor::End()
 
     glUseProgram(m_postShader->GetProgramID()); // Use our shader
     m_postShader->SetTextureSampler("ScreenTexture", GL_TEXTURE0, 0, m_textureColorbuffer);
+    m_postShader->SetInt("BlueTint", m_blueTintEnabled);
 
     BindVertices();
 
