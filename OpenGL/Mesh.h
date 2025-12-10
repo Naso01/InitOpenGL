@@ -77,6 +77,7 @@ private:
 	glm::vec3 m_color;
 	unsigned short m_specularStrength;
 	glm::vec3 m_specularColor;
+
 };
 
 #endif // !MESH_H

@@ -75,7 +75,8 @@ namespace OpenGL {
 		static bool TranslateEnabled;
 		static bool RotateEnabled;
 		static bool ScaleEnabled;
-
+		//Water Scene
+		static bool WaterSceneEnabled;
 		ToolWindow(void)
 		{
 			InitializeComponent();
@@ -106,6 +107,7 @@ namespace OpenGL {
 			RotateEnabled = box_rotate->Checked;
 			ScaleEnabled = box_scale->Checked;
 
+			WaterSceneEnabled = rbtn_waterscene->Checked;
 		}
 
 	protected:
@@ -578,6 +580,7 @@ private: System::Void box_scale_CheckedChanged(System::Object^ sender, System::E
 
 #pragma region Water Scene
 private: System::Void rbtn_waterscene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	WaterSceneEnabled = rbtn_waterscene->Checked;
 }
 private: System::Void trackBar_Frequency_Scroll(System::Object^ sender, System::EventArgs^ e) {
 }

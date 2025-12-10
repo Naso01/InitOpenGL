@@ -96,6 +96,12 @@ void GameController::RunGame() {
 	fighterjet.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(fighterjet);
 
+	Mesh fish = CreateMesh(m_shaderDiffuse, "fish.obj", { 0.1f, 0.1f, 0.1f },
+														{ 0.0f, 0.0f, 0.0f });
+	fish.SetCameraPosition(m_camera.GetPosition());
+	fish.SetRotation({ 0.0f, 180.0f, 0.0f });
+	m_meshes.push_back(fish);
+
 	/*
 	Skybox m_skybox = Skybox();
 	m_skybox.Create(&m_shaderSkybox, "../Assets/Models/Skybox.obj",
@@ -154,91 +160,103 @@ void GameController::RunGame() {
 
 		mouseMovement = m_inputController.GetMovementVector();
 
+		if (OpenGL::ToolWindow::MoveLight || OpenGL::ToolWindow::TransformEnabled) {
+
 #pragma region Light Settings
-		if(OpenGL::ToolWindow::MoveLight){
-			newSpecularColor = {
-				OpenGL::ToolWindow::RenderRedChannel,
-				OpenGL::ToolWindow::RenderGreenChannel,
-				OpenGL::ToolWindow::RenderBlueChannel
-			};
-			//if render color channels changed
-			if (specularColor != newSpecularColor)
-			{
-				for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
-					Mesh::Lights[count].SetSpecularColor(newSpecularColor);
+			if(OpenGL::ToolWindow::MoveLight){
+				newSpecularColor = {
+					OpenGL::ToolWindow::RenderRedChannel,
+					OpenGL::ToolWindow::RenderGreenChannel,
+					OpenGL::ToolWindow::RenderBlueChannel
+				};
+				//if render color channels changed
+				if (specularColor != newSpecularColor)
+				{
+					for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+						Mesh::Lights[count].SetSpecularColor(newSpecularColor);
+					}
+					specularColor = newSpecularColor;
 				}
-				specularColor = newSpecularColor;
-			}
 
-			for (unsigned int count = 0; count < m_meshes.size(); count++) {
-				m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
-			}
+				for (unsigned int count = 0; count < m_meshes.size(); count++) {
+					m_meshes[count].SetSpecularStrength(OpenGL::ToolWindow::SpecularStrength);
+				}
 
-			if(mouseMovement != glm::vec3(0.0f))
-			{
-				for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
-					glm::vec3 currentPosition = Mesh::Lights[count].GetPosition();
-					Mesh::Lights[count].SetPosition(currentPosition + mouseMovement);
+				if(mouseMovement != glm::vec3(0.0f))
+				{
+					for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+						glm::vec3 currentPosition = Mesh::Lights[count].GetPosition();
+						Mesh::Lights[count].SetPosition(currentPosition + mouseMovement);
+					}
 				}
 			}
-		}
-		//Reset Light Position
-		if (OpenGL::ToolWindow::ResetLightPosition) {
+			//Reset Light Position
+			if (OpenGL::ToolWindow::ResetLightPosition) {
 		
-			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
-				Mesh::Lights[count].SetPosition(lightPosition);
+				for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+					Mesh::Lights[count].SetPosition(lightPosition);
+				}
+				OpenGL::ToolWindow::ResetLightPosition = false;
 			}
-			OpenGL::ToolWindow::ResetLightPosition = false;
-		}
 #pragma endregion Light Settings
 
 #pragma region Transform
-		if (OpenGL::ToolWindow::TransformEnabled) {
+			if (OpenGL::ToolWindow::TransformEnabled) {
 
-			if (OpenGL::ToolWindow::ResetTransform) {
-				for (unsigned int count = 0; count < m_meshes.size(); count++) {
-					m_meshes[count].SetPosition(fighterPosition);
-					m_meshes[count].SetRotation(glm::vec3{ 45.0f ,0.0f, 0.0f });
-					m_meshes[count].SetScale(fighterScale);
+				if (OpenGL::ToolWindow::ResetTransform) {
+
+					m_meshes[0].SetPosition(fighterPosition);
+					m_meshes[0].SetRotation(glm::vec3{ 45.0f ,0.0f, 0.0f });
+					m_meshes[0].SetScale(fighterScale);
+
+					OpenGL::ToolWindow::ResetTransform = false;
 				}
-				OpenGL::ToolWindow::ResetTransform = false;
-			}
-			if (OpenGL::ToolWindow::TranslateEnabled) {
-				for (unsigned int count = 0; count < m_meshes.size(); count++) {
-					glm::vec3 currentPosition = m_meshes[count].GetPosition();
-					m_meshes[count].SetPosition(currentPosition + mouseMovement);
+				if (OpenGL::ToolWindow::TranslateEnabled) {
+					glm::vec3 currentPosition = m_meshes[0].GetPosition();
+					m_meshes[0].SetPosition(currentPosition + mouseMovement);
+				
 				}
-			}
-			if (OpenGL::ToolWindow::RotateEnabled) {
-				for (unsigned int count = 0; count < m_meshes.size(); count++) {
-					glm::vec3 currentRotation = m_meshes[count].GetRotation();
+				if (OpenGL::ToolWindow::RotateEnabled) {
+					glm::vec3 currentRotation = m_meshes[0].GetRotation();
 					// more intuitive rotation {y, x , z}
-					m_meshes[count].SetRotation(currentRotation + (glm::vec3{ mouseMovement.y, mouseMovement.x, mouseMovement.z } *10.0f));
+					m_meshes[0].SetRotation(currentRotation + (glm::vec3{ mouseMovement.y, mouseMovement.x, mouseMovement.z } *10.0f));
 				}
+				if (OpenGL::ToolWindow::ScaleEnabled) {
+					glm::vec3 currentScale = m_meshes[0].GetScale();
+					m_meshes[0].SetScale(currentScale + mouseMovement * 0.001f);
+				}	
 			}
-			if (OpenGL::ToolWindow::ScaleEnabled) {
-				for (unsigned int count = 0; count < m_meshes.size(); count++) {
-					glm::vec3 currentScale = m_meshes[count].GetScale();
-					m_meshes[count].SetScale(currentScale + mouseMovement * 0.001f);
-				}
-			}	
-		}
-		else { //rotate on the x axis
-			for (unsigned int count = 0; count < m_meshes.size(); count++) {
-				glm::vec3 currentRotation = m_meshes[count].GetRotation();
-				m_meshes[count].SetRotation(currentRotation + glm::vec3{ 0.01f, 0.0f, 0.0f });
+			else { //rotate on the x axis
+					glm::vec3 currentRotation = m_meshes[0].GetRotation();
+					m_meshes[0].SetRotation(currentRotation + glm::vec3{ 0.01f, 0.0f, 0.0f });
 			}
-		}
 		
-#pragma endregion Transform
+#pragma endregion Transform 
 
+			m_postProcessor.Start();
+			//fighter jet
+			m_meshes[0].Render(m_camera.GetProjection() * m_camera.GetView());
 
-		m_postProcessor.Start();
+			f.RenderText("Fighter Position:" + glm::to_string(m_meshes[0].GetPosition()), 100, 200, 0.5f, { 1.0f, 1.0f, 0.0f });
+			f.RenderText("Fighter Rotation:" + glm::to_string(m_meshes[0].GetRotation()), 100, 225, 0.5f, { 1.0f, 1.0f, 0.0f });
+			f.RenderText("Fighter Scale:" + glm::to_string(m_meshes[0].GetScale()), 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
 
-		//Meshes
-		for (unsigned int count = 0; count < m_meshes.size(); count++) {
-			m_meshes[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
+		else if (OpenGL::ToolWindow::WaterSceneEnabled) {
+
+			m_postProcessor.Start();
+			//move light away from camera view
+			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
+				Mesh::Lights[count].SetPosition(glm::vec3{0.5f, 1.0f, 11.0f});
+			}
+
+			//Fish
+			m_meshes[1].Render(m_camera.GetProjection()* m_camera.GetView());
+			f.RenderText("Fish Position:" + glm::to_string(m_meshes[1].GetPosition()), 100, 200, 0.5f, { 1.0f, 1.0f, 0.0f });
+			f.RenderText("Fish Rotation:" + glm::to_string(m_meshes[1].GetRotation()), 100, 225, 0.5f, { 1.0f, 1.0f, 0.0f });
+			f.RenderText("Fish Scale:" + glm::to_string(m_meshes[1].GetScale()), 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
+		}
+
 		//Light
 		for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
@@ -252,11 +270,11 @@ void GameController::RunGame() {
 			fps = 0;
 			lastTime += 1.0f;
 		}
-		m_postProcessor.End();
 
-		System::Drawing::Point mousePos = OpenGL::ToolWindow::MousePosition;
 
 		//Font
+		System::Drawing::Point mousePos = OpenGL::ToolWindow::MousePosition;
+		
 		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
 		f.RenderText("Mouse Pos: " + to_string(mousePos.X) + "   " + to_string(mousePos.Y), 100, 125, 0.5f, {1.0f, 1.0f, 0.0f});
 
@@ -264,10 +282,9 @@ void GameController::RunGame() {
 		f.RenderText("Left Mouse Button:" + leftMouseButtonState, 100, 150, 0.5f, { 1.0f, 1.0f, 0.0f });
 		string middleMouseButtonState = (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) ? "Down" : "Up";
 		f.RenderText("Middle Mouse Button:" + middleMouseButtonState, 100, 175, 0.5f, { 1.0f, 1.0f, 0.0f });
-
-		f.RenderText("Fighter Position:"+ glm::to_string(m_meshes[0].GetPosition()), 100, 200, 0.5f, {1.0f, 1.0f, 0.0f});
-		f.RenderText("Fighter Rotation:" + glm::to_string(m_meshes[0].GetRotation()), 100, 225, 0.5f, { 1.0f, 1.0f, 0.0f });
-		f.RenderText("Fighter Scale:" + glm::to_string(m_meshes[0].GetScale()), 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
+		
+		m_postProcessor.End();
+		
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 

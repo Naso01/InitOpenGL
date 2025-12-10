@@ -35,6 +35,7 @@ private:
 	Camera m_camera;
 	PostProcessor m_postProcessor;
 	vector<Mesh> m_meshes;
+	Mesh m_fishMesh;
 	Skybox m_skybox;
 	GLuint vao;
 	InputController m_inputController;
