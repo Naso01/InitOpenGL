@@ -251,7 +251,7 @@ void GameController::RunGame() {
 			}
 				
 			m_postProcessor.SetBlueTint(OpenGL::ToolWindow::TintBlueEnabled);
-
+			m_postProcessor.SetWireFrame(OpenGL::ToolWindow::WireframeEnabled);
 
 			//Fish
 			m_meshes[1].Render(m_camera.GetProjection()* m_camera.GetView());
