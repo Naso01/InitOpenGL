@@ -12,51 +12,52 @@ glm::vec3 InputController::GetMovementVector()
 {
     glm::vec3 movement(0.0f);
 
-    // Only act when left click is pressed
-    if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS)
+    // --- Check what type of movement we're doing ---
+    bool moveXY = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+    bool moveZ = glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
+
+    // If no buttons pressed → no movement
+    if (!moveXY && !moveZ)
         return movement;
 
-    // Mouse pos
+    // --- Get mouse position ---
     double mouseX, mouseY;
     glfwGetCursorPos(m_window, &mouseX, &mouseY);
 
     Resolution r = WindowController::GetInstance().GetResolution();
-
-    // Screen center
     double centerX = r.width * 0.5;
     double centerY = r.height * 0.5;
 
     // Vector from center → mouse
     double dx = mouseX - centerX;
-    double dy = centerY - mouseY;
-    // NOTE: invert Y because OpenGL coords + screen coords flipped
+    double dy = centerY - mouseY; // Y inverted
 
-    // Compute distance from center
     double dist = sqrt(dx * dx + dy * dy);
-
-    // Normalize direction
-    double len = sqrt(dx * dx + dy * dy);
-    if (len < 0.0001)
+    if (dist < 0.0001)
         return movement;
 
-    double ndx = dx / len;   // normalized x direction
-    double ndy = dy / len;   // normalized y direction
+    // Normalized movement direction
+    double ndx = dx / dist;
+    double ndy = dy / dist;
 
-    // Scale: farther = faster
+    // Intensity based on distance from center
     double maxDist = sqrt(centerX * centerX + centerY * centerY);
-    double intensity = dist / maxDist; // 0 to 1
+    double intensity = glm::clamp(dist / maxDist, 0.0, 1.0);
 
-    // Clamp intensity
-    intensity = glm::clamp(intensity, 0.0, 1.0);
-
-    // Base speed
     const float baseSpeed = 0.01f;
-
-    // Final movement
     float speed = baseSpeed * (float)intensity;
 
-    movement.x += (float)ndx * speed;
-    movement.y += (float)ndy * speed;
+    // --- Apply correct movement type --- 
+    if (moveXY)
+    {
+        movement.x = (float)ndx * speed;
+        movement.y = (float)ndy * speed;
+    }
+
+    if (moveZ)
+    {
+        movement.z = (float)ndy * speed;
+    }
 
     return movement;
 }

@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "WindowController.h"
 #include <glm/gtc/random.hpp>
+#include "glm/gtx/string_cast.hpp"
 #include "Fonts.h"
 #include "ToolWindow.h"
 
@@ -87,7 +88,7 @@ void GameController::RunGame() {
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	glm::vec3 fighterScale = { 0.0008f, 0.0008f, 0.0008f };
+	glm::vec3 fighterScale = { 0.004f, 0.004f, 0.004f };
 	glm::vec3 fighterPosition = { 0.0f, 0.0f, 0.0f };
 
 	Mesh fighterjet = CreateMesh(m_shaderDiffuse, "fighter.obj", fighterScale,
@@ -197,7 +198,7 @@ void GameController::RunGame() {
 			if (OpenGL::ToolWindow::ResetTransform) {
 				for (unsigned int count = 0; count < m_meshes.size(); count++) {
 					m_meshes[count].SetPosition(fighterPosition);
-					m_meshes[count].SetRotation(glm::vec3{ 40.0f ,0.0f, 0.0f });
+					m_meshes[count].SetRotation(glm::vec3{ 45.0f ,0.0f, 0.0f });
 					m_meshes[count].SetScale(fighterScale);
 				}
 				OpenGL::ToolWindow::ResetTransform = false;
@@ -211,7 +212,8 @@ void GameController::RunGame() {
 			if (OpenGL::ToolWindow::RotateEnabled) {
 				for (unsigned int count = 0; count < m_meshes.size(); count++) {
 					glm::vec3 currentRotation = m_meshes[count].GetRotation();
-					m_meshes[count].SetRotation(currentRotation + mouseMovement * 10.0f);
+					// more intuitive rotation {y, x , z}
+					m_meshes[count].SetRotation(currentRotation + (glm::vec3{ mouseMovement.y, mouseMovement.x, mouseMovement.z } *10.0f));
 				}
 			}
 			if (OpenGL::ToolWindow::ScaleEnabled) {
@@ -254,11 +256,18 @@ void GameController::RunGame() {
 
 		System::Drawing::Point mousePos = OpenGL::ToolWindow::MousePosition;
 
-		string strMousePosition = "Mouse Pos: " + to_string(mousePos.X) + "   " + to_string(mousePos.Y);
-
 		//Font
 		f.RenderText(fpsS, 100, 100, 0.5f, { 1.0f, 1.0f, 0.0f });
-		f.RenderText(strMousePosition, 100, 150, 0.5f, {1.0f, 1.0f, 0.0f});
+		f.RenderText("Mouse Pos: " + to_string(mousePos.X) + "   " + to_string(mousePos.Y), 100, 150, 0.5f, {1.0f, 1.0f, 0.0f});
+
+		string leftMouseButtonState = (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) ? "Down" : "Up";
+		f.RenderText("Left Mouse Button:" + leftMouseButtonState, 100, 200, 0.5f, { 1.0f, 1.0f, 0.0f });
+		string middleMouseButtonState = (glfwGetMouseButton(WindowController::GetInstance().GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) ? "Down" : "Up";
+		f.RenderText("Middle Mouse Button:" + middleMouseButtonState, 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
+
+		f.RenderText("Fighter Position:"+ glm::to_string(m_meshes[0].GetPosition()), 100, 300, 0.5f, {1.0f, 1.0f, 0.0f});
+		f.RenderText("Fighter Rotation:" + glm::to_string(m_meshes[0].GetRotation()), 100, 350, 0.5f, { 1.0f, 1.0f, 0.0f });
+		f.RenderText("Fighter Scale:" + glm::to_string(m_meshes[0].GetScale()), 100, 400, 0.5f, { 1.0f, 1.0f, 0.0f });
 		glfwSwapBuffers(WindowController::GetInstance().GetWindow()); // Swap the front and back buffers
 		glfwPollEvents();
 
