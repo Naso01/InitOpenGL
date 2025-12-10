@@ -243,7 +243,7 @@ void GameController::RunGame() {
 
 		}
 		else if (OpenGL::ToolWindow::WaterSceneEnabled) {
-
+#pragma region Water Scene
 			m_postProcessor.Start();
 			//move light away from camera view
 			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
@@ -255,6 +255,7 @@ void GameController::RunGame() {
 			f.RenderText("Fish Position:" + glm::to_string(m_meshes[1].GetPosition()), 100, 200, 0.5f, { 1.0f, 1.0f, 0.0f });
 			f.RenderText("Fish Rotation:" + glm::to_string(m_meshes[1].GetRotation()), 100, 225, 0.5f, { 1.0f, 1.0f, 0.0f });
 			f.RenderText("Fish Scale:" + glm::to_string(m_meshes[1].GetScale()), 100, 250, 0.5f, { 1.0f, 1.0f, 0.0f });
+#pragma endregion Water Scene
 		}
 
 		//Light

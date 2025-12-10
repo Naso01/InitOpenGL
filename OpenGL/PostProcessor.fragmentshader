@@ -10,8 +10,10 @@ void main(){
 	vec3 col = texture(ScreenTexture, retTexCoord).rgb;
 	
 	//Regular post processing
-	FragColor = vec4(col, 1.0);
+	//FragColor = vec4(col, 1.0);
 
+
+	FragColor = vec4(col.r /2, col.g /2, col.b, 1.0);
 	/*
 	//Inversion
 	//FragColor = vec4(vec3(1.0 - texture(ScreenTexture, retTexCoord)), 1.0);
