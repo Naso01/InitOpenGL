@@ -592,6 +592,12 @@ private: System::Void box_scale_CheckedChanged(System::Object^ sender, System::E
 #pragma region Water Scene
 private: System::Void rbtn_waterscene_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 	WaterSceneEnabled = rbtn_waterscene->Checked;
+	if (!WaterSceneEnabled) {
+		WireframeEnabled = false;
+		box_wireframe->Checked = false;
+		TintBlueEnabled = false;
+		box_tintblue->Checked = false;
+	}
 }
 private: System::Void trackBar_Frequency_Scroll(System::Object^ sender, System::EventArgs^ e) {
 	Frequency = trackBar_Frequency->Value / 100.0f;
@@ -602,10 +608,12 @@ private: System::Void trackBar_Amplitude_Scroll(System::Object^ sender, System::
 	lbl_amplitudevalue->Text = Amplitude.ToString("F2");
 }
 private: System::Void box_wireframe_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-	WireframeEnabled = box_wireframe->Checked;
+	if (WaterSceneEnabled)
+		WireframeEnabled = box_wireframe->Checked;
 }
 private: System::Void box_tintblue_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-	TintBlueEnabled = box_tintblue->Checked;
+	if (WaterSceneEnabled)
+		TintBlueEnabled = box_tintblue->Checked;
 }
 
 #pragma endregion Water Scene

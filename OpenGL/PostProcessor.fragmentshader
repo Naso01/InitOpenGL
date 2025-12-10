@@ -14,13 +14,14 @@ void main(){
 	
 	vec2 uv = retTexCoord;
 
-
+   if (WaterScene)
+    {
         // Horizontal sine-based wave
         float wave = sin(uv.x * Frequency + Time) * Amplitude;
         
         // Apply to Y coordinate for ripples
         uv.y += wave;
-    
+    }
 
 	vec3 col = texture(ScreenTexture, uv).rgb;
 

@@ -153,7 +153,7 @@ void GameController::RunGame() {
 
 	glm::vec3 newSpecularColor;
 	glm::vec3 mouseMovement;
-
+	bool waterScene = false;
 	do {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the screen - Clear depth buffer every frame
@@ -249,9 +249,6 @@ void GameController::RunGame() {
 			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
 				Mesh::Lights[count].SetPosition(glm::vec3{0.5f, 1.0f, 11.0f});
 			}
-				
-			m_postProcessor.SetBlueTint(OpenGL::ToolWindow::TintBlueEnabled);
-			m_postProcessor.SetWireFrame(OpenGL::ToolWindow::WireframeEnabled);
 
 			//Fish
 			m_meshes[1].Render(m_camera.GetProjection()* m_camera.GetView());
