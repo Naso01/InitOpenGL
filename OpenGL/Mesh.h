@@ -17,8 +17,10 @@ public:
 	//Accessors
 	glm::vec3 GetPosition() { return m_position; }
 	void SetPosition(glm::vec3 _position) { m_position = _position; }
+	glm::vec3 GetScale() { return m_scale; }
 	void SetScale(glm::vec3 _scale) { m_scale = _scale; }
 	void SetColor(glm::vec3 _color) { m_color = _color; }
+	glm::vec3 GetRotation() { return m_rotation; }
 	void SetRotation(glm::vec3 _rotation) { m_rotation = _rotation; }
 	glm::vec3 GetColor() { return m_color; }
 	void SetCameraPosition(glm::vec3 _cameraPosition) { m_cameraPosition = _cameraPosition; }

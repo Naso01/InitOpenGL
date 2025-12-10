@@ -62,12 +62,19 @@ namespace OpenGL {
 	private: System::Windows::Forms::RadioButton^ rbtn_waterscene;
 	public:
 		//---------------- Static Variables ------------------------------------------------------------------------
+		//Light Settings
 		static unsigned short SpecularStrength;
 		static float RenderRedChannel;
 		static float RenderGreenChannel;
 		static float RenderBlueChannel;
 		static bool MoveLight;
 		static bool ResetLightPosition;
+		//Transform
+		static bool ResetTransform;
+		static bool TransformEnabled;
+		static bool TranslateEnabled;
+		static bool RotateEnabled;
+		static bool ScaleEnabled;
 
 		ToolWindow(void)
 		{
@@ -87,8 +94,18 @@ namespace OpenGL {
 			float blueValue = trackBar_Blue->Value / 100.0f; //Blue
 			RenderBlueChannel = blueValue;
 			lbl_BlueValue->Text = blueValue.ToString("F2");
+			
+			ResetLightPosition = false;
 
 			MoveLight = rbtn_MoveLight->Checked;
+
+
+			TransformEnabled = rbtn_transform->Checked;
+			ResetTransform = false;
+			TranslateEnabled = box_translate->Checked;
+			RotateEnabled = box_rotate->Checked;
+			ScaleEnabled = box_scale->Checked;
+
 		}
 
 	protected:
@@ -542,14 +559,20 @@ namespace OpenGL {
 #pragma endregion Light
 #pragma region Transform
 private: System::Void rbtn_transform_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	TransformEnabled = rbtn_transform->Checked;
+	ResetTransform = true;
 }
 private: System::Void btn_resettransform_Click(System::Object^ sender, System::EventArgs^ e) {
+	ResetTransform = true;
 }
 private: System::Void box_translate_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	TranslateEnabled = box_translate->Checked;
 }
 private: System::Void box_rotate_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	RotateEnabled = box_rotate->Checked;
 }
 private: System::Void box_scale_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	ScaleEnabled = box_scale->Checked;
 }
 #pragma endregion Transform
 

@@ -80,13 +80,18 @@ void GameController::RunGame() {
 
 	//Create meshes
 #pragma region CreateMeshes
+	glm::vec3 lightPosition = { 0.0f, 0.0f, 5.0f };
+	
 	Mesh m = CreateMesh(m_shaderColor, "sphere.obj", { 0.01f, 0.01f, 0.01f }, 
-												 { 0.0f,  0.0f,  5.0f });
+		lightPosition);
 	m.SetColor({1.0f, 1.0f , 1.0f });
 	Mesh::Lights.push_back(m);
 
-	Mesh fighterjet = CreateMesh(m_shaderDiffuse, "fighter.obj",	{0.005f, 0.005f, 0.005f },
-														{0.0f, 0.0f, 0.0f});
+	glm::vec3 fighterScale = { 0.0008f, 0.0008f, 0.0008f };
+	glm::vec3 fighterPosition = { 0.0f, 0.0f, 0.0f };
+
+	Mesh fighterjet = CreateMesh(m_shaderDiffuse, "fighter.obj", fighterScale,
+		fighterPosition);
 	fighterjet.SetCameraPosition(m_camera.GetPosition());
 	m_meshes.push_back(fighterjet);
 
@@ -180,12 +185,50 @@ void GameController::RunGame() {
 		if (OpenGL::ToolWindow::ResetLightPosition) {
 		
 			for (unsigned int count = 0; count < Mesh::Lights.size(); count++) {
-				Mesh::Lights[count].SetPosition({ 0.0f, 0.0f, 5.0f });
+				Mesh::Lights[count].SetPosition(lightPosition);
 			}
 			OpenGL::ToolWindow::ResetLightPosition = false;
 		}
-
 #pragma endregion Light Settings
+
+#pragma region Transform
+		if (OpenGL::ToolWindow::TransformEnabled) {
+
+			if (OpenGL::ToolWindow::ResetTransform) {
+				for (unsigned int count = 0; count < m_meshes.size(); count++) {
+					m_meshes[count].SetPosition(fighterPosition);
+					m_meshes[count].SetRotation(glm::vec3{ 40.0f ,0.0f, 0.0f });
+					m_meshes[count].SetScale(fighterScale);
+				}
+				OpenGL::ToolWindow::ResetTransform = false;
+			}
+			if (OpenGL::ToolWindow::TranslateEnabled) {
+				for (unsigned int count = 0; count < m_meshes.size(); count++) {
+					glm::vec3 currentPosition = m_meshes[count].GetPosition();
+					m_meshes[count].SetPosition(currentPosition + mouseMovement);
+				}
+			}
+			if (OpenGL::ToolWindow::RotateEnabled) {
+				for (unsigned int count = 0; count < m_meshes.size(); count++) {
+					glm::vec3 currentRotation = m_meshes[count].GetRotation();
+					m_meshes[count].SetRotation(currentRotation + mouseMovement * 10.0f);
+				}
+			}
+			if (OpenGL::ToolWindow::ScaleEnabled) {
+				for (unsigned int count = 0; count < m_meshes.size(); count++) {
+					glm::vec3 currentScale = m_meshes[count].GetScale();
+					m_meshes[count].SetScale(currentScale + mouseMovement * 0.001f);
+				}
+			}	
+		}
+		else { //rotate on the x axis
+			for (unsigned int count = 0; count < m_meshes.size(); count++) {
+				glm::vec3 currentRotation = m_meshes[count].GetRotation();
+				m_meshes[count].SetRotation(currentRotation + glm::vec3{ 0.01f, 0.0f, 0.0f });
+			}
+		}
+		
+#pragma endregion Transform
 
 
 		m_postProcessor.Start();
