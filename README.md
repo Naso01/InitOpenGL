@@ -4,6 +4,8 @@ Visual Studio C++ solution that hosts an OpenGL 3.3–style graphics course proj
 
 **Remote:** [https://github.com/Naso01/InitOpenGL](https://github.com/Naso01/InitOpenGL)
 
+Each **topic branch** (everything except `master`) includes a **minimal root `README.md`** at its latest commit: short intro, a link back to this file on **master**, the same **Attribution** block, and a **This branch** section with only that branch's description.
+
 ---
 
 ## Attribution
